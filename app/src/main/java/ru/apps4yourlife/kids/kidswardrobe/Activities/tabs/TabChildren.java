@@ -1,4 +1,4 @@
-package ru.apps4yourlife.kids.kidswardrobe.tabs;
+package ru.apps4yourlife.kids.kidswardrobe.Activities.tabs;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

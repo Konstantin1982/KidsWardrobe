@@ -27,6 +27,10 @@
         <item name="android:textColor">@color/buttonsTextColor</item>
         <item name="android:textSize">18dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
     </style>
 
 </resources>

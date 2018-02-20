@@ -3,11 +3,10 @@ package ru.apps4yourlife.kids.kidswardrobe;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
-import ru.apps4yourlife.kids.kidswardrobe.tabs.TabChildren;
-import ru.apps4yourlife.kids.kidswardrobe.tabs.TabClothes;
-import ru.apps4yourlife.kids.kidswardrobe.tabs.TabReports;
+import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabChildren;
+import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabClothes;
+import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabReports;
 
 /**
  * Created by ksharafutdinov on 05-Feb-18.
