@@ -69,6 +69,13 @@ public class StartActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void btnShowAllClothes_Click(View v) {
+        // Code here executes on main thread after user presses button
+        Toast.makeText(v.getContext(), "Button Clicked", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, AllItemsActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
