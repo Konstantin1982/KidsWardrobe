@@ -33,4 +33,11 @@
         <item name="android:layout_marginEnd">20dp</item>
     </style>
 
+    <style name="TypicalTextView" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
 </resources>
