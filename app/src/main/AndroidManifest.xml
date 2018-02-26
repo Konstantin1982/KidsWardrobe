@@ -34,7 +34,8 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity android:name=".Test" />
         <activity android:name=".Activities.AddNewItemActivity" />
-        <activity android:name=".Activities.AllItemsActivity"></activity>
+        <activity android:name=".Activities.AllItemsActivity" />
+        <activity android:name=".Activities.CategoryItemsActivity"></activity>
     </application>
 
 </manifest>

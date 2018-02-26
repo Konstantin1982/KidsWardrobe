@@ -19,17 +19,17 @@
         android:gravity="top">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/categoryName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:background="@color/colorAccent"
-            android:text="Неразобранное"
+            tools:text="Неразобранное"
             android:textAlignment="center"
             android:textSize="16dp" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageSeparator"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             app:srcCompat="@drawable/grid_item_line_separator"
@@ -39,12 +39,12 @@
             />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/categoryImage"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginBottom="8dp"
             app:srcCompat="@android:drawable/ic_notification_overlay"
-            android:background="@color/colorAccent"/>
+            />
 
         <TextView
             android:id="@+id/textView3"

@@ -52,30 +52,32 @@
             />
 
     <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
+        android:id="@+id/typeClothesTextView"
         style="@style/TypicalTextView"
-        android:text="AutoCompleteTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton"
-        tools:text="Что это?" />
+        android:completionThreshold="0"
+        android:hint="Что это?"
 
-
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView2"
-        style="@style/TypicalTextView"
-        android:text="Размер"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView" />
+        />
 
     <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView3"
+        android:id="@+id/seasonClothesTextView"
         style="@style/TypicalTextView"
         android:text="Сезон"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView2" />
+        app:layout_constraintTop_toBottomOf="@+id/typeClothesTextView" />
+
+    <AutoCompleteTextView
+        android:id="@+id/sizeClothesTextView"
+        style="@style/TypicalTextView"
+        android:text="Размер"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seasonClothesTextView" />
+
 
     <Button
         android:id="@+id/buttonShowMoreDetails"
@@ -90,7 +92,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
-        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView3" />
+        app:layout_constraintTop_toBottomOf="@+id/sizeClothesTextView" />
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView4"

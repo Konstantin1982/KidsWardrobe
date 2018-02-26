@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
@@ -22,6 +24,13 @@ public class AllItemsActivity extends AppCompatActivity {
 
         mGridItems = findViewById(R.id.gridItems);
         mGridItems.setAdapter(new GridAdapter(this));
+        mGridItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(view.getContext(), "Item clicked: " + i, Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     private class GridAdapter extends BaseAdapter {
@@ -52,7 +61,6 @@ public class AllItemsActivity extends AppCompatActivity {
 
             View itemView;
             itemView = getLayoutInflater().inflate(R.layout.grid_item, null);
-
             return itemView;
         }
     }

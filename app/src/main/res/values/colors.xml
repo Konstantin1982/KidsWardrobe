@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="buttonsColor">#2196f3</color>
     <color name="buttonsTextColor">#FFFFFF</color>
-    <color name="fragmentGreyBackground">#DEDEDE</color>
+    <color name="fragmentGreyBackground">#99DEDEDE</color>
     <color name="gridItemStrokeColor">#785B18</color>
     <color name="gridItemBackgroundColor">#99FFF9C4</color>
 

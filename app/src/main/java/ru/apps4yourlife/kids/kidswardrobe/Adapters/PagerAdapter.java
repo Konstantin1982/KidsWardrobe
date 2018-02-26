@@ -1,4 +1,4 @@
-package ru.apps4yourlife.kids.kidswardrobe;
+package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -44,6 +44,15 @@ public class PagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         // TODO: real titles
-        return "OBJECT " + (position + 1);
+        switch (position) {
+            case 0:
+                return "Одежда";
+            case 1:
+                return "Дети";
+            case 2:
+                return "Что надеть";
+            default:
+            return "undefined " + (position + 1);
+        }
     }
 }

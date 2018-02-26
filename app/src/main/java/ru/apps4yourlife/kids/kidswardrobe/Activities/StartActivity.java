@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-import ru.apps4yourlife.kids.kidswardrobe.PagerAdapter;
+import ru.apps4yourlife.kids.kidswardrobe.Adapters.PagerAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
 public class StartActivity extends AppCompatActivity {
@@ -37,12 +37,12 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         // Load an ad into the AdMob banner view.
-
+        /*
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
-
+        */
         // Toasts the test ad message on the screen. Remove this after defining your own ad unit ID.
         Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
 
@@ -52,15 +52,6 @@ public class StartActivity extends AppCompatActivity {
         mpagerAdapter = new PagerAdapter(getSupportFragmentManager(),3);
         mViewPager.setAdapter(mpagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        /*
-        mAddNewClothesButton = (Button) findViewById(R.id.button2);
-        mAddNewClothesButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Code here executes on main thread after user presses button
-                Toast.makeText(v.getContext(), TOAST_TEXT, Toast.LENGTH_LONG).show();
-            }
-        });
-        */
     }
     public void btnAddNewClothes_Click(View v) {
         // Code here executes on main thread after user presses button
