@@ -1,6 +1,7 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,13 +25,7 @@ public class AllItemsActivity extends AppCompatActivity {
 
         mGridItems = findViewById(R.id.gridItems);
         mGridItems.setAdapter(new GridAdapter(this));
-        mGridItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(view.getContext(), "Item clicked: " + i, Toast.LENGTH_LONG).show();
-
-            }
-        });
+        mGridItems.setOnItemClickListener(new AllItemsClickListener());
     }
 
     private class GridAdapter extends BaseAdapter {
@@ -65,6 +60,13 @@ public class AllItemsActivity extends AppCompatActivity {
         }
     }
 
+    private class AllItemsClickListener implements AdapterView.OnItemClickListener {
 
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(adapterView.getContext(), CategoryItemsActivity.class);
+            startActivity(intent);
+        }
+    }
 
 }
