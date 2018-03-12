@@ -8,6 +8,7 @@
     <color name="fragmentGreyBackground">#99DEDEDE</color>
     <color name="gridItemStrokeColor">#785B18</color>
     <color name="gridItemBackgroundColor">#99FFF9C4</color>
+    <color name="listItemsBackgroundColor">#FFFFFF</color>
 
 
 </resources>

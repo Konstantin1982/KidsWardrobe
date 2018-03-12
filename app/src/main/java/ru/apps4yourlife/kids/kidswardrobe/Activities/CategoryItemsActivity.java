@@ -17,14 +17,12 @@ public class CategoryItemsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_items);
 
-        mListItems = findViewById(R.id.categoryListItems);
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mListItems = (RecyclerView) findViewById(R.id.categoryListItems);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        layoutManager.setMeasurementCacheEnabled(false);
+        mListItems.setLayoutManager(layoutManager);
 
         RecyclerView.Adapter mAdapter =new CategoryListAdapter(this);
-
-        mListItems.setLayoutManager(layoutManager);
         mListItems.setAdapter(mAdapter);
-
     }
 }

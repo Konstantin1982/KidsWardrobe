@@ -25,18 +25,18 @@
         android:layout_height="match_parent"
         tools:context="ru.apps4yourlife.kids.kidswardrobe.Activities.AddNewItemActivity">
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="151dp"
-        android:layout_height="128dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="151dp"
+            android:layout_height="128dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -47,7 +47,7 @@
 
             app:layout_constraintBottom_toBottomOf="@+id/imageButton"
             app:layout_constraintEnd_toEndOf="@+id/imageButton"
-            android:src ="@drawable/ic_add_black_24dp"
+            app:srcCompat ="@drawable/ic_add_black_24dp"
 
             />
 
@@ -88,7 +88,6 @@
         android:layout_marginTop="24dp"
         android:text="Все параметры"
         android:onClick="btnShowDetail_clicked"
-        android:drawableRight="@drawable/ic_expand_more_black_24dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
@@ -152,7 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:clickable="true"
-            android:src="@drawable/ic_done_black_24dp"
+            app:srcCompat="@drawable/ic_done_black_24dp"
             app:backgroundTint="@color/buttonsColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

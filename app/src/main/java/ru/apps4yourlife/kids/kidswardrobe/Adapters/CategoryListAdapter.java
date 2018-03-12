@@ -28,13 +28,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     public CategoryListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent, false);
-        view.setFocusable(true);
+
         return new CategoryListAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(CategoryListAdapterViewHolder holder, int position) {
-        Toast.makeText(mContext,"Hi there" + position, Toast.LENGTH_SHORT).show();
+
+        holder.firstTextView.setText("Hi there");
+        holder.secondTextView.setText("Hello there");
+        // Toast.makeText(mContext,"Hi there" + position, Toast.LENGTH_SHORT).show();
         return;
     }
 
@@ -51,6 +54,10 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         final TextView highTempView;
         final TextView lowTempView;
         */
+
+        private TextView firstTextView;
+        private TextView secondTextView;
+
         CategoryListAdapterViewHolder(View view) {
             super(view);
             /*
@@ -60,6 +67,10 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
             highTempView = (TextView) view.findViewById(R.id.high_temperature);
             lowTempView = (TextView) view.findViewById(R.id.low_temperature);
             */
+
+            firstTextView = (TextView) view.findViewById(R.id.textView);
+            secondTextView = (TextView) view.findViewById(R.id.textView2);
+
             view.setOnClickListener(this);
         }
 

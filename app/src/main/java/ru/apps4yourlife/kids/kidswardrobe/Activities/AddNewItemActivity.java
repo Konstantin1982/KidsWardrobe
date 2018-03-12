@@ -87,11 +87,14 @@ public class AddNewItemActivity extends AppCompatActivity {
         editView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView8);
         editView.setVisibility(visibility);
 
+        // TODO: Make copmatibility with preLollipop
+        /*
         Button mButton = (Button) findViewById(R.id.buttonShowMoreDetails);
         if (mDetailShown == 0)
             mButton.setCompoundDrawablesWithIntrinsicBounds( 0, 0, R.drawable.ic_expand_more_black_24dp, 0);
         else
             mButton.setCompoundDrawablesWithIntrinsicBounds( 0, 0, R.drawable.ic_expand_less_black_24dp, 0);
+        */
     }
 
 

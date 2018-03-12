@@ -35,7 +35,9 @@
         <activity android:name=".Test" />
         <activity android:name=".Activities.AddNewItemActivity" />
         <activity android:name=".Activities.AllItemsActivity" />
-        <activity android:name=".Activities.CategoryItemsActivity"></activity>
+        <activity android:name=".Activities.CategoryItemsActivity" />
+        <activity android:name=".Activities.AddNewChildActivity" />
+        <activity android:name=".Activities.ChildrenSizeActivity"></activity>
     </application>
 
 </manifest>
