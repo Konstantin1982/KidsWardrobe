@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dialog_choose_application_items">
+        <item>Сделать новое фото</item>
+        <item>Выбрать из галереи</item>
+    </string-array>
+
+</resources>

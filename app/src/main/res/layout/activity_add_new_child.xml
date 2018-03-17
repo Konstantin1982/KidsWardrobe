@@ -7,7 +7,7 @@
     tools:context="ru.apps4yourlife.kids.kidswardrobe.Activities.AddNewChildActivity">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/addNewChildImageButton"
         android:layout_width="151dp"
         android:layout_height="128dp"
         android:layout_marginEnd="8dp"
@@ -17,7 +17,9 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:onClick="btnAddNewChildPhoto_click"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -26,9 +28,10 @@
         android:clickable="true"
         app:backgroundTint="@color/buttonsColor"
 
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton"
+        app:layout_constraintBottom_toBottomOf="@+id/addNewChildImageButton"
+        app:layout_constraintEnd_toEndOf="@+id/addNewChildImageButton"
         app:srcCompat ="@drawable/ic_add_black_24dp"
+        android:onClick="btnAddNewChildPhoto_click"
 
         />
 
