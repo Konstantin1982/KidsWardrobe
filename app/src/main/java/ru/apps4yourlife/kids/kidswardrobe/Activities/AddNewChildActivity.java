@@ -2,6 +2,7 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.support.v4.app.DialogFragment;
@@ -47,6 +49,10 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        try {
+            storageDir.mkdirs();
+        } catch (Exception ex) {
+        }
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -65,10 +71,11 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
+                ex.printStackTrace();
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
+                        "ru.apps4yourlife.kids.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, 0);
