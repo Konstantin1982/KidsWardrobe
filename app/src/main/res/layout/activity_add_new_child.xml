@@ -36,7 +36,7 @@
         />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/nameChild"
         style="@style/TypicalTextView"
         android:inputType="textPersonName"
         android:hint="Как зовут ребенка"
@@ -54,10 +54,10 @@
         android:tooltipText="Пол ребенка"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/nameChild" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/birthdate_button"
         android:text="Дата рождения"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,8 +75,9 @@
         android:clickable="true"
         app:backgroundTint="@color/buttonsColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button4"
-        app:srcCompat="@drawable/ic_done_black_24dp" />
+        app:layout_constraintTop_toBottomOf="@+id/birthdate_button"
+        app:srcCompat="@drawable/ic_done_black_24dp"
+        android:onClick="btnSaveNewChild_click"/>
 
 
 </android.support.constraint.ConstraintLayout>
