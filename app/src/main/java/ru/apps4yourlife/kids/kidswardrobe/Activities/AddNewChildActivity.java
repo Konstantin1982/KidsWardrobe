@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialogFragment;
-import ru.apps4yourlife.kids.kidswardrobe.Utilities.Helper;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 
 public class AddNewChildActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener  {
@@ -41,7 +41,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
-                photoFile = Helper.createImageFile(this);
+                photoFile = GeneralHelper.createImageFile(this);
                 mCurrentPhotoPath = photoFile.getAbsolutePath();
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -50,7 +50,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "ru.apps4yourlife.kids.fileprovider",
                         photoFile);
-                takePictureIntent = Helper.prepareTakePhotoIntent(takePictureIntent, this, photoURI);
+                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, photoURI);
                 startActivityForResult(takePictureIntent, 0);
             }
         }
@@ -60,7 +60,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
-            Bitmap bitmap = Helper.resizeBitmapFile(mAddChildButton.getWidth(), mAddChildButton.getHeight(), mCurrentPhotoPath);
+            Bitmap bitmap = GeneralHelper.resizeBitmapFile(mAddChildButton.getWidth(), mAddChildButton.getHeight(), mCurrentPhotoPath);
             mAddChildButton.setImageBitmap(bitmap);
         }
     }

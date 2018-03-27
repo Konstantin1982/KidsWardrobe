@@ -26,7 +26,7 @@
         tools:context="ru.apps4yourlife.kids.kidswardrobe.Activities.AddNewItemActivity">
 
         <ImageButton
-            android:id="@+id/addNewChildImageButton"
+            android:id="@+id/addNewItemImageButton"
             android:layout_width="151dp"
             android:layout_height="128dp"
             android:layout_marginEnd="8dp"
@@ -36,7 +36,9 @@
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            app:srcCompat="@android:drawable/ic_menu_camera"
+            android:onClick="btnAddNewItemPhoto_click"
+            />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -45,9 +47,10 @@
             android:clickable="true"
             app:backgroundTint="@color/buttonsColor"
 
-            app:layout_constraintBottom_toBottomOf="@+id/addNewChildImageButton"
-            app:layout_constraintEnd_toEndOf="@+id/addNewChildImageButton"
+            app:layout_constraintBottom_toBottomOf="@+id/addNewItemImageButton"
+            app:layout_constraintEnd_toEndOf="@+id/addNewItemImageButton"
             app:srcCompat ="@drawable/ic_add_black_24dp"
+            android:onClick="btnAddNewItemPhoto_click"
 
             />
 
@@ -56,7 +59,7 @@
         style="@style/TypicalTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addNewChildImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/addNewItemImageButton"
         android:completionThreshold="0"
         android:hint="Что это?"
 

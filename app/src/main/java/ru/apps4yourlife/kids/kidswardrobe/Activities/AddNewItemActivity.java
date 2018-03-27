@@ -1,34 +1,39 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-import java.lang.reflect.Array;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialogFragment;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
-public class AddNewItemActivity extends AppCompatActivity {
+public class AddNewItemActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener {
     private static final String TOAST_TEXT = "Test ads are being shown. ";
     private static final int TYPE_KIND_CLOTHES = 0;
 
 
     private int mDetailShown;
+    private String mCurrentPhotoPath;
+    private ImageButton maddNewItemImageButton;
 
     private AutoCompleteTextView mTypeClothesTextView;
     private String oldType;
@@ -117,6 +122,49 @@ public class AddNewItemActivity extends AppCompatActivity {
         }
     }
     private void checkIsItNewValue(String chosenType) {
+
+    }
+    public void btnAddNewItemPhoto_click(View view) {
+        ChoosePhotoApplicationDialogFragment mApplicationDialogFragment = new ChoosePhotoApplicationDialogFragment();
+        mApplicationDialogFragment.setmListener(this);
+        mApplicationDialogFragment.show(getSupportFragmentManager(),"ChoosePhotoApplicationDialogFragment");
+
+    }
+
+    @Override
+    public void onTakeNewPhotoClick() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = GeneralHelper.createImageFile(this);
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "ru.apps4yourlife.kids.fileprovider",
+                        photoFile);
+                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, photoURI);
+                startActivityForResult(takePictureIntent, 0);
+            }
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            maddNewItemImageButton = (ImageButton) findViewById(R.id.addNewItemImageButton);
+            Bitmap bitmap = GeneralHelper.resizeBitmapFile(maddNewItemImageButton.getWidth(), maddNewItemImageButton.getHeight(), mCurrentPhotoPath);
+            maddNewItemImageButton.setImageBitmap(bitmap);
+        }
+    }
+
+
+    @Override
+    public void onChooseFromGalleryClick() {
 
     }
 }

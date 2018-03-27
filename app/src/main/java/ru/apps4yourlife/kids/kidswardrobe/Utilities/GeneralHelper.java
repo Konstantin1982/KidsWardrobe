@@ -22,7 +22,7 @@ import java.util.List;
  * Created by 123 on 27.03.2018.
  */
 
-public class Helper {
+public class GeneralHelper {
     public static File createImageFile(Context context) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
