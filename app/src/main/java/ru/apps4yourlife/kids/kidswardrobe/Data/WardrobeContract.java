@@ -1,4 +1,4 @@
-package ru.apps4yourlife.kids.kidswardrobe.Utilities;
+package ru.apps4yourlife.kids.kidswardrobe.Data;
 import android.provider.BaseColumns;
 
 /**
@@ -14,6 +14,12 @@ public class WardrobeContract {
         public static final String COLUMN_BIRTHDATE = "birthdate";
         public static final String COLUMN_PHOTO_PREVIEW = "photo_preview";
         public static final String COLUMN_LINK_TO_PHOTO = "photo";
+    }
+
+    public static final class SettingsEntry implements BaseColumns {
+        public static final String TABLE_NAME = "settings";
+        public static final String COLUMN_KEY = "key";
+        public static final String COLUMN_VALUE = "value";
     }
 
 

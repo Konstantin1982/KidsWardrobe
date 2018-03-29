@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.PagerAdapter;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
 public class StartActivity extends AppCompatActivity {
@@ -35,6 +37,7 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("ERROR:","OnDestroy is called!!!!!!");
         setContentView(R.layout.activity_start);
         // Load an ad into the AdMob banner view.
         /*
@@ -90,4 +93,14 @@ public class StartActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void btnDropDB_Click (View view) {
+
+        WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
+        if (dataManager.DeleteDatabase(this)) {
+            Toast.makeText(view.getContext(), "Database deleted", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(view.getContext(), "Database ERROR", Toast.LENGTH_LONG).show();
+        }
+
+    }
 }

@@ -1,13 +1,11 @@
-package ru.apps4yourlife.kids.kidswardrobe.Utilities;
+package ru.apps4yourlife.kids.kidswardrobe.Data;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.net.Uri;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.Date;
 
 /**
@@ -38,10 +36,14 @@ public class WardrobeDBDataManager {
         return result;
     }
 
-    public static byte[] getBytes(Bitmap bitmap) {
+    private static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         return stream.toByteArray();
+    }
+
+    public boolean DeleteDatabase(Context context) {
+        return context.deleteDatabase(mDBHelper.getDatabaseName());
     }
 
 }
