@@ -33,6 +33,7 @@ public class WardrobeDBDataManager {
 
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         result = db.insert(WardrobeContract.ChildEntry.TABLE_NAME,null,newChildValues);
+        db.close();
         return result;
     }
 
@@ -44,6 +45,13 @@ public class WardrobeDBDataManager {
 
     public boolean DeleteDatabase(Context context) {
         return context.deleteDatabase(mDBHelper.getDatabaseName());
+    }
+
+    public int getChildrenCount() {
+        int result = 0;
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+
+        return result;
     }
 
 }

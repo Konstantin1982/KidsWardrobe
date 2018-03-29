@@ -103,4 +103,9 @@ public class StartActivity extends AppCompatActivity {
         }
 
     }
+
+    public void btnShowListChildren_Click(View view) {
+        Intent intent = new Intent(this,ChildrenListActivity.class);
+        startActivity(intent);
+    }
 }

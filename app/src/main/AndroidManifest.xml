@@ -39,7 +39,7 @@
         <activity android:name=".Activities.AllItemsActivity" />
         <activity android:name=".Activities.CategoryItemsActivity" />
         <activity android:name=".Activities.AddNewChildActivity" />
-        <activity android:name=".Activities.ChildrenSizeActivity"></activity>
+        <activity android:name=".Activities.ChildrenSizeActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -48,8 +48,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".Activities.ChildrenListActivity"></activity>
     </application>
 
 </manifest>

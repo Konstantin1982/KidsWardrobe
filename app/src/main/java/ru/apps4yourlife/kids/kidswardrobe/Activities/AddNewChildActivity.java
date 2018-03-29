@@ -22,7 +22,7 @@ import java.util.Date;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
-import ru.apps4yourlife.kids.kidswardrobe.Utilities.WardrobeDBDataManager;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 
 
 public class AddNewChildActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener  {

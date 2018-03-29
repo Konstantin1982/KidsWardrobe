@@ -39,7 +39,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.SettingsEntry.TABLE_NAME + "(" +
                         WardrobeContract.SettingsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         WardrobeContract.SettingsEntry.COLUMN_KEY + " VARCHAR(255), " +
-                        WardrobeContract.SettingsEntry.COLUMN_VALUE  + " VARCHAR(255), " +
+                        WardrobeContract.SettingsEntry.COLUMN_VALUE  + " VARCHAR(255) " +
                         ")";
         sqLiteDatabase.execSQL(SQL_CREATE_CHILDREN_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_SETTINGS_TABLE);
