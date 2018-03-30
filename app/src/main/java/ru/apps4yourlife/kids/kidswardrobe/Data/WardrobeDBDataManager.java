@@ -2,8 +2,10 @@ package ru.apps4yourlife.kids.kidswardrobe.Data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
@@ -14,14 +16,17 @@ import java.util.Date;
 
 public class WardrobeDBDataManager {
     private WardrobeDBHelper mDBHelper;
+    private Context mContext;
 
 
     public WardrobeDBDataManager(Context context) {
         mDBHelper = new WardrobeDBHelper(context);
+        mContext = context;
     }
 
     public  long InsertNewChild(String childName, int childSex, Date childBirthdate, String linkToPhoto, Bitmap smallPhoto) {
         long result = 0;
+        Toast.makeText(mContext,"To Insert: = " + childBirthdate.toString(),Toast.LENGTH_SHORT).show();
         ContentValues newChildValues = new ContentValues();
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_NAME, childName);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_SEX, childSex);
@@ -47,11 +52,16 @@ public class WardrobeDBDataManager {
         return context.deleteDatabase(mDBHelper.getDatabaseName());
     }
 
-    public int getChildrenCount() {
-        int result = 0;
-        SQLiteDatabase db = mDBHelper.getReadableDatabase();
-
-        return result;
+    public Cursor GetChildrenListFromDb(String filtration) {
+        Cursor childrenList = mDBHelper.getReadableDatabase().query(
+                                    WardrobeContract.ChildEntry.TABLE_NAME,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    WardrobeContract.ChildEntry._ID);
+        return childrenList;
     }
 
 }

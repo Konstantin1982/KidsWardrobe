@@ -16,6 +16,7 @@ public class WardrobeContract {
         public static final String COLUMN_LINK_TO_PHOTO = "photo";
     }
 
+
     public static final class SettingsEntry implements BaseColumns {
         public static final String TABLE_NAME = "settings";
         public static final String COLUMN_KEY = "key";

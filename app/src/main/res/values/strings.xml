@@ -12,4 +12,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="dialog_choose_application_title">Выберите источник</string>
+
+    <string name="birthdate_undefinded">Дата рождения не указана</string>
+
 </resources>
