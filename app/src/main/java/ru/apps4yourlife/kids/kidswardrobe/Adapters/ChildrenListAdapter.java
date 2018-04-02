@@ -47,23 +47,22 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
     public void onBindViewHolder(ChildrenListAdapter.ChildrenListAdapterViewHolder holder, int position) {
 
         mListChildrenCursor.moveToPosition(position);
+        // ID and Name
         holder.nameTextView.setTag(mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry._ID)));
         holder.nameTextView.setText(mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_NAME)));
+        // BirthDate
         long birthDateAsLong = mListChildrenCursor.getLong(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE));
-        Date birthDate = new Date(birthDateAsLong);
         String dateTextFromDBAfterTransform = "";
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar calendar = new GregorianCalendar(1970,01,01);
-        Date defaultDate =  calendar.getTime();
-        if (birthDate.equals(defaultDate)) {
+        long defaultDateAsLong =  new GregorianCalendar(1970,01,01).getTime().getTime();
+        if (birthDateAsLong == defaultDateAsLong) {
             dateTextFromDBAfterTransform = mContext.getResources().getString(R.string.birthdate_undefinded);
         } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateTextFromDBAfterTransform = dateFormat.format(birthDate);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateTextFromDBAfterTransform = dateFormat.format(birthDateAsLong);
         }
-
         holder.ageTextView.setText(dateTextFromDBAfterTransform);
+
+        //TODO: Photo
         return;
     }
 
