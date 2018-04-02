@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,20 +49,21 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         mListChildrenCursor.moveToPosition(position);
         holder.nameTextView.setTag(mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry._ID)));
         holder.nameTextView.setText(mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_NAME)));
-        String dateTextFromDB = mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE));
+        long birthDateAsLong = mListChildrenCursor.getLong(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE));
+        Date birthDate = new Date(birthDateAsLong);
+        String dateTextFromDBAfterTransform = "";
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = new GregorianCalendar(1970,01,01);
-        if (calendar.equals(dateTextFromDB)) {
-            dateTextFromDB = mContext.getResources().getString(R.string.birthdate_undefinded);
+        Date defaultDate =  calendar.getTime();
+        if (birthDate.equals(defaultDate)) {
+            dateTextFromDBAfterTransform = mContext.getResources().getString(R.string.birthdate_undefinded);
         } else {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-            try {
-                dateTextFromDB = dateFormat.parse(dateTextFromDB).toString();
-            } catch (ParseException ex) {
-                dateTextFromDB = mContext.getResources().getString(R.string.birthdate_undefinded);
-            }
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateTextFromDBAfterTransform = dateFormat.format(birthDate);
         }
-        Toast.makeText(mContext, dateTextFromDB, Toast.LENGTH_SHORT).show();
-        holder.ageTextView.setText(dateTextFromDB);
+
+        holder.ageTextView.setText(dateTextFromDBAfterTransform);
         return;
     }
 

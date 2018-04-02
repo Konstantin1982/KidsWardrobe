@@ -29,7 +29,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.ChildEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         WardrobeContract.ChildEntry.COLUMN_NAME + " VARCHAR(255), " +
                         WardrobeContract.ChildEntry.COLUMN_SEX + " INTEGER, " +
-                        WardrobeContract.ChildEntry.COLUMN_BIRTHDATE + " DATE DEFAULT NULL, " +
+                        WardrobeContract.ChildEntry.COLUMN_BIRTHDATE + " INTEGER, " +
                         WardrobeContract.ChildEntry.COLUMN_LINK_TO_PHOTO + " VARCHAR(255), " +
                         WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW + " BLOB" +
                         ")";

@@ -35,11 +35,13 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     private String mCurrentPhotoPath;
     private Bitmap mPhotoPreview;
     private Button mBirthDateButton;
+    private Date mChosenDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_child);
+        mChosenDate = new GregorianCalendar(1970,01,01).getTime();
     }
 
     public void btnAddNewChildPhoto_click(View v) {
@@ -90,22 +92,10 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         // TODO: get sex
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         TextView mName = (TextView) findViewById(R.id.nameChild);
-        Button mBirthDate = (Button) findViewById(R.id.birthdate_button);
-
-        String dateString = mBirthDate.getText().toString();
-        Toast.makeText(this,"From btn : " + dateString,Toast.LENGTH_SHORT).show();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        Date convertedDate;
-        try {
-            convertedDate = dateFormat.parse(dateString);
-        } catch (ParseException ex) {
-            Calendar calendar = new GregorianCalendar(1970,01,01);
-            convertedDate =  calendar.getTime();
-        }
         long res = dataManager.InsertNewChild(
                     mName.getText().toString(),
                     0,
-                    convertedDate,
+                    mChosenDate.getTime(),
                     mCurrentPhotoPath,
                     mPhotoPreview);
         Toast.makeText(this,"New chils has been inserted: " + res,Toast.LENGTH_SHORT).show();
@@ -119,6 +109,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                                   int dayOfMonth) {
                         mBirthDateButton = (Button) findViewById(R.id.birthdate_button);
                         Calendar calendar = new GregorianCalendar(year,monthOfYear,dayOfMonth);
+                        mChosenDate = calendar.getTime();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMM-dd");
                         mBirthDateButton.setText(dateFormat.format(calendar.getTime()));
                     }
