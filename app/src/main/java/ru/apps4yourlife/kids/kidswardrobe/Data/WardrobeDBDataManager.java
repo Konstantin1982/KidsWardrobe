@@ -63,5 +63,16 @@ public class WardrobeDBDataManager {
                                     WardrobeContract.ChildEntry._ID);
         return childrenList;
     }
+    public Cursor GetChildByIdFromDb(String ID) {
+        Cursor childrenList = mDBHelper.getReadableDatabase().query(
+                                    WardrobeContract.ChildEntry.TABLE_NAME,
+                                    null,
+                WardrobeContract.ChildEntry._ID + " = ?",
+                                    new String[] {ID},
+                                    null,
+                                    null,
+                                    WardrobeContract.ChildEntry._ID);
+        return childrenList;
+    }
 
 }

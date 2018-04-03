@@ -1,5 +1,6 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +10,7 @@ import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ChildrenListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
-public class ChildrenListActivity extends AppCompatActivity {
+public class ChildrenListActivity extends AppCompatActivity implements ChildrenListAdapter.ChildrenListAdapterClickHandler {
 
     private RecyclerView mListChildren;
 
@@ -23,8 +24,14 @@ public class ChildrenListActivity extends AppCompatActivity {
         layoutManager.setMeasurementCacheEnabled(false);
         mListChildren.setLayoutManager(layoutManager);
 
-        RecyclerView.Adapter mAdapter =new ChildrenListAdapter(this);
+        RecyclerView.Adapter mAdapter = new ChildrenListAdapter(this, this);
         mListChildren.setAdapter(mAdapter);
 
+    }
+
+    public void onChildClick(int ID) {
+        Intent intent = new Intent(this, AddNewChildActivity.class);
+        intent.putExtra("ID",ID);
+        startActivity(intent);
     }
 }

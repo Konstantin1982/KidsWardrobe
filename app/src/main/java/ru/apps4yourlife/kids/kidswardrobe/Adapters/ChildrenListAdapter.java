@@ -2,6 +2,8 @@ package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,9 @@ import java.util.GregorianCalendar;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
+
+import static ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper.getBitmapFromBytes;
 
 /**
  * Created by ksharafutdinov on 29-Mar-18.
@@ -29,7 +34,14 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
     private Context mContext;
     private Cursor mListChildrenCursor;
 
-    public ChildrenListAdapter(Context context) {
+    public interface ChildrenListAdapterClickHandler {
+        void onChildClick(int childId);
+    }
+
+    private final ChildrenListAdapterClickHandler mChildrenListAdapterClickHandler;
+
+    public ChildrenListAdapter(Context context, ChildrenListAdapterClickHandler clickHandler) {
+        mChildrenListAdapterClickHandler = clickHandler;
         mContext = context;
         WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(mContext);
         mListChildrenCursor = mDataManager.GetChildrenListFromDb("");
@@ -62,7 +74,14 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         }
         holder.ageTextView.setText(dateTextFromDBAfterTransform);
 
-        //TODO: Photo
+
+        byte[] previewInBytes = mListChildrenCursor.getBlob(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW));
+        Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes);
+        if (smallPhoto != null) {
+            holder.smallPhotoImageView.setImageBitmap(smallPhoto);
+        } else {
+            // TODO: default preview of photo
+        }
         return;
     }
 
@@ -85,12 +104,16 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
 
             nameTextView = (TextView) view.findViewById(R.id.childNameInList);
             ageTextView = (TextView) view.findViewById(R.id.childAgeInList);
-
+            smallPhotoImageView = (ImageView) view.findViewById(R.id.previewPhotoChildInList);
             view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            mListChildrenCursor.moveToPosition(getAdapterPosition());
+            mChildrenListAdapterClickHandler.onChildClick(
+                    mListChildrenCursor.getInt(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry._ID))
+            );
         }
     }
 

@@ -37,7 +37,6 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("ERROR:","OnDestroy is called!!!!!!");
         setContentView(R.layout.activity_start);
         // Load an ad into the AdMob banner view.
         /*

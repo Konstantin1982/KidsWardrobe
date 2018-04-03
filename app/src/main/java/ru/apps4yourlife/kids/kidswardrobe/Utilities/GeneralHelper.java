@@ -73,4 +73,8 @@ public class GeneralHelper {
         Bitmap bitmap = BitmapFactory.decodeFile(fileName, bmOptions);
         return bitmap;
     }
+
+    public static Bitmap getBitmapFromBytes(byte[] bytes) {
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
 }

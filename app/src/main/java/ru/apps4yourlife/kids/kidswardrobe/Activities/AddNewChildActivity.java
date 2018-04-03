@@ -41,7 +41,14 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_child);
-        mChosenDate = new GregorianCalendar(1970,01,01).getTime();
+        int childID = getIntent().getIntExtra("ID",0);
+        if (childID == 0) {
+            mChosenDate = new GregorianCalendar(1970, 01, 01).getTime();
+        } else {
+            // fill parameters for child
+            Toast.makeText(this,"ID = " + childID, Toast.LENGTH_SHORT).show();
+            //GetChildByIdFromDb
+        }
     }
 
     public void btnAddNewChildPhoto_click(View v) {
