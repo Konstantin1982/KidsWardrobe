@@ -127,7 +127,8 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 mCurrentChildID);
         //TODO: after insert action
         Toast.makeText(this,"New chils has been inserted: " + res,Toast.LENGTH_SHORT).show();
-
+        setResult(1);
+        finish();
     }
     public void btnSetBirthDate_click (View view) {
         Calendar currentCalendar = new GregorianCalendar();

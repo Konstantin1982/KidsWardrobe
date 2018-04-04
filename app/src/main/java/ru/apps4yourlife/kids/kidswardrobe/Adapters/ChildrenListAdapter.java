@@ -46,6 +46,11 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(mContext);
         mListChildrenCursor = mDataManager.GetChildrenListFromDb("");
     }
+    public void updateListValues() {
+        WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(mContext);
+        mListChildrenCursor = mDataManager.GetChildrenListFromDb("");
+        notifyDataSetChanged();
+    }
 
     @Override
     public ChildrenListAdapter.ChildrenListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

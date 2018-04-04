@@ -13,7 +13,7 @@ import ru.apps4yourlife.kids.kidswardrobe.R;
 public class ChildrenListActivity extends AppCompatActivity implements ChildrenListAdapter.ChildrenListAdapterClickHandler {
 
     private RecyclerView mListChildren;
-
+    private ChildrenListAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +24,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         layoutManager.setMeasurementCacheEnabled(false);
         mListChildren.setLayoutManager(layoutManager);
 
-        RecyclerView.Adapter mAdapter = new ChildrenListAdapter(this, this);
+        mAdapter = new ChildrenListAdapter(this, this);
         mListChildren.setAdapter(mAdapter);
 
     }
@@ -32,6 +32,14 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
     public void onChildClick(String ID) {
         Intent intent = new Intent(this, AddNewChildActivity.class);
         intent.putExtra("ID",ID);
-        startActivity(intent);
+        startActivityForResult(intent,199);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 199 && resultCode > 0) {
+            mAdapter.updateListValues();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
