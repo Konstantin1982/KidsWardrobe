@@ -29,7 +29,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
 
     }
 
-    public void onChildClick(int ID) {
+    public void onChildClick(String ID) {
         Intent intent = new Intent(this, AddNewChildActivity.class);
         intent.putExtra("ID",ID);
         startActivity(intent);

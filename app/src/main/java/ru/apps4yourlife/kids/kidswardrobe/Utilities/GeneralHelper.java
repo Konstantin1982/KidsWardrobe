@@ -14,15 +14,24 @@ import java.io.File;
 import java.io.IOException;
 
 import java.net.URI;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
+import ru.apps4yourlife.kids.kidswardrobe.R;
 
 /**
  * Created by 123 on 27.03.2018.
  */
 
 public class GeneralHelper {
+
+    public static final int GENERAL_HELPER_CHILD_TYPE = 106;
+    public static final int GENERAL_HELPER_CLOTHES_TYPE = 107;
+
     public static File createImageFile(Context context) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -74,7 +83,28 @@ public class GeneralHelper {
         return bitmap;
     }
 
-    public static Bitmap getBitmapFromBytes(byte[] bytes) {
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    public static Bitmap getBitmapFromBytes(byte[] bytes, int type) {
+
+        Bitmap resultBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        if (resultBitmap == null) {
+            switch (type) {
+                case GENERAL_HELPER_CHILD_TYPE: // TODO Default bitmap for children
+                case GENERAL_HELPER_CLOTHES_TYPE: // TODO Default bitmap for clothes
+            }
+        }
+        return resultBitmap;
+    }
+
+    public static String getStringFromBirthDate (long birthDateAsLong, String defaultString) {
+        String result;
+
+        long defaultDateAsLong =  new GregorianCalendar(1970,01,01).getTime().getTime();
+        if (birthDateAsLong == defaultDateAsLong) {
+            result = defaultString;
+        } else {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            result = dateFormat.format(birthDateAsLong);
+        }
+        return result;
     }
 }

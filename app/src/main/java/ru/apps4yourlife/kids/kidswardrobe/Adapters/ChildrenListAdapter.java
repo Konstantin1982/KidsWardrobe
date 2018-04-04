@@ -35,7 +35,7 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
     private Cursor mListChildrenCursor;
 
     public interface ChildrenListAdapterClickHandler {
-        void onChildClick(int childId);
+        void onChildClick(String childId);
     }
 
     private final ChildrenListAdapterClickHandler mChildrenListAdapterClickHandler;
@@ -64,24 +64,16 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         holder.nameTextView.setText(mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_NAME)));
         // BirthDate
         long birthDateAsLong = mListChildrenCursor.getLong(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE));
-        String dateTextFromDBAfterTransform = "";
-        long defaultDateAsLong =  new GregorianCalendar(1970,01,01).getTime().getTime();
-        if (birthDateAsLong == defaultDateAsLong) {
-            dateTextFromDBAfterTransform = mContext.getResources().getString(R.string.birthdate_undefinded);
-        } else {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateTextFromDBAfterTransform = dateFormat.format(birthDateAsLong);
-        }
-        holder.ageTextView.setText(dateTextFromDBAfterTransform);
-
-
+        holder.ageTextView.setText(
+                GeneralHelper.getStringFromBirthDate(
+                        birthDateAsLong,
+                        mContext.getResources().getString(R.string.birthdate_undefinded)
+                )
+        );
+        //small photo
         byte[] previewInBytes = mListChildrenCursor.getBlob(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW));
-        Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes);
-        if (smallPhoto != null) {
-            holder.smallPhotoImageView.setImageBitmap(smallPhoto);
-        } else {
-            // TODO: default preview of photo
-        }
+        Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes, GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
+        holder.smallPhotoImageView.setImageBitmap(smallPhoto);
         return;
     }
 
@@ -112,7 +104,7 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         public void onClick(View v) {
             mListChildrenCursor.moveToPosition(getAdapterPosition());
             mChildrenListAdapterClickHandler.onChildClick(
-                    mListChildrenCursor.getInt(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry._ID))
+                    mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry._ID))
             );
         }
     }

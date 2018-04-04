@@ -2,6 +2,7 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -15,14 +16,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
+
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
@@ -36,18 +39,34 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     private Bitmap mPhotoPreview;
     private Button mBirthDateButton;
     private Date mChosenDate;
+    private String mCurrentChildID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_child);
-        int childID = getIntent().getIntExtra("ID",0);
-        if (childID == 0) {
+        mCurrentChildID = getIntent().getStringExtra("ID");
+        if (mCurrentChildID  == null) {
             mChosenDate = new GregorianCalendar(1970, 01, 01).getTime();
         } else {
-            // fill parameters for child
-            Toast.makeText(this,"ID = " + childID, Toast.LENGTH_SHORT).show();
-            //GetChildByIdFromDb
+            // TODO: fill parameters for child
+            Toast.makeText(this,"ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
+            Cursor currentChildCursor = new WardrobeDBDataManager(this).GetChildByIdFromDb(mCurrentChildID);
+            // Name
+            TextView mName = (TextView) findViewById(R.id.nameChild);
+            mName.setText(currentChildCursor.getString(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_NAME)));
+            //Age
+            long birthDateAsLong = currentChildCursor.getLong(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE));
+            String birthDateAsString = GeneralHelper.getStringFromBirthDate(birthDateAsLong,this.getResources().getString(R.string.birthdate_undefinded));
+            mBirthDateButton = (Button) findViewById(R.id.birthdate_button);
+            mBirthDateButton.setText(birthDateAsString);
+            //Photo
+            byte[] previewInBytes = currentChildCursor.getBlob(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW));
+            Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
+            mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
+            mPhotoPreview = smallPhoto;
+            mAddChildButton.setImageBitmap(mPhotoPreview);
+            //Path to photo??
         }
     }
 
@@ -99,12 +118,14 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         // TODO: get sex
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         TextView mName = (TextView) findViewById(R.id.nameChild);
-        long res = dataManager.InsertNewChild(
-                    mName.getText().toString(),
-                    0,
-                    mChosenDate.getTime(),
-                    mCurrentPhotoPath,
-                    mPhotoPreview);
+        long res = dataManager.InsertOrUpdateChild(
+                mName.getText().toString(),
+                0,
+                mChosenDate.getTime(),
+                mCurrentPhotoPath,
+                mPhotoPreview,
+                mCurrentChildID);
+        //TODO: after insert action
         Toast.makeText(this,"New chils has been inserted: " + res,Toast.LENGTH_SHORT).show();
 
     }

@@ -24,20 +24,22 @@ public class WardrobeDBDataManager {
         mContext = context;
     }
 
-    public  long InsertNewChild(String childName, int childSex, long childBirthdate, String linkToPhoto, Bitmap smallPhoto) {
+    public  long InsertOrUpdateChild(String childName, int childSex, long childBirthdate, String linkToPhoto, Bitmap smallPhoto, String idEntry) {
         long result = 0;
-        Toast.makeText(mContext,"To Insert: = " + childBirthdate,Toast.LENGTH_SHORT).show();
         ContentValues newChildValues = new ContentValues();
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_NAME, childName);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_SEX, childSex);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE, childBirthdate);//TODO: int to string
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_LINK_TO_PHOTO, linkToPhoto);
-
         byte[] smallPhotoBytes = getBytes(smallPhoto);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW, smallPhotoBytes);
-
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        result = db.insert(WardrobeContract.ChildEntry.TABLE_NAME,null,newChildValues);
+        if (idEntry == null) {
+            Toast.makeText(mContext, "To Insert: = " + childBirthdate, Toast.LENGTH_SHORT).show();
+            result = db.insert(WardrobeContract.ChildEntry.TABLE_NAME, null, newChildValues);
+        } else {
+            result = db.update(WardrobeContract.ChildEntry.TABLE_NAME, newChildValues, WardrobeContract.ChildEntry._ID + " = ? ", new String[]{idEntry});
+        }
         db.close();
         return result;
     }
@@ -67,11 +69,12 @@ public class WardrobeDBDataManager {
         Cursor childrenList = mDBHelper.getReadableDatabase().query(
                                     WardrobeContract.ChildEntry.TABLE_NAME,
                                     null,
-                WardrobeContract.ChildEntry._ID + " = ?",
-                                    new String[] {ID},
+                            WardrobeContract.ChildEntry._ID + " = ?",
+                                     new String[] {String.valueOf(ID)},
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
+        childrenList.moveToFirst();
         return childrenList;
     }
 
