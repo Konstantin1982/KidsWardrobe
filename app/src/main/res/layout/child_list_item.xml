@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:background="@color/listItemsBackgroundColor"
     android:minHeight="100dp"
+    android:maxHeight="100dp"
     android:padding="8dp"
     >
     <android.support.constraint.Guideline
@@ -22,7 +23,6 @@
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"

@@ -14,5 +14,6 @@
     <string name="dialog_choose_application_title">Выберите источник</string>
 
     <string name="birthdate_undefinded">Дата рождения не указана</string>
+    <string name="error_name_undefinded">Имя должно быть указано</string>
 
 </resources>

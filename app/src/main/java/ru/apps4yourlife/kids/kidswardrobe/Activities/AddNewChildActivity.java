@@ -4,11 +4,13 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -40,12 +42,15 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     private Button mBirthDateButton;
     private Date mChosenDate;
     private String mCurrentChildID;
+    private String mPositionFromList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_child);
         mCurrentChildID = getIntent().getStringExtra("ID");
+        mPositionFromList = getIntent().getStringExtra("POSITION");
+        Log.e("ACTIVITY ADD","Received POSITION = " + mPositionFromList);
         if (mCurrentChildID  == null) {
             mChosenDate = new GregorianCalendar(1970, 01, 01).getTime();
         } else {
@@ -60,6 +65,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             String birthDateAsString = GeneralHelper.getStringFromBirthDate(birthDateAsLong,this.getResources().getString(R.string.birthdate_undefinded));
             mBirthDateButton = (Button) findViewById(R.id.birthdate_button);
             mBirthDateButton.setText(birthDateAsString);
+            mChosenDate = new Date(birthDateAsLong);
             //Photo
             byte[] previewInBytes = currentChildCursor.getBlob(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW));
             Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
@@ -116,19 +122,34 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     public void btnSaveNewChild_click(View view) {
         // TODO: validate form
         // TODO: get sex
+        boolean formIsOK = true;
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         TextView mName = (TextView) findViewById(R.id.nameChild);
-        long res = dataManager.InsertOrUpdateChild(
-                mName.getText().toString(),
-                0,
-                mChosenDate.getTime(),
-                mCurrentPhotoPath,
-                mPhotoPreview,
-                mCurrentChildID);
-        //TODO: after insert action
-        Toast.makeText(this,"New chils has been inserted: " + res,Toast.LENGTH_SHORT).show();
-        setResult(1);
-        finish();
+        String mNameValue = mName.getText().toString();
+        if (mNameValue.isEmpty()) {
+            formIsOK = false;
+            mName.setError(getResources().getString(R.string.error_name_undefinded));
+        }
+
+        if (mPhotoPreview == null) {
+            mPhotoPreview  = BitmapFactory.decodeResource(getResources(), R.drawable.default_photo);
+        }
+
+        if (formIsOK) {
+            long res = dataManager.InsertOrUpdateChild(
+                    mNameValue,
+                    0,
+                    mChosenDate.getTime(),
+                    mCurrentPhotoPath,
+                    mPhotoPreview,
+                    mCurrentChildID);
+            //TODO: after insert action
+            Toast.makeText(this, "New chils has been inserted: " + res, Toast.LENGTH_SHORT).show();
+            Intent data = new Intent();
+            data.putExtra("POSITION", mPositionFromList);
+            setResult(1, data);
+            finish();
+        }
     }
     public void btnSetBirthDate_click (View view) {
         Calendar currentCalendar = new GregorianCalendar();
