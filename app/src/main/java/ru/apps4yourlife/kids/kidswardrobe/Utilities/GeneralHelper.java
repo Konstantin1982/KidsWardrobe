@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.net.URI;
@@ -62,25 +63,27 @@ public class GeneralHelper {
         return intent;
     }
 
-    public static Bitmap resizeBitmapFile(int targetW, int targetH, String fileName) {
+    public static Bitmap resizeBitmapFile(Context context, int targetW, int targetH, Uri contentUri)  {
+        Bitmap resultBitmap = null;
+        try {
+            // Get the dimensions of the bitmap
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(context.getContentResolver().openInputStream(contentUri),null,bmOptions);
+            int photoW = bmOptions.outWidth;
+            int photoH = bmOptions.outHeight;
 
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(fileName, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(fileName, bmOptions);
-        return bitmap;
+            // Determine how much to scale down the image
+            int scaleFactor = Math.max(photoW / targetW, photoH / targetH);
+            // Decode the image file into a Bitmap sized to fill the View
+            bmOptions.inJustDecodeBounds = false;
+            bmOptions.inSampleSize = scaleFactor;
+            bmOptions.inPurgeable = true;
+            resultBitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(contentUri),null,bmOptions);
+        }catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return resultBitmap;
     }
 
     public static Bitmap getBitmapFromBytes(byte[] bytes, int type) {

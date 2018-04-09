@@ -18,8 +18,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -37,7 +35,7 @@ import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 public class AddNewChildActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener  {
 
     private ImageButton mAddChildButton;
-    private String mCurrentPhotoPath;
+    private Uri mCurrentPhotoUri;
     private Bitmap mPhotoPreview;
     private Button mBirthDateButton;
     private Date mChosenDate;
@@ -90,15 +88,14 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             File photoFile = null;
             try {
                 photoFile = GeneralHelper.createImageFile(this);
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                mCurrentPhotoUri = FileProvider.getUriForFile(this,
                         "ru.apps4yourlife.kids.fileprovider",
                         photoFile);
-                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, photoURI);
+                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
                 startActivityForResult(takePictureIntent, 0);
             }
         }
@@ -106,9 +103,12 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+        if((requestCode == 1 || requestCode == 0) && resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                mCurrentPhotoUri = data.getData();
+            }
             mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
-            mPhotoPreview = GeneralHelper.resizeBitmapFile(mAddChildButton.getWidth(), mAddChildButton.getHeight(), mCurrentPhotoPath);
+            mPhotoPreview = GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth(), mAddChildButton.getHeight(), mCurrentPhotoUri);
             mAddChildButton.setImageBitmap(mPhotoPreview);
         }
     }
@@ -116,7 +116,9 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
 
     @Override
     public void onChooseFromGalleryClick() {
-
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, 1);
     }
 
     public void btnSaveNewChild_click(View view) {
@@ -140,7 +142,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                     mNameValue,
                     0,
                     mChosenDate.getTime(),
-                    mCurrentPhotoPath,
+                    mCurrentPhotoUri.toString(),
                     mPhotoPreview,
                     mCurrentChildID);
             //TODO: after insert action

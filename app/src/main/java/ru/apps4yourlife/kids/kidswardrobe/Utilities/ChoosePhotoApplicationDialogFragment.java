@@ -1,5 +1,6 @@
 package ru.apps4yourlife.kids.kidswardrobe.Utilities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -20,10 +21,9 @@ public  class ChoosePhotoApplicationDialogFragment extends DialogFragment {
         public void onChooseFromGalleryClick();
     }
 
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // setTitle(R.string.dialog_choose_application_title)
         builder
                 .setItems(R.array.dialog_choose_application_items, new DialogInterface.OnClickListener() {
@@ -31,6 +31,9 @@ public  class ChoosePhotoApplicationDialogFragment extends DialogFragment {
                         switch (which) {
                             case 0: // CREATE A NEW PHOTO
                                 mListener.onTakeNewPhotoClick();
+                                break;
+                            case 1 : // PICK PHOTO FROM GALLERY
+                                mListener.onChooseFromGalleryClick();
                                 break;
                         }
                     }

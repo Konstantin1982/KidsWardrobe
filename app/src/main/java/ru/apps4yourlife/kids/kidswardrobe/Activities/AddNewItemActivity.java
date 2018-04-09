@@ -32,7 +32,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
 
 
     private int mDetailShown;
-    private String mCurrentPhotoPath;
+    private Uri mCurrentPhotoUri;
     private ImageButton maddNewItemImageButton;
 
     private AutoCompleteTextView mTypeClothesTextView;
@@ -138,15 +138,14 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
             File photoFile = null;
             try {
                 photoFile = GeneralHelper.createImageFile(this);
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                mCurrentPhotoUri = FileProvider.getUriForFile(this,
                         "ru.apps4yourlife.kids.fileprovider",
                         photoFile);
-                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, photoURI);
+                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
                 startActivityForResult(takePictureIntent, 0);
             }
         }
@@ -157,7 +156,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             maddNewItemImageButton = (ImageButton) findViewById(R.id.addNewItemImageButton);
-            Bitmap bitmap = GeneralHelper.resizeBitmapFile(maddNewItemImageButton.getWidth(), maddNewItemImageButton.getHeight(), mCurrentPhotoPath);
+            Bitmap bitmap = GeneralHelper.resizeBitmapFile(this, maddNewItemImageButton.getWidth(), maddNewItemImageButton.getHeight(), mCurrentPhotoUri);
             maddNewItemImageButton.setImageBitmap(bitmap);
         }
     }
