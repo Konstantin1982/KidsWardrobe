@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+<ScrollView
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillViewport="true">
+
+<android.support.constraint.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="ru.apps4yourlife.kids.kidswardrobe.Activities.AddNewChildActivity"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
 
     <ImageButton
         android:id="@+id/addNewChildImageButton"
-        android:layout_width="151dp"
-        android:layout_height="128dp"
+        android:layout_width="150dp"
+        android:layout_height="130dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:scaleType="center"
+        android:padding="0dp"
+        android:onClick="btnAddNewChildPhoto_click"
+        android:src="@android:drawable/ic_menu_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        android:onClick="btnAddNewChildPhoto_click"
-        />
+        app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="80dp"
         android:clickable="true"
-        app:backgroundTint="@color/buttonsColor"
-
-        app:layout_constraintBottom_toBottomOf="@+id/addNewChildImageButton"
-        app:layout_constraintEnd_toEndOf="@+id/addNewChildImageButton"
-        app:srcCompat ="@drawable/ic_add_black_24dp"
         android:onClick="btnAddNewChildPhoto_click"
-
-        />
+        app:backgroundTint="@color/buttonsColor"
+        app:layout_constraintStart_toStartOf="@+id/addNewChildImageButton"
+        app:layout_constraintTop_toTopOf="@+id/addNewChildImageButton"
+        app:srcCompat="@drawable/ic_add_black_24dp" />
 
     <EditText
         android:id="@+id/nameChild"
         style="@style/TypicalTextView"
-        android:inputType="textPersonName"
+        android:layout_marginTop="8dp"
         android:hint="Как зовут ребенка"
+        android:inputType="textPersonName"
+        android:nextFocusLeft="@id/nameChild"
+        android:nextFocusUp="@id/nameChild"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/floatingActionButton" />
+        app:layout_constraintTop_toBottomOf="@+id/addNewChildImageButton" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -73,13 +85,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:clickable="true"
         app:backgroundTint="@color/buttonsColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/birthdate_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/ic_done_black_24dp"
         android:onClick="btnSaveNewChild_click"/>
 
+
 </android.support.constraint.ConstraintLayout>
 
+</ScrollView>

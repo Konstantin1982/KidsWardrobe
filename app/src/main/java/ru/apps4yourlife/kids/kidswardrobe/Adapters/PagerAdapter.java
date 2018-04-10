@@ -4,9 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabChildren;
-import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabClothes;
 import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabReports;
+import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabManager;
 
 /**
  * Created by ksharafutdinov on 05-Feb-18.
@@ -24,10 +23,10 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                TabClothes tabClothes = new TabClothes();
-                return tabClothes;
+                TabManager tabManager = new TabManager();
+                return tabManager;
             case 1:
-                TabChildren tabChildren = new TabChildren();
+                TabReports tabChildren = new TabReports();
                 return tabChildren;
             case 2:
                 TabReports tabReports = new TabReports();
@@ -46,11 +45,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
         // TODO: real titles
         switch (position) {
             case 0:
-                return "Одежда";
+                return "Управление";
             case 1:
-                return "Дети";
-            case 2:
-                return "Что надеть";
+                return "Просмотр";
             default:
             return "undefined " + (position + 1);
         }

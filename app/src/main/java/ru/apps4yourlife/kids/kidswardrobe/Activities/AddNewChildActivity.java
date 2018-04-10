@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
             mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
             mPhotoPreview = smallPhoto;
+            mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mAddChildButton.setImageBitmap(mPhotoPreview);
             //Path to photo??
         }
@@ -108,7 +110,8 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 mCurrentPhotoUri = data.getData();
             }
             mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
-            mPhotoPreview = GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth(), mAddChildButton.getHeight(), mCurrentPhotoUri);
+            mPhotoPreview = GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth()+10, mAddChildButton.getHeight()+10, mCurrentPhotoUri);
+            mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mAddChildButton.setImageBitmap(mPhotoPreview);
         }
     }
@@ -122,7 +125,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     }
 
     public void btnSaveNewChild_click(View view) {
-        // TODO: validate form
+        //TODO: it can be cicked if photo was not changed!
         // TODO: get sex
         boolean formIsOK = true;
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
@@ -135,6 +138,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
 
         if (mPhotoPreview == null) {
             mPhotoPreview  = BitmapFactory.decodeResource(getResources(), R.drawable.default_photo);
+            mCurrentPhotoUri = null;
         }
 
         if (formIsOK) {
