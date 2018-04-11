@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -24,13 +25,19 @@ public class WardrobeDBDataManager {
         mContext = context;
     }
 
-    public  long InsertOrUpdateChild(String childName, int childSex, long childBirthdate, String linkToPhoto, Bitmap smallPhoto, String idEntry) {
+    public  long InsertOrUpdateChild(String childName, int childSex, long childBirthdate, Uri linkToPhoto, Bitmap smallPhoto, String idEntry) {
         long result = 0;
+
         ContentValues newChildValues = new ContentValues();
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_NAME, childName);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_SEX, childSex);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE, childBirthdate);//TODO: int to string
-        newChildValues.put(WardrobeContract.ChildEntry.COLUMN_LINK_TO_PHOTO, linkToPhoto);
+        String stringLinktoPhoto = "";
+        if (linkToPhoto != null) {
+            stringLinktoPhoto = linkToPhoto.toString();
+        }
+
+        newChildValues.put(WardrobeContract.ChildEntry.COLUMN_LINK_TO_PHOTO, stringLinktoPhoto);
         byte[] smallPhotoBytes = getBytes(smallPhoto);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW, smallPhotoBytes);
         SQLiteDatabase db = mDBHelper.getWritableDatabase();

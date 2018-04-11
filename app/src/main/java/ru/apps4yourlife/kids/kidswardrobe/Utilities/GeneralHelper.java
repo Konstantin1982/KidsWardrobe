@@ -6,6 +6,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -23,12 +27,13 @@ import java.util.List;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import com.squareup.picasso.Transformation;
 
 /**
  * Created by 123 on 27.03.2018.
  */
 
-public class GeneralHelper {
+public class GeneralHelper implements Transformation{
 
     public static final int GENERAL_HELPER_CHILD_TYPE = 106;
     public static final int GENERAL_HELPER_CLOTHES_TYPE = 107;
@@ -109,5 +114,26 @@ public class GeneralHelper {
             result = dateFormat.format(birthDateAsLong);
         }
         return result;
+    }
+
+    @Override
+    public Bitmap transform(final Bitmap source) {
+        final Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+        final Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+        canvas.drawCircle(source.getWidth() / 2, source.getHeight() / 2, source.getWidth() / 2, paint);
+
+        if (source != output)
+            source.recycle();
+
+        return output;
+    }
+
+    @Override
+    public String key() {
+        return "circle";
     }
 }

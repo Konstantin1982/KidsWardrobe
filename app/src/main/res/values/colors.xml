@@ -11,6 +11,7 @@
     <color name="gridItemBackgroundColor">#99FFF9C4</color>
     <color name="listItemsBackgroundColor">#FFFFFF</color>
     <color name="defaultBackgroundColor">#FAFAFA</color>
+    <color name="defaultEmptyBackgroundColor">#DADADA</color>
 
 
 </resources>

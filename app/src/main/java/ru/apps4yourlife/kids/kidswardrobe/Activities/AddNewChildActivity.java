@@ -8,14 +8,19 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +38,7 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 
 
-public class AddNewChildActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener  {
+public class AddNewChildActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener, AdapterView.OnItemSelectedListener {
 
     private ImageButton mAddChildButton;
     private Uri mCurrentPhotoUri;
@@ -42,6 +47,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     private Date mChosenDate;
     private String mCurrentChildID;
     private String mPositionFromList;
+    private int mChildSex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,18 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         mCurrentChildID = getIntent().getStringExtra("ID");
         mPositionFromList = getIntent().getStringExtra("POSITION");
         Log.e("ACTIVITY ADD","Received POSITION = " + mPositionFromList);
+
+        Spinner childSexSpinner = (Spinner) findViewById(R.id.child_sex_spinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.child_sex_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        childSexSpinner.setAdapter(spinnerAdapter);
+        childSexSpinner.setOnItemSelectedListener(this);
+
         if (mCurrentChildID  == null) {
             mChosenDate = new GregorianCalendar(1970, 01, 01).getTime();
+            mChildSex = 0;
+            mPhotoPreview  = BitmapFactory.decodeResource(getResources(), R.drawable.default_photo);
+            mCurrentPhotoUri = null;
         } else {
             // TODO: fill parameters for child
             Toast.makeText(this,"ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
@@ -72,8 +88,11 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             mPhotoPreview = smallPhoto;
             mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mAddChildButton.setImageBitmap(mPhotoPreview);
-            //Path to photo??
+            // Sex
+            mChildSex = currentChildCursor.getInt(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_SEX));
+            childSexSpinner.setSelection(mChildSex);
         }
+
     }
 
     public void btnAddNewChildPhoto_click(View v) {
@@ -110,9 +129,10 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 mCurrentPhotoUri = data.getData();
             }
             mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
-            mPhotoPreview = GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth()+10, mAddChildButton.getHeight()+10, mCurrentPhotoUri);
+            mPhotoPreview = new GeneralHelper().transform(GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth()-10, mAddChildButton.getHeight()-10, mCurrentPhotoUri));
             mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mAddChildButton.setImageBitmap(mPhotoPreview);
+            mAddChildButton.setBackground(null);
         }
     }
 
@@ -137,16 +157,14 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         }
 
         if (mPhotoPreview == null) {
-            mPhotoPreview  = BitmapFactory.decodeResource(getResources(), R.drawable.default_photo);
-            mCurrentPhotoUri = null;
         }
 
         if (formIsOK) {
             long res = dataManager.InsertOrUpdateChild(
                     mNameValue,
-                    0,
+                    mChildSex,
                     mChosenDate.getTime(),
-                    mCurrentPhotoUri.toString(),
+                    mCurrentPhotoUri,
                     mPhotoPreview,
                     mCurrentChildID);
             //TODO: after insert action
@@ -173,5 +191,17 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 currentCalendar.get(currentCalendar.YEAR),
                 currentCalendar.get(currentCalendar.MONTH),
                 currentCalendar.get(currentCalendar.DAY_OF_MONTH)).show();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+        Toast.makeText(this,"Variant clicked: " + position,Toast.LENGTH_SHORT).show();
+        mChildSex = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        Toast.makeText(this,"Nothing clicked!!!",Toast.LENGTH_SHORT).show();
+
     }
 }

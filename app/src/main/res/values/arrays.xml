@@ -17,5 +17,10 @@
         <item>Выбрать из галереи</item>
         <item>Выбрать из галереи</item>
     </string-array>
+    <string-array name="child_sex_array">
+        <item>Не указано</item>
+        <item>Девочка</item>
+        <item>Мальчик</item>
+    </string-array>
 
 </resources>
