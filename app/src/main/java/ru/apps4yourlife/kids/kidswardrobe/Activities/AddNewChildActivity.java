@@ -1,5 +1,4 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,11 +7,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -92,7 +92,9 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             mChildSex = currentChildCursor.getInt(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_SEX));
             childSexSpinner.setSelection(mChildSex);
         }
-
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
     }
 
     public void btnAddNewChildPhoto_click(View v) {
@@ -144,7 +146,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         startActivityForResult(galleryIntent, 1);
     }
 
-    public void btnSaveNewChild_click(View view) {
+    public void btnSaveNewChild_click() {
         //TODO: it can be cicked if photo was not changed!
         // TODO: get sex
         boolean formIsOK = true;
@@ -203,5 +205,27 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     public void onNothingSelected(AdapterView<?> adapterView) {
         Toast.makeText(this,"Nothing clicked!!!",Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_save_child, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_save :
+                btnSaveNewChild_click();
+                return true;
+            case android.R.id.home:
+                setResult(0);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

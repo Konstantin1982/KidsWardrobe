@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#2196F3</color>
     <color name="colorAccent">#FF4081</color>
     <color name="buttonsColor">#2196f3</color>
-    <color name="buttonsTextColor">#FFFFFF</color>
+    <color name="buttonsTextColor">#ffffff</color>
+    <color name="defaultTextColor">#666666</color>
     <color name="whiteColor">#FFFFFF</color>
     <color name="fragmentGreyBackground">#99DEDEDE</color>
     <color name="gridItemStrokeColor">#785B18</color>
@@ -12,6 +13,7 @@
     <color name="listItemsBackgroundColor">#FFFFFF</color>
     <color name="defaultBackgroundColor">#FAFAFA</color>
     <color name="defaultEmptyBackgroundColor">#DADADA</color>
+    <color name="divideLineColor">#DADADA</color>
 
 
 </resources>

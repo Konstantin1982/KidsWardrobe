@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:clickable="true"
-            app:srcCompat="@drawable/ic_done_black_24dp"
+            app:srcCompat="@drawable/ic_done_white_24dp"
             app:backgroundTint="@color/buttonsColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
