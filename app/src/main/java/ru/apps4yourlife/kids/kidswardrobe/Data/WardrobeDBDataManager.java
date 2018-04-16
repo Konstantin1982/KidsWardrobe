@@ -8,8 +8,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
+
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 /**
  * Created by ksharafutdinov on 27-Mar-18.
@@ -50,6 +54,60 @@ public class WardrobeDBDataManager {
         db.close();
         return result;
     }
+
+    public long InsertOrUpdateChildSize(long idChild, double height, double footSize, double shoesSize) {
+        long result = 0;
+
+        long todayDateAsLong = GeneralHelper.GetCurrentDate().getTime();
+        ContentValues newValues = new ContentValues();
+        newValues.put(WardrobeContract.ChildSizeEntry.COLUMN_CHILD_ID, idChild);
+        newValues.put(WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED, todayDateAsLong);
+        newValues.put(WardrobeContract.ChildSizeEntry.COLUMN_HEIGHT, height);
+        newValues.put(WardrobeContract.ChildSizeEntry.COLUMN_FOOT_SIZE, footSize);
+        newValues.put(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE, shoesSize);
+
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        // check this date select 1 from size where date = current date
+        Cursor tmpCursor = db.query(
+                WardrobeContract.ChildSizeEntry.TABLE_NAME,
+                null,
+                WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " = ?" ,
+                new String[] { String.valueOf(todayDateAsLong)},
+                null,
+                null,
+                WardrobeContract.ChildSizeEntry._ID);
+        if (tmpCursor.getCount() > 0) {
+            result = db.update(
+                        WardrobeContract.ChildSizeEntry.TABLE_NAME,
+                        newValues,
+                        WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " = ?" ,
+                        new String[] { String.valueOf(todayDateAsLong)}
+                    );
+        } else  {
+            result = db.insert(WardrobeContract.ChildSizeEntry.TABLE_NAME, null, newValues);
+        }
+        tmpCursor.close();
+        return result;
+    }
+
+    public Cursor GetLatestChildSize(String childId) {
+        Cursor result = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ChildSizeEntry.TABLE_NAME,
+                null,
+                WardrobeContract.ChildSizeEntry.COLUMN_CHILD_ID + " = ?",
+                new String[] {String.valueOf(childId)},
+                null,
+                null,
+                WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " DESC",
+                "1");
+        result.moveToFirst();
+        return result;
+    }
+
+
+
+    // TODO: all size from child
+    // TODO: latest size from child
 
     private static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -13,6 +13,7 @@ import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.EditText;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -124,8 +126,8 @@ public class GeneralHelper implements Transformation{
 
         final Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(output);
-        canvas.drawCircle(source.getWidth() / 2, source.getHeight() / 2, source.getWidth() / 2, paint);
-
+        float radius = Math.min(source.getWidth() / 2, source.getHeight() / 2);
+        canvas.drawCircle(source.getWidth() / 2, source.getHeight() / 2, radius, paint);
         if (source != output)
             source.recycle();
 
@@ -135,5 +137,26 @@ public class GeneralHelper implements Transformation{
     @Override
     public String key() {
         return "circle";
+    }
+
+    public static Date GetCurrentDate() {
+        GregorianCalendar tmpDate = new GregorianCalendar();
+        GregorianCalendar normalDate = new GregorianCalendar(
+                tmpDate.get(Calendar.YEAR),
+                tmpDate.get(Calendar.MONTH),
+                tmpDate.get(Calendar.DAY_OF_MONTH),
+                0,
+                0,
+                0);
+        return normalDate.getTime();
+    }
+
+    public static double GetDoubleValueFromEditText(EditText field) {
+        String valueAsString = field.getText().toString();
+        double value = 0;
+        if (!valueAsString.isEmpty()) {
+            value = Double.valueOf(valueAsString);
+        }
+        return value;
     }
 }

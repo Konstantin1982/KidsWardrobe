@@ -23,5 +23,14 @@ public class WardrobeContract {
         public static final String COLUMN_VALUE = "value";
     }
 
+    public static final class ChildSizeEntry implements BaseColumns {
+        public static final String TABLE_NAME = "child_size";
+        public static final String COLUMN_CHILD_ID = "child_id";
+        public static final String COLUMN_DATE_ENTERED = "date_entered";
+        public static final String COLUMN_HEIGHT = "height";
+        public static final String COLUMN_FOOT_SIZE = "foot_size";
+        public static final String COLUMN_SHOES_SIZE = "shoes_size";
+    }
+
 
 }

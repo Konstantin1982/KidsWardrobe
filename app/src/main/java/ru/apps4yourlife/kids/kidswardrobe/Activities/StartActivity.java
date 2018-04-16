@@ -64,11 +64,6 @@ public class StartActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddNewChildActivity.class);
         startActivity(intent);
     }
-    public void btnEditSizes_Click(View v) {
-        Intent intent = new Intent(this, ChildrenSizeActivity.class);
-        startActivity(intent);
-
-    }
     public void btnShowAllClothes_Click(View v) {
         // Code here executes on main thread after user presses button
         Toast.makeText(v.getContext(), "Button Clicked", Toast.LENGTH_LONG).show();

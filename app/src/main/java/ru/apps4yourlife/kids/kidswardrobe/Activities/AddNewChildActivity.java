@@ -1,5 +1,6 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,10 +15,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -91,6 +94,19 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             // Sex
             mChildSex = currentChildCursor.getInt(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_SEX));
             childSexSpinner.setSelection(mChildSex);
+            currentChildCursor.close();
+            // SIZE
+            Cursor currentChildSizesCursor = new WardrobeDBDataManager(this).GetLatestChildSize(mCurrentChildID);
+            if (currentChildSizesCursor.getCount() > 0) {
+                EditText childHeight = (EditText) findViewById(R.id.heightChildEditText);
+                childHeight.setText(currentChildSizesCursor.getString(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_HEIGHT)));
+
+                EditText childFoot = (EditText) findViewById(R.id.footSizeEditText);
+                childFoot.setText(currentChildSizesCursor.getString(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_FOOT_SIZE)));
+
+                EditText childShoes = (EditText) findViewById(R.id.shoesSizeEditText);
+                childShoes.setText(currentChildSizesCursor.getString(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE)));
+            }
         }
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -158,9 +174,6 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             mName.setError(getResources().getString(R.string.error_name_undefinded));
         }
 
-        if (mPhotoPreview == null) {
-        }
-
         if (formIsOK) {
             long res = dataManager.InsertOrUpdateChild(
                     mNameValue,
@@ -170,12 +183,28 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                     mPhotoPreview,
                     mCurrentChildID);
             //TODO: after insert action
+            double childFoot = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.footSizeEditText));
+            double childHeight = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.heightChildEditText));
+            double childShoes = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.shoesSizeEditText));
+            if (childFoot + childHeight + childShoes > 0) {
+                long resSize =
+                        dataManager.InsertOrUpdateChildSize(
+                            mCurrentChildID == null ? res : Long.valueOf(mCurrentChildID),
+                            childHeight,
+                            childFoot,
+                            childShoes);
+            }
+
             Toast.makeText(this, "New chils has been inserted: " + res, Toast.LENGTH_SHORT).show();
             Intent data = new Intent();
             data.putExtra("POSITION", mPositionFromList);
             setResult(1, data);
             finish();
         }
+
+        // size
+
+
     }
     public void btnSetBirthDate_click (View view) {
         Calendar currentCalendar = new GregorianCalendar();
@@ -214,13 +243,24 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         return true;
     }
 
+    public void LooseFocus() {
+        findViewById(R.id.main_layout_add_new_child).requestFocus();
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_save :
+                LooseFocus();
                 btnSaveNewChild_click();
                 return true;
             case android.R.id.home:
+                LooseFocus();
                 setResult(0);
                 finish();
                 return true;

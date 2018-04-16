@@ -41,8 +41,21 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.SettingsEntry.COLUMN_KEY + " VARCHAR(255), " +
                         WardrobeContract.SettingsEntry.COLUMN_VALUE  + " VARCHAR(255) " +
                         ")";
+
+        final String SQL_CREATE_CHILD_SIZE_TABLE =
+                "CREATE TABLE " +
+                        WardrobeContract.ChildSizeEntry.TABLE_NAME + "(" +
+                        WardrobeContract.ChildSizeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        WardrobeContract.ChildSizeEntry.COLUMN_CHILD_ID + " INTEGER, " +
+                        WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " INTEGER, " +
+                        WardrobeContract.ChildSizeEntry.COLUMN_HEIGHT + " DOUBLE, " +
+                        WardrobeContract.ChildSizeEntry.COLUMN_FOOT_SIZE + " DOUBLE, " +
+                        WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE + " DOUBLE" +
+                        ")";
+
         sqLiteDatabase.execSQL(SQL_CREATE_CHILDREN_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_SETTINGS_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_CHILD_SIZE_TABLE);
     }
 
     @Override

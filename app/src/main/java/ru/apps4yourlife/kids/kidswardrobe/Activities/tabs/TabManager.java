@@ -18,7 +18,7 @@ public class TabManager extends Fragment {
 
         //Returning the layout file after inflating
         //Change R.layout.tab1 in you classes
-        return inflater.inflate(R.layout.tab_clothes_layout, container, false);
+        return inflater.inflate(R.layout.tab_manage_info, container, false);
     }
     public void btnAddNewClothes_Click(View v) {
         // Code here executes on main thread after user presses button
