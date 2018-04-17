@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -33,7 +34,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
 
     private int mDetailShown;
     private Uri mCurrentPhotoUri;
+    private Bitmap mPhotoPreview;
     private ImageButton maddNewItemImageButton;
+
 
     private AutoCompleteTextView mTypeClothesTextView;
     private String oldType;
@@ -42,7 +45,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item);
-
+        /*
         AdView adView = (AdView) findViewById(R.id.adView2);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
@@ -51,7 +54,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
         // Toasts the test ad message on the screen. Remove this after defining your own ad unit ID.
         Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
         mDetailShown = 0;
-
+*/
 
         mTypeClothesTextView = (AutoCompleteTextView) findViewById(R.id.typeClothesTextView);
         ArrayAdapter<String> mAutoCompleteTextViewAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,getList(TYPE_KIND_CLOTHES));
@@ -70,38 +73,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
             }
         });
     }
-
-    public void btnShowDetail_clicked(View v) {
-
-
-        AutoCompleteTextView editView;
-        mDetailShown = 1 - mDetailShown;
-        int visibility;
-        if (mDetailShown == 1) visibility = View.VISIBLE;
-        else  visibility = View.GONE;
-
-
-        editView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView4);
-        editView.setVisibility(visibility);
-        editView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView5);
-        editView.setVisibility(visibility);
-        editView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView6);
-        editView.setVisibility(visibility);
-        editView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView7);
-        editView.setVisibility(visibility);
-        editView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView8);
-        editView.setVisibility(visibility);
-
-        // TODO: Make copmatibility with preLollipop
-        /*
-        Button mButton = (Button) findViewById(R.id.buttonShowMoreDetails);
-        if (mDetailShown == 0)
-            mButton.setCompoundDrawablesWithIntrinsicBounds( 0, 0, R.drawable.ic_expand_more_black_24dp, 0);
-        else
-            mButton.setCompoundDrawablesWithIntrinsicBounds( 0, 0, R.drawable.ic_expand_less_black_24dp, 0);
-        */
-    }
-
 
     private List<String> getList (int typeOfList) {
         List<String> mList = new ArrayList<>();
@@ -128,8 +99,14 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
         ChoosePhotoApplicationDialogFragment mApplicationDialogFragment = new ChoosePhotoApplicationDialogFragment();
         mApplicationDialogFragment.setmListener(this);
         mApplicationDialogFragment.show(getSupportFragmentManager(),"ChoosePhotoApplicationDialogFragment");
-
     }
+
+    public void btnAddNewChildPhoto_click(View v) {
+        ChoosePhotoApplicationDialogFragment mApplicationDialogFragment = new ChoosePhotoApplicationDialogFragment();
+        mApplicationDialogFragment.setmListener(this);
+        mApplicationDialogFragment.show(getSupportFragmentManager(),"ChoosePhotoApplicationDialogFragment");
+    }
+
 
     @Override
     public void onTakeNewPhotoClick() {
@@ -149,21 +126,27 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
                 startActivityForResult(takePictureIntent, 0);
             }
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+        if((requestCode == 1 || requestCode == 0) && resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                mCurrentPhotoUri = data.getData();
+            }
             maddNewItemImageButton = (ImageButton) findViewById(R.id.addNewItemImageButton);
-            Bitmap bitmap = GeneralHelper.resizeBitmapFile(this, maddNewItemImageButton.getWidth(), maddNewItemImageButton.getHeight(), mCurrentPhotoUri);
-            maddNewItemImageButton.setImageBitmap(bitmap);
+            mPhotoPreview = GeneralHelper.resizeBitmapFile(this, maddNewItemImageButton.getWidth()-10, maddNewItemImageButton.getHeight()-10, mCurrentPhotoUri);
+            maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            maddNewItemImageButton.setImageBitmap(mPhotoPreview);
+            maddNewItemImageButton.setBackground(null);
         }
     }
 
 
     @Override
     public void onChooseFromGalleryClick() {
-
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, 1);
     }
 }

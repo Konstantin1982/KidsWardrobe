@@ -35,11 +35,17 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
         <activity android:name=".Test" />
-        <activity android:name=".Activities.AddNewItemActivity" />
+        <activity
+            android:name=".Activities.AddNewItemActivity"
+            android:label="@string/title_activity_new_item"
+            android:screenOrientation="portrait"
+        />
         <activity android:name=".Activities.AllItemsActivity" />
         <activity android:name=".Activities.CategoryItemsActivity" />
-        <activity android:name=".Activities.AddNewChildActivity" />
-        <activity android:name=".Activities.ChildrenSizeActivity" />
+        <activity android:name=".Activities.AddNewChildActivity"
+            android:label="@string/title_activity_new_child"
+            android:screenOrientation="portrait"
+        />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

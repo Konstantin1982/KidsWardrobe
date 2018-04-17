@@ -16,4 +16,9 @@
     <string name="birthdate_undefinded">Дата рождения не указана</string>
     <string name="error_name_undefinded">Имя должно быть указано</string>
 
+
+    <string name="title_activity_new_item">Новая одежда</string>
+    <string name="title_activity_new_child">Ребенок</string>
+    <string name="title_activity_wardrobe">Гардероб</string>
+
 </resources>
