@@ -32,19 +32,25 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
     private static final int TYPE_KIND_CLOTHES = 0;
 
 
-    private int mDetailShown;
     private Uri mCurrentPhotoUri;
     private Bitmap mPhotoPreview;
     private ImageButton maddNewItemImageButton;
 
 
+
+
     private AutoCompleteTextView mTypeClothesTextView;
     private String oldType;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item);
+
+
         /*
         AdView adView = (AdView) findViewById(R.id.adView2);
         AdRequest adRequest = new AdRequest.Builder()
@@ -55,14 +61,18 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
         Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
         mDetailShown = 0;
 */
-
+        // Fill TYPES VALUE
         mTypeClothesTextView = (AutoCompleteTextView) findViewById(R.id.typeClothesTextView);
-        ArrayAdapter<String> mAutoCompleteTextViewAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,getList(TYPE_KIND_CLOTHES));
+        ArrayAdapter<String> mAutoCompleteTextViewAdapter = new ArrayAdapter<String>(
+                this,
+                        android.R.layout.simple_dropdown_item_1line,
+                        getList(TYPE_KIND_CLOTHES)
+        );
         mTypeClothesTextView.setAdapter(mAutoCompleteTextViewAdapter);
         mTypeClothesTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
+            public void onFocusChange(View view, boolean isFocused) {
+                if (isFocused) {
                     oldType = mTypeClothesTextView.getText().toString();
                     mTypeClothesTextView.showDropDown();
                 } else {
@@ -72,6 +82,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
                 }
             }
         });
+        //
     }
 
     private List<String> getList (int typeOfList) {
