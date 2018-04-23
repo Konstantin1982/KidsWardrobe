@@ -27,6 +27,7 @@ public class WardrobeDBDataManager {
     public WardrobeDBDataManager(Context context) {
         mDBHelper = new WardrobeDBHelper(context);
         mContext = context;
+        //mDBHelper.getWritableDatabase(); // just to fix crash
     }
 
     public  long InsertOrUpdateChild(String childName, int childSex, long childBirthdate, Uri linkToPhoto, Bitmap smallPhoto, String idEntry) {
@@ -141,6 +142,67 @@ public class WardrobeDBDataManager {
                                     WardrobeContract.ChildEntry._ID);
         childrenList.moveToFirst();
         return childrenList;
+    }
+
+
+
+    public Cursor GetAllClothesCategories() {
+        Cursor categoryList = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesCategory.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                WardrobeContract.ClothesCategory.COLUMN_CAT_NAME + ", " + WardrobeContract.ClothesCategory._ID);
+        return categoryList;
+
+    }
+
+
+    public Cursor GetAllSizesTypes() {
+        Cursor sizeTypes = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.SizesTypes.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                WardrobeContract.SizesTypes.COLUMN_ID);
+        return sizeTypes;
+    }
+
+    public String GetSizeTypeName(int ID) {
+        String sizeTypeName = "Размер";
+        Cursor sizeType = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.SizesTypes.TABLE_NAME,
+                null,
+                WardrobeContract.SizesTypes._ID + " = ? ",
+                new String[] {String.valueOf(ID)},
+                null,
+                null,
+                WardrobeContract.SizesTypes.COLUMN_ID);
+        if (sizeType.getCount() > 0) {
+            sizeType.moveToFirst();
+            sizeTypeName = sizeType.getString(sizeType.getColumnIndex(WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME));
+        }
+        return sizeTypeName;
+    }
+
+    public Cursor GetSizesValuesByType(int type) {
+        Cursor sizeValues = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.Sizes.TABLE_NAME,
+                null,
+                WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = ? ",
+                new String[] {String.valueOf(type)},
+                null,
+                null,
+                WardrobeContract.Sizes._ID);
+        if (sizeValues.getCount() > 0) {
+            sizeValues.moveToFirst();
+        }
+        return sizeValues;
+
     }
 
 }

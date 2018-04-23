@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -108,28 +109,29 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_CATEGORY_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TYPES_TABLE);
+        Log.e("DB", "TABLES WERE CREATED");
     }
 
     public void InsertInitialValuesToClothesCategories(SQLiteDatabase db) {
         String[] typesInXML = mContext.getResources().getStringArray(R.array.clothes_categories_values);
-        db.beginTransaction();
+        //db.beginTransaction();
         try {
             for (String type : typesInXML) {
                 ContentValues values = new ContentValues();
                 String[] parcedType = type.split("\\|");
                 values.put(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE, Integer.valueOf(parcedType[0]));
                 values.put(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL, Integer.valueOf(parcedType[1]));
-                values.put(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME, Integer.valueOf(parcedType[2]));
+                values.put(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME, parcedType[2]);
                 db.insert(WardrobeContract.ClothesCategory.TABLE_NAME, null, values);
             }
         } finally {
-            db.endTransaction();
+          //  db.endTransaction();
         }
     }
 
     public void InsertInitialValuesToSizes(SQLiteDatabase db) {
         String[] typesInXML = mContext.getResources().getStringArray(R.array.sizes);
-        db.beginTransaction();
+        //db.beginTransaction();
         try {
             for (String type : typesInXML) {
                 ContentValues values = new ContentValues();
@@ -139,13 +141,13 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                 db.insert(WardrobeContract.Sizes.TABLE_NAME, null, values);
             }
         } finally {
-            db.endTransaction();
+            //db.endTransaction();
         }
     }
 
     public void InsertInitialValuesToSizesTypes(SQLiteDatabase db) {
         String[] typesInXML = mContext.getResources().getStringArray(R.array.sizes_types);
-        db.beginTransaction();
+        // db.beginTransaction();
         try {
             for (String type : typesInXML) {
                 ContentValues values = new ContentValues();
@@ -155,7 +157,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                 db.insert(WardrobeContract.SizesTypes.TABLE_NAME, null, values);
             }
         } finally {
-            db.endTransaction();
+            // db.endTransaction();
         }
     }
 
@@ -164,6 +166,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Toast.makeText(mContext,"Oncreate DB is called",Toast.LENGTH_LONG).show();
+        Log.e("DB","DB IS CREATED!!");
 
         CreateTables(sqLiteDatabase);
 

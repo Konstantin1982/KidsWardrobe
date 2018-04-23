@@ -45,12 +45,16 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:completionThreshold="0"
-        android:hint="Например, Куртка или Обувь"
+        android:hint="Например, Куртка"
         android:textAlignment="viewEnd"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="@+id/textView8" />
+        app:layout_constraintTop_toTopOf="@+id/textView8"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:selectAllOnFocus="true"
+        />
 
     <AutoCompleteTextView
         android:id="@+id/sizeClothesTextView"
@@ -61,11 +65,12 @@
         android:layout_marginTop="8dp"
         android:hint="Тип размера зависит от полки"
         android:textAlignment="viewEnd"
-        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintBottom_toBottomOf="@+id/sizeMainLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView12"
-        app:layout_constraintTop_toTopOf="@+id/textView12" />
-
+        app:layout_constraintStart_toEndOf="@+id/sizeMainLabel"
+        app:layout_constraintTop_toTopOf="@+id/sizeMainLabel"
+        android:selectAllOnFocus="true"
+        />
     <ImageView
         android:id="@+id/imageView18"
         android:layout_width="wrap_content"
@@ -133,7 +138,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView21" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/sizeMainLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -250,9 +255,9 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView26" />
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/sizeTypeAdditionalLabel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="17dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -262,20 +267,21 @@
         app:layout_constraintTop_toTopOf="@+id/imageView27" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/sizeTypeAdditionalTextView"
         style="@style/TypicalTextView"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:hint="актуально только для обуви"
+        android:hint="Тип размера зависит от полки"
         android:inputType="numberDecimal"
         android:textAlignment="viewEnd"
-        app:layout_constraintBottom_toBottomOf="@+id/textView17"
+        app:layout_constraintBottom_toBottomOf="@+id/sizeTypeAdditionalLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView17"
-        app:layout_constraintTop_toTopOf="@+id/textView17" />
+        app:layout_constraintStart_toEndOf="@+id/sizeTypeAdditionalLabel"
+        app:layout_constraintTop_toTopOf="@+id/sizeTypeAdditionalLabel"
+        />
 
     <ImageView
         android:id="@+id/imageView28"
@@ -342,7 +348,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView29" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/spinner_season"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -352,6 +358,7 @@
         ads:layout_constraintBottom_toBottomOf="@+id/textView14"
         ads:layout_constraintEnd_toEndOf="parent"
         ads:layout_constraintStart_toEndOf="@+id/textView14"
+        android:focusable="true"
         ads:layout_constraintTop_toTopOf="@+id/textView14" />
 
 </android.support.constraint.ConstraintLayout>

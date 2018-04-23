@@ -1,7 +1,7 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -13,16 +13,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
@@ -30,6 +29,9 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 public class AddNewItemActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener {
     private static final String TOAST_TEXT = "Test ads are being shown. ";
     private static final int TYPE_KIND_CLOTHES = 0;
+    private static final int SIZES_VALUES = 1;
+
+    private WardrobeDBDataManager mDataManager;
 
 
     private Uri mCurrentPhotoUri;
@@ -37,10 +39,9 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
     private ImageButton maddNewItemImageButton;
 
 
-
-
     private AutoCompleteTextView mTypeClothesTextView;
-    private String oldType;
+    private Cursor mClothesCategoriesCursor;
+    private Cursor mSizesValuesCursor;
 
 
 
@@ -49,7 +50,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item);
-
+        mDataManager = new WardrobeDBDataManager(this);
 
         /*
         AdView adView = (AdView) findViewById(R.id.adView2);
@@ -66,44 +67,129 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
         ArrayAdapter<String> mAutoCompleteTextViewAdapter = new ArrayAdapter<String>(
                 this,
                         android.R.layout.simple_dropdown_item_1line,
-                        getList(TYPE_KIND_CLOTHES)
+                        getList(TYPE_KIND_CLOTHES, 0)
         );
         mTypeClothesTextView.setAdapter(mAutoCompleteTextViewAdapter);
         mTypeClothesTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
                 if (isFocused) {
-                    oldType = mTypeClothesTextView.getText().toString();
                     mTypeClothesTextView.showDropDown();
                 } else {
                     checkIsItNewValue(mTypeClothesTextView.getText().toString());
-                    updateAdapterForSizes(mTypeClothesTextView.getText().toString());
 
                 }
             }
         });
+        // mTypeClothesTextView.dropDown
         //
+
+
     }
 
-    private List<String> getList (int typeOfList) {
+    private List<String> getList (int typeOfList, int typeOfValues) {
         List<String> mList = new ArrayList<>();
         switch (typeOfList) {
             case TYPE_KIND_CLOTHES:
-                String[] mTypes = {"Куртки", "Штаны", "Обувь", "Трусы", "Шапки", "Платья", "Комбинезоны", "Носки", "Варежки-Перчатки", "Рубашки"};
-                for (String type : mTypes) {
-                    mList.add(type);
+                mClothesCategoriesCursor = mDataManager.GetAllClothesCategories();
+                if (mClothesCategoriesCursor.getCount() > 0) {
+                    for (int i = 0; i < mClothesCategoriesCursor.getCount(); i++) {
+                        mClothesCategoriesCursor.moveToPosition(i);
+                        mList.add(
+                                mClothesCategoriesCursor.getString(
+                                        mClothesCategoriesCursor.getColumnIndex(
+                                                WardrobeContract.ClothesCategory.COLUMN_CAT_NAME
+                                        )
+                                )
+                        );
+                    }
+                }
+                break;
+            case SIZES_VALUES:
+                mSizesValuesCursor = mDataManager.GetSizesValuesByType(typeOfValues);
+                if (mSizesValuesCursor.getCount() > 0) {
+                    for (int i = 0; i < mSizesValuesCursor.getCount(); i++) {
+                        mSizesValuesCursor.moveToPosition(i);
+                        mList.add(
+                                mSizesValuesCursor.getString(
+                                        mSizesValuesCursor.getColumnIndex(
+                                                WardrobeContract.Sizes.COLUMN_VALUE
+                                        )
+                                )
+                        );
+                    }
                 }
                 break;
         }
         return mList;
     }
 
-    private void updateAdapterForSizes(String chosenType) {
-        if (chosenType!= "") {
+    private void updateAdaptersForSizes(int newSizeTypeMain, int newSizeTypeAdditional) {
 
-        }
+        final  AutoCompleteTextView sizeClothesTextView;
+        // MAIN
+        sizeClothesTextView = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
+        ArrayAdapter<String> autoCompleteTextViewAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                getList(SIZES_VALUES, newSizeTypeMain)
+        );
+        sizeClothesTextView.setAdapter(autoCompleteTextViewAdapter);
+        sizeClothesTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if (isFocused) {
+                    sizeClothesTextView.showDropDown();
+                }
+            }
+        });
+
+        TextView sizeLabel = (TextView) findViewById(R.id.sizeMainLabel);
+        sizeLabel.setText(mDataManager.GetSizeTypeName(newSizeTypeMain));
+
+
+        // ADDITIONAL sizeTypeAdditionalTextView
+        final  AutoCompleteTextView sizeClothesTextView2;
+        sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
+        autoCompleteTextViewAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                getList(SIZES_VALUES, newSizeTypeAdditional)
+        );
+        sizeClothesTextView2.setAdapter(autoCompleteTextViewAdapter);
+        sizeClothesTextView2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if (isFocused) {
+                    sizeClothesTextView2.showDropDown();
+                }
+            }
+        });
+
+        sizeLabel = (TextView) findViewById(R.id.sizeTypeAdditionalLabel);
+        sizeLabel.setText(mDataManager.GetSizeTypeName(newSizeTypeAdditional));
+
     }
+
+
     private void checkIsItNewValue(String chosenType) {
+        if (chosenType != "") {
+            for (int i = 0; i < mClothesCategoriesCursor.getCount(); i++) {
+                mClothesCategoriesCursor.moveToPosition(i);
+                String savedType = mClothesCategoriesCursor.getString(mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME));
+                if (savedType.toLowerCase().equals(chosenType.toLowerCase())) {
+                    // it is not new.
+                    updateAdaptersForSizes(
+                            mClothesCategoriesCursor.getInt(
+                                    mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE)),
+                            mClothesCategoriesCursor.getInt(
+                                    mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL))
+                    );
+                } else {
+                    // TODO show button to link category and size!!!
+                }
+            }
+        }
 
     }
     public void btnAddNewItemPhoto_click(View view) {
