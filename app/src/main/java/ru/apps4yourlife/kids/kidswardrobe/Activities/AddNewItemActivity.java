@@ -5,15 +5,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,9 +27,10 @@ import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialogFragment;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseSizeTypesDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
-public class AddNewItemActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener {
+public class AddNewItemActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener, ChooseSizeTypesDialogFragment.ChooseSizeTypesDialogListener {
     private static final String TOAST_TEXT = "Test ads are being shown. ";
     private static final int TYPE_KIND_CLOTHES = 0;
     private static final int SIZES_VALUES = 1;
@@ -150,13 +154,13 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
 
         // ADDITIONAL sizeTypeAdditionalTextView
         final  AutoCompleteTextView sizeClothesTextView2;
-        sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
-        autoCompleteTextViewAdapter = new ArrayAdapter<String>(
+        sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeTypeAdditionalTextView);
+        ArrayAdapter<String> autoCompleteTextViewAdapter2 = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_dropdown_item_1line,
                 getList(SIZES_VALUES, newSizeTypeAdditional)
         );
-        sizeClothesTextView2.setAdapter(autoCompleteTextViewAdapter);
+        sizeClothesTextView2.setAdapter(autoCompleteTextViewAdapter2);
         sizeClothesTextView2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
@@ -174,6 +178,7 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
 
     private void checkIsItNewValue(String chosenType) {
         if (chosenType != "") {
+            boolean isFind = false;
             for (int i = 0; i < mClothesCategoriesCursor.getCount(); i++) {
                 mClothesCategoriesCursor.moveToPosition(i);
                 String savedType = mClothesCategoriesCursor.getString(mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME));
@@ -185,9 +190,14 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
                             mClothesCategoriesCursor.getInt(
                                     mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL))
                     );
-                } else {
-                    // TODO show button to link category and size!!!
+                    isFind = true;
+                    break;
                 }
+            }
+            if (!isFind) {
+                // TODO show button to link category and size!!!
+                FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
+                warningButton.setVisibility(View.VISIBLE);
             }
         }
 
@@ -197,13 +207,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
         mApplicationDialogFragment.setmListener(this);
         mApplicationDialogFragment.show(getSupportFragmentManager(),"ChoosePhotoApplicationDialogFragment");
     }
-
-    public void btnAddNewChildPhoto_click(View v) {
-        ChoosePhotoApplicationDialogFragment mApplicationDialogFragment = new ChoosePhotoApplicationDialogFragment();
-        mApplicationDialogFragment.setmListener(this);
-        mApplicationDialogFragment.show(getSupportFragmentManager(),"ChoosePhotoApplicationDialogFragment");
-    }
-
 
     @Override
     public void onTakeNewPhotoClick() {
@@ -245,5 +248,15 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
         Intent galleryIntent = new Intent(Intent.ACTION_PICK);
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, 1);
+    }
+
+    public void btnShowSizeTypeDialog_click(View view) {
+        ChooseSizeTypesDialogFragment applicationDialogFragment = new ChooseSizeTypesDialogFragment();
+        applicationDialogFragment.setmListener(this);
+        applicationDialogFragment.show(getSupportFragmentManager(),"ChooseSizeTypesDialogFragment");
+    }
+
+    public void onNewSizesTypesDefined(int type1, int type2) {
+        Toast.makeText(this,"TYpes: " + type1 + type2, Toast.LENGTH_SHORT).show();
     }
 }

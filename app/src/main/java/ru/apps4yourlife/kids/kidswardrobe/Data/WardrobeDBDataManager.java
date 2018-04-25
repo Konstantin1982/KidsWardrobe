@@ -177,7 +177,7 @@ public class WardrobeDBDataManager {
         Cursor sizeType = mDBHelper.getReadableDatabase().query(
                 WardrobeContract.SizesTypes.TABLE_NAME,
                 null,
-                WardrobeContract.SizesTypes._ID + " = ? ",
+                WardrobeContract.SizesTypes.COLUMN_ID + " = ? ",
                 new String[] {String.valueOf(ID)},
                 null,
                 null,
