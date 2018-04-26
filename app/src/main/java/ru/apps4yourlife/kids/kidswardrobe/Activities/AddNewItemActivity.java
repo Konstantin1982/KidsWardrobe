@@ -1,5 +1,6 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,14 +10,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +40,12 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialog
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseSizeTypesDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
-public class AddNewItemActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener, ChooseSizeTypesDialogFragment.ChooseSizeTypesDialogListener {
+public class AddNewItemActivity extends AppCompatActivity
+        implements
+            ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener,
+            ChooseSizeTypesDialogFragment.ChooseSizeTypesDialogListener,
+            AdapterView.OnItemSelectedListener
+{
     private static final String TOAST_TEXT = "Test ads are being shown. ";
     private static final int TYPE_KIND_CLOTHES = 0;
     private static final int SIZES_VALUES = 1;
@@ -47,8 +62,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
     private Cursor mClothesCategoriesCursor;
     private Cursor mSizesValuesCursor;
 
-
-
+    // predefined Type
+    private String mPreType = "";
+    private long mPreTypeID = 0;
+    private boolean mNeedSaveType;
+    // predefined sizes types
+    private int mPreTypeSize1;
+    private int mPreTypeSize2;
+    private int mItemID = 0;
+    // sex and season
+    private int mSeason = 0;
+    private int mSex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +80,6 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
         setContentView(R.layout.activity_add_new_item);
         mDataManager = new WardrobeDBDataManager(this);
 
-        /*
-        AdView adView = (AdView) findViewById(R.id.adView2);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        adView.loadAd(adRequest);
-
-        // Toasts the test ad message on the screen. Remove this after defining your own ad unit ID.
-        Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
-        mDetailShown = 0;
-*/
         // Fill TYPES VALUE
         mTypeClothesTextView = (AutoCompleteTextView) findViewById(R.id.typeClothesTextView);
         ArrayAdapter<String> mAutoCompleteTextViewAdapter = new ArrayAdapter<String>(
@@ -85,10 +99,22 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
                 }
             }
         });
-        // mTypeClothesTextView.dropDown
-        //
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
 
 
+        Spinner itemSexSpinner = (Spinner) findViewById(R.id.spinner_sex_item);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.child_sex_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        itemSexSpinner.setAdapter(spinnerAdapter);
+        itemSexSpinner.setOnItemSelectedListener(this);
+
+        Spinner itemSeasonSpinner = (Spinner) findViewById(R.id.spinner_season);
+        ArrayAdapter<CharSequence> spinnerAdapter2 = ArrayAdapter.createFromResource(this, R.array.season_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        itemSeasonSpinner.setAdapter(spinnerAdapter2);
+        itemSeasonSpinner.setOnItemSelectedListener(this);
     }
 
     private List<String> getList (int typeOfList, int typeOfValues) {
@@ -172,13 +198,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
 
         sizeLabel = (TextView) findViewById(R.id.sizeTypeAdditionalLabel);
         sizeLabel.setText(mDataManager.GetSizeTypeName(newSizeTypeAdditional));
+        mPreTypeSize1 = newSizeTypeMain;
+        mPreTypeSize2 = newSizeTypeAdditional;
 
     }
 
 
     private void checkIsItNewValue(String chosenType) {
-        if (chosenType != "") {
+        mNeedSaveType = false;
+        if (chosenType != "" && !chosenType.equals(mPreType)) {
             boolean isFind = false;
+            mPreType = chosenType;
             for (int i = 0; i < mClothesCategoriesCursor.getCount(); i++) {
                 mClothesCategoriesCursor.moveToPosition(i);
                 String savedType = mClothesCategoriesCursor.getString(mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME));
@@ -190,14 +220,17 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
                             mClothesCategoriesCursor.getInt(
                                     mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL))
                     );
+                    mPreTypeID = mClothesCategoriesCursor.getLong(mClothesCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory._ID));
                     isFind = true;
                     break;
                 }
             }
+            mNeedSaveType = !isFind;
             if (!isFind) {
                 // TODO show button to link category and size!!!
                 FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
                 warningButton.setVisibility(View.VISIBLE);
+
             }
         }
 
@@ -257,6 +290,92 @@ public class AddNewItemActivity extends AppCompatActivity implements ChoosePhoto
     }
 
     public void onNewSizesTypesDefined(int type1, int type2) {
+        updateAdaptersForSizes(type1, type2);
+        mPreTypeSize1 = type1;
+        mPreTypeSize2 = type2;
         Toast.makeText(this,"TYpes: " + type1 + type2, Toast.LENGTH_SHORT).show();
+        FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
+        warningButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_save_child, menu);
+        return true;
+    }
+
+    public void LooseFocus() {
+        findViewById(R.id.main_layout_add_new_item).requestFocus();
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_save :
+                LooseFocus();
+                btnSaveNewItem_click();
+                return true;
+            case android.R.id.home:
+                LooseFocus();
+                setResult(0);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void btnSaveNewItem_click() {
+        boolean formIsOK = true;
+
+        FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
+        if (warningButton.getVisibility() == View.VISIBLE) {
+            formIsOK = false;
+            // TODO: animation of warning button
+        }
+
+        if (formIsOK) {
+            WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
+            // Insert Type with size types if needed
+            if (mNeedSaveType) {
+                mPreTypeID = dataManager.InsertOrUpdateClothesCategory(0,mPreType,mPreTypeSize1,mPreTypeSize2);
+            }
+
+            // insert size values
+            AutoCompleteTextView sizeClothesTextView = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
+            long sizeValue1 =     dataManager.FindOrInsertNewSizeValue(mPreTypeSize1, sizeClothesTextView.getText().toString());
+
+            AutoCompleteTextView sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeTypeAdditionalTextView);
+            long sizeValue2 =     dataManager.FindOrInsertNewSizeValue(mPreTypeSize1, sizeClothesTextView2.getText().toString());
+
+            EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
+            long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, mPreTypeSize1, mPreTypeSize1, commentEdit.getText().toString());
+            Toast.makeText(this, "New item has been inserted: " + new_id , Toast.LENGTH_SHORT).show();
+            setResult(1);
+            finish();
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        Spinner spinner = (Spinner) adapterView;
+        if (spinner.getId() == R.id.spinner_season) {
+            mSeason = position;
+        }
+        if (spinner.getId() == R.id.spinner_sex_item) {
+            mSex = position;
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Size;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
@@ -56,6 +57,34 @@ public class WardrobeDBDataManager {
         return result;
     }
 
+    public long InsertOrUpdateItem(long id, long cat_id, Uri linkToPhoto, Bitmap smallPhoto, int season, int sex, int size1, int size2, String comment) {
+        long result = 0;
+        ContentValues newValues = new ContentValues();
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_CAT_ID, cat_id);
+
+        byte[] smallPhotoBytes = getBytes(smallPhoto);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW, smallPhotoBytes);
+
+        String stringLinkToPhoto = "";
+        if (linkToPhoto != null) {
+            stringLinkToPhoto = linkToPhoto.toString();
+        }
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_LINK_TO_PHOTO, stringLinkToPhoto);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_SEASON, season);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_SEX, sex);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN, size1);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL, size2);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_COMMENT, comment);
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        if (id == 0) {
+            result = db.insert(WardrobeContract.ClothesItem.TABLE_NAME, null, newValues);
+        } else {
+            result = db.update(WardrobeContract.ClothesItem.TABLE_NAME, newValues, WardrobeContract.ClothesItem._ID + " = ? ", new String[]{String.valueOf(id)});
+        }
+        db.close();
+        return result;
+    }
+
     public long InsertOrUpdateChildSize(long idChild, double height, double footSize, double shoesSize) {
         long result = 0;
 
@@ -90,6 +119,35 @@ public class WardrobeDBDataManager {
         tmpCursor.close();
         return result;
     }
+
+    public long InsertOrUpdateClothesCategory(long id, String categoryName, int sizeType1, int sizeType2) {
+        long result = 0;
+
+        ContentValues newValues = new ContentValues();
+        newValues.put(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME, categoryName);
+        newValues.put(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE, sizeType1);
+        newValues.put(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL, sizeType2);
+
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        if (id == 0) {
+            result = db.insert(WardrobeContract.ClothesCategory.TABLE_NAME, null, newValues);
+        } else {
+            result = db.update(WardrobeContract.ClothesCategory.TABLE_NAME, newValues, WardrobeContract.ClothesCategory._ID + " = ? ", new String[]{String.valueOf(id)});
+        }
+        db.close();
+        return result;
+    }
+
+
+    /*
+    public static final class ClothesCategory implements BaseColumns {
+        public static final String TABLE_NAME = "category";
+        public static final String COLUMN_CAT_NAME = "name";
+        public static final String COLUMN_SIZE_TYPE = "size_type";
+        public static final String COLUMN_SIZE_TYPE_ADDITIONAL = "size_type2";
+    }
+    */
+    // size
 
     public Cursor GetLatestChildSize(String childId) {
         Cursor result = mDBHelper.getReadableDatabase().query(
@@ -202,7 +260,30 @@ public class WardrobeDBDataManager {
             sizeValues.moveToFirst();
         }
         return sizeValues;
-
     }
 
+    public long FindOrInsertNewSizeValue(int type, String value) {
+        long result = 0;
+
+        Cursor sizeCursor = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.Sizes.TABLE_NAME,
+                null,
+                WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = ? AND " + WardrobeContract.Sizes.COLUMN_VALUE + " =  ? ",
+                new String[] {String.valueOf(type), value},
+                null,
+                null,
+                WardrobeContract.Sizes._ID);
+        if (sizeCursor.getCount() > 0) {
+            sizeCursor.moveToFirst();
+            result = sizeCursor.getInt(sizeCursor.getColumnIndex(WardrobeContract.Sizes._ID));
+        } else {
+            ContentValues newValues = new ContentValues();
+            newValues.put(WardrobeContract.Sizes.COLUMN_SIZE_TYPE, String.valueOf(type));
+            newValues.put(WardrobeContract.Sizes.COLUMN_VALUE, value);
+            SQLiteDatabase db = mDBHelper.getWritableDatabase();
+            result = db.insert(WardrobeContract.Sizes.TABLE_NAME, null, newValues);
+            db.close();
+        }
+        return result;
+    }
 }

@@ -5,6 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:id="@+id/main_layout_add_new_item"
     >
 <ScrollView
     android:layout_height="match_parent"
@@ -225,7 +228,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView25" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinner_sex_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -328,7 +331,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView29" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/commentEditText"
         style="@style/TypicalTextView"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

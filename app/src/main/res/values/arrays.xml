@@ -22,6 +22,12 @@
         <item>Девочка</item>
         <item>Мальчик</item>
     </string-array>
+    <string-array name="season_array">
+        <item>Всесезонный</item>
+        <item>Зима</item>
+        <item>Лето</item>
+        <item>Весна-Осень</item>
+    </string-array>
     <!-- main type| second type| value -->
     <string-array name="clothes_categories_values">
         <item>1|2|Куртки</item>
@@ -37,6 +43,7 @@
         <item>3|1|Рубашки</item>
     </string-array>
     <string-array name="sizes_types">
+        <item>0|Размер </item>
         <item>1|Рост (размер РОС.)</item>
         <item>2|Возраст</item>
         <item>4|Размер обуви (размер ноги)</item>
