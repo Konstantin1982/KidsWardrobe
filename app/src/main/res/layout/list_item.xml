@@ -17,7 +17,7 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/previewItemImageInList"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
@@ -38,7 +38,7 @@
         android:text="Сезон Ребенок"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toStartOf="@+id/imageButton2"
-        app:layout_constraintStart_toEndOf="@+id/imageView4" />
+        app:layout_constraintStart_toEndOf="@+id/previewItemImageInList" />
 
     <TextView
         android:id="@+id/textView2"
@@ -49,7 +49,7 @@
         android:layout_marginTop="8dp"
         tools:text="Размер цвет"
         app:layout_constraintEnd_toStartOf="@+id/imageButton2"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@+id/previewItemImageInList"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <ImageButton

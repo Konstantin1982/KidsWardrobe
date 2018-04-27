@@ -3,6 +3,7 @@ package ru.apps4yourlife.kids.kidswardrobe.Data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -204,11 +205,20 @@ public class WardrobeDBDataManager {
 
 
 
-    public Cursor GetAllClothesCategories() {
-        Cursor categoryList = mDBHelper.getReadableDatabase().query(
+    public Cursor GetAllClothesCategories(boolean showEmpty) {
+        Cursor categoryList;
+        String selection = null;
+        String[] selectionArgs = null;
+        if (!showEmpty) {
+            selection = "EXISTS " +
+                        "   (SELECT 1 from " + WardrobeContract.ClothesItem.TABLE_NAME + " " +
+                    "           WHERE " + WardrobeContract.ClothesItem.COLUMN_CAT_ID + " =  " +
+                                WardrobeContract.ClothesCategory.TABLE_NAME + "." + WardrobeContract.ClothesCategory._ID  + ")";
+        }
+        categoryList = mDBHelper.getReadableDatabase().query(
                 WardrobeContract.ClothesCategory.TABLE_NAME,
                 null,
-                null,
+                selection,
                 null,
                 null,
                 null,
@@ -228,6 +238,28 @@ public class WardrobeDBDataManager {
                 null,
                 WardrobeContract.SizesTypes.COLUMN_ID);
         return sizeTypes;
+    }
+
+    public long GetCountItemsInCategory(long catId) {
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+        long result = DatabaseUtils.queryNumEntries(
+                db,
+                WardrobeContract.ClothesItem.TABLE_NAME,
+                WardrobeContract.ClothesItem.COLUMN_CAT_ID + " = ? ",
+                new String[]{String.valueOf(catId)});
+        return result;
+    }
+
+    public Cursor GetAllItemsInCategory(long catId) {
+        Cursor itemsInCategory = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesItem.TABLE_NAME,
+                null,
+                WardrobeContract.ClothesItem.COLUMN_CAT_ID + " = ? ",
+                new String[]{String.valueOf(catId)},
+                null,
+                null,
+                WardrobeContract.ClothesItem._ID);
+        return itemsInCategory;
     }
 
     public String GetSizeTypeName(int ID) {
@@ -286,4 +318,26 @@ public class WardrobeDBDataManager {
         }
         return result;
     }
+
+
+
+    public long GetDefaultCategoryId() {
+        Cursor categoryList;
+        categoryList = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesCategory.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                WardrobeContract.ClothesCategory._ID,
+                "1");
+        long result = 0;
+        if (categoryList.getCount() > 0) {
+            categoryList.moveToFirst();
+            result = categoryList.getLong(categoryList.getColumnIndex(WardrobeContract.ClothesCategory._ID));
+        }
+        return result;
+    }
+
 }

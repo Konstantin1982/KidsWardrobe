@@ -1,16 +1,23 @@
 package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 /**
  * Created by ksharafutdinov on 27-Feb-18.
@@ -19,9 +26,16 @@ import ru.apps4yourlife.kids.kidswardrobe.R;
 public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapter.CategoryListAdapterViewHolder> {
 
     private Context mContext;
+    private long mCategoryId;
+    private Cursor mItemsInCategoryCursor;
 
-    public CategoryListAdapter(Context context) {
+    public CategoryListAdapter(Context context, long categoryId) {
         mContext = context;
+        mCategoryId = categoryId;
+
+        WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(mContext);
+        mItemsInCategoryCursor = mDataManager.GetAllItemsInCategory (mCategoryId);
+
     }
 
     @Override
@@ -32,16 +46,19 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
 
     @Override
     public void onBindViewHolder(CategoryListAdapterViewHolder holder, int position) {
-
-        holder.firstTextView.setText("Hi there");
-        holder.secondTextView.setText("Hello there");
-        // Toast.makeText(mContext,"Hi there" + position, Toast.LENGTH_SHORT).show();
+        mItemsInCategoryCursor.moveToPosition(position);
+        holder.firstTextView.setText(mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEX)));
+        holder.secondTextView.setText(mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEASON)));
+        byte[] previewInBytes = mItemsInCategoryCursor.getBlob(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
+        Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CLOTHES_TYPE);
+        holder.mImagePreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        holder.mImagePreview.setImageBitmap(smallPhoto);
         return;
     }
 
     @Override
     public int getItemCount() {
-        return 8;
+        return mItemsInCategoryCursor.getCount();
     }
 
     class CategoryListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -53,6 +70,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         final TextView lowTempView;
         */
 
+        private ImageView mImagePreview;
         private TextView firstTextView;
         private TextView secondTextView;
 
@@ -68,7 +86,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
 
             firstTextView = (TextView) view.findViewById(R.id.textView);
             secondTextView = (TextView) view.findViewById(R.id.textView2);
-
+            mImagePreview = (ImageView) view.findViewById(R.id.previewItemImageInList);
             view.setOnClickListener(this);
         }
 

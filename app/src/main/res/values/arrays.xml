@@ -30,6 +30,7 @@
     </string-array>
     <!-- main type| second type| value -->
     <string-array name="clothes_categories_values">
+        <item>0|0|Неразобранное</item>
         <item>1|2|Куртки</item>
         <item>1|2|Штаны</item>
         <item>4|6|Обувь</item>

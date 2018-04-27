@@ -121,7 +121,7 @@ public class AddNewItemActivity extends AppCompatActivity
         List<String> mList = new ArrayList<>();
         switch (typeOfList) {
             case TYPE_KIND_CLOTHES:
-                mClothesCategoriesCursor = mDataManager.GetAllClothesCategories();
+                mClothesCategoriesCursor = mDataManager.GetAllClothesCategories(true);
                 if (mClothesCategoriesCursor.getCount() > 0) {
                     for (int i = 0; i < mClothesCategoriesCursor.getCount(); i++) {
                         mClothesCategoriesCursor.moveToPosition(i);
@@ -345,6 +345,9 @@ public class AddNewItemActivity extends AppCompatActivity
             // Insert Type with size types if needed
             if (mNeedSaveType) {
                 mPreTypeID = dataManager.InsertOrUpdateClothesCategory(0,mPreType,mPreTypeSize1,mPreTypeSize2);
+            }
+            if (mPreTypeID == 0) {
+                mPreTypeID = dataManager.GetDefaultCategoryId();
             }
 
             // insert size values
