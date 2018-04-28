@@ -28,14 +28,23 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     private Context mContext;
     private long mCategoryId;
     private Cursor mItemsInCategoryCursor;
+    private final CategoryListAdapterClickHandler mCategoryListAdapterClickHandler;
 
-    public CategoryListAdapter(Context context, long categoryId) {
+    public CategoryListAdapter(Context context, long categoryId, CategoryListAdapterClickHandler clickHandler) {
         mContext = context;
         mCategoryId = categoryId;
-
+        mCategoryListAdapterClickHandler = clickHandler;
         WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(mContext);
         mItemsInCategoryCursor = mDataManager.GetAllItemsInCategory (mCategoryId);
+    }
 
+    public interface CategoryListAdapterClickHandler {
+        void onItemClick(String childId, String itemPositionInList);
+    }
+
+    public void updateListValues(Cursor newItemList, int position) {
+        mItemsInCategoryCursor = newItemList;
+        notifyItemChanged(position);
     }
 
     @Override
@@ -99,12 +108,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
          */
         @Override
         public void onClick(View v) {
-            /*
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
-            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
-            mClickHandler.onClick(dateInMillis);
-            */
+            int position = getAdapterPosition();
+            mItemsInCategoryCursor.moveToPosition(position);
+            Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
+            mCategoryListAdapterClickHandler.onItemClick (
+                    mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem._ID)),
+                    String.valueOf(position)
+            );
         }
     }
 }

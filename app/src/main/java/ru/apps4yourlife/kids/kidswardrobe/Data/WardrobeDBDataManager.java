@@ -140,16 +140,6 @@ public class WardrobeDBDataManager {
     }
 
 
-    /*
-    public static final class ClothesCategory implements BaseColumns {
-        public static final String TABLE_NAME = "category";
-        public static final String COLUMN_CAT_NAME = "name";
-        public static final String COLUMN_SIZE_TYPE = "size_type";
-        public static final String COLUMN_SIZE_TYPE_ADDITIONAL = "size_type2";
-    }
-    */
-    // size
-
     public Cursor GetLatestChildSize(String childId) {
         Cursor result = mDBHelper.getReadableDatabase().query(
                 WardrobeContract.ChildSizeEntry.TABLE_NAME,
@@ -199,7 +189,7 @@ public class WardrobeDBDataManager {
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
-        childrenList.moveToFirst();
+        if (childrenList.getCount() > 0) childrenList.moveToFirst();
         return childrenList;
     }
 
@@ -211,9 +201,9 @@ public class WardrobeDBDataManager {
         String[] selectionArgs = null;
         if (!showEmpty) {
             selection = "EXISTS " +
-                        "   (SELECT 1 from " + WardrobeContract.ClothesItem.TABLE_NAME + " " +
+                    "   (SELECT 1 from " + WardrobeContract.ClothesItem.TABLE_NAME + " " +
                     "           WHERE " + WardrobeContract.ClothesItem.COLUMN_CAT_ID + " =  " +
-                                WardrobeContract.ClothesCategory.TABLE_NAME + "." + WardrobeContract.ClothesCategory._ID  + ")";
+                    WardrobeContract.ClothesCategory.TABLE_NAME + "." + WardrobeContract.ClothesCategory._ID  + ")";
         }
         categoryList = mDBHelper.getReadableDatabase().query(
                 WardrobeContract.ClothesCategory.TABLE_NAME,
@@ -226,7 +216,24 @@ public class WardrobeDBDataManager {
         return categoryList;
 
     }
+    public Cursor GetCategoryById(long catId) {
+        Cursor categoryList;
+        String selection = null;
+        String[] selectionArgs = null;
+        categoryList = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesCategory.TABLE_NAME,
+                null,
+                WardrobeContract.ClothesCategory._ID + " = ?",
+                new String[] {String.valueOf(catId)},
+                null,
+                null,
+                null);
+        if (categoryList.getCount()> 0) {
+            categoryList.moveToFirst();
+        }
+        return categoryList;
 
+    }
 
     public Cursor GetAllSizesTypes() {
         Cursor sizeTypes = mDBHelper.getReadableDatabase().query(
@@ -294,6 +301,22 @@ public class WardrobeDBDataManager {
         return sizeValues;
     }
 
+    public Cursor GetSizesValuesById(long sizeId) {
+        Cursor sizeValues = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.Sizes.TABLE_NAME,
+                null,
+                WardrobeContract.Sizes._ID + " = ? ",
+                new String[] {String.valueOf(sizeId)},
+                null,
+                null,
+                WardrobeContract.Sizes._ID);
+        if (sizeValues.getCount() > 0) {
+            sizeValues.moveToFirst();
+        }
+        return sizeValues;
+    }
+
+
     public long FindOrInsertNewSizeValue(int type, String value) {
         long result = 0;
 
@@ -338,6 +361,20 @@ public class WardrobeDBDataManager {
             result = categoryList.getLong(categoryList.getColumnIndex(WardrobeContract.ClothesCategory._ID));
         }
         return result;
+    }
+
+    public Cursor GetItemById(long itemId) {
+        Cursor itemValues;
+        itemValues = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesItem.TABLE_NAME,
+                null,
+                WardrobeContract.ClothesItem._ID + " = ?",
+                new String[] {String.valueOf(itemId)},
+                null,
+                null,
+                WardrobeContract.ClothesItem._ID);
+        if (itemValues.getCount() > 0) itemValues.moveToFirst();
+        return itemValues;
     }
 
 }

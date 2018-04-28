@@ -56,7 +56,7 @@ public class AddNewItemActivity extends AppCompatActivity
     private Uri mCurrentPhotoUri;
     private Bitmap mPhotoPreview;
     private ImageButton maddNewItemImageButton;
-
+    private String mPositionFromList;
 
     private AutoCompleteTextView mTypeClothesTextView;
     private Cursor mClothesCategoriesCursor;
@@ -74,18 +74,22 @@ public class AddNewItemActivity extends AppCompatActivity
     private int mSeason = 0;
     private int mSex = 0;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item);
         mDataManager = new WardrobeDBDataManager(this);
 
+        maddNewItemImageButton = (ImageButton) findViewById(R.id.addNewItemImageButton);
+
         // Fill TYPES VALUE
         mTypeClothesTextView = (AutoCompleteTextView) findViewById(R.id.typeClothesTextView);
         ArrayAdapter<String> mAutoCompleteTextViewAdapter = new ArrayAdapter<String>(
                 this,
-                        android.R.layout.simple_dropdown_item_1line,
-                        getList(TYPE_KIND_CLOTHES, 0)
+                android.R.layout.simple_dropdown_item_1line,
+                getList(TYPE_KIND_CLOTHES, 0)
         );
         mTypeClothesTextView.setAdapter(mAutoCompleteTextViewAdapter);
         mTypeClothesTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -99,10 +103,13 @@ public class AddNewItemActivity extends AppCompatActivity
                 }
             }
         });
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
 
+
+        String sentId = getIntent().getStringExtra("ID");
+        if (!sentId.isEmpty()) {
+            mItemID = Integer.valueOf(sentId);
+        }
+        mPositionFromList = getIntent().getStringExtra("POSITION");
 
         Spinner itemSexSpinner = (Spinner) findViewById(R.id.spinner_sex_item);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.child_sex_array, android.R.layout.simple_spinner_item);
@@ -115,6 +122,59 @@ public class AddNewItemActivity extends AppCompatActivity
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         itemSeasonSpinner.setAdapter(spinnerAdapter2);
         itemSeasonSpinner.setOnItemSelectedListener(this);
+
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+
+        if (mItemID == 0) {
+            mCurrentPhotoUri = null;
+            mPhotoPreview = null;
+        } else {
+            Cursor currentItemCursor = mDataManager.GetItemById(mItemID);
+            // фотография + путь к ней
+            mCurrentPhotoUri = Uri.parse(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_LINK_TO_PHOTO)));
+
+            byte[] previewInBytes = currentItemCursor.getBlob(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
+            Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
+            mPhotoPreview = smallPhoto;
+            maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            maddNewItemImageButton.setImageBitmap(mPhotoPreview);
+            maddNewItemImageButton.setBackground(null);
+
+
+            // категория
+            long cat_id = currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_CAT_ID));
+            Cursor currentCat = mDataManager.GetCategoryById(cat_id);
+            mPreType = currentCat.getString(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME));
+            mPreTypeID = cat_id;
+            mTypeClothesTextView.setText(currentCat.getString(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME)));
+            // сезон (СПИННЕР)
+            mSeason = currentItemCursor.getInt(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEASON));
+            itemSeasonSpinner.setSelection(mSeason);
+            // для кого (СПИННЕР)
+            mSex = currentItemCursor.getInt(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEX));
+            itemSexSpinner.setSelection(mSex);
+            // размер 1
+            // размер 2
+            Cursor sizeCursor = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN)));
+            Cursor sizeCursor2 = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL)));
+            updateAdaptersForSizes(
+                    currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE)),
+                    currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE))
+            );
+            AutoCompleteTextView sizeClothesTextView = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
+            sizeClothesTextView.setText(sizeCursor.getString(sizeCursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
+
+            AutoCompleteTextView sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeTypeAdditionalTextView);
+            sizeClothesTextView2.setText(sizeCursor2.getString(sizeCursor2.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
+
+            // комментарий
+            EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
+            commentEdit.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)));
+        }
+
     }
 
     private List<String> getList (int typeOfList, int typeOfValues) {
@@ -267,7 +327,6 @@ public class AddNewItemActivity extends AppCompatActivity
             if (requestCode == 1) {
                 mCurrentPhotoUri = data.getData();
             }
-            maddNewItemImageButton = (ImageButton) findViewById(R.id.addNewItemImageButton);
             mPhotoPreview = GeneralHelper.resizeBitmapFile(this, maddNewItemImageButton.getWidth()-10, maddNewItemImageButton.getHeight()-10, mCurrentPhotoUri);
             maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
             maddNewItemImageButton.setImageBitmap(mPhotoPreview);
@@ -360,7 +419,9 @@ public class AddNewItemActivity extends AppCompatActivity
             EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
             long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, mPreTypeSize1, mPreTypeSize1, commentEdit.getText().toString());
             Toast.makeText(this, "New item has been inserted: " + new_id , Toast.LENGTH_SHORT).show();
-            setResult(1);
+            Intent data = new Intent();
+            data.putExtra("POSITION", mPositionFromList);
+            setResult(1, data);
             finish();
         }
     }
