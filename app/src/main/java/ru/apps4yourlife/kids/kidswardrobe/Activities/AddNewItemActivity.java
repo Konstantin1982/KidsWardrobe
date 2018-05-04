@@ -106,7 +106,7 @@ public class AddNewItemActivity extends AppCompatActivity
 
 
         String sentId = getIntent().getStringExtra("ID");
-        if (!sentId.isEmpty()) {
+        if (sentId != null &&  !sentId.isEmpty()) {
             mItemID = Integer.valueOf(sentId);
         }
         mPositionFromList = getIntent().getStringExtra("POSITION");
@@ -158,17 +158,21 @@ public class AddNewItemActivity extends AppCompatActivity
             itemSexSpinner.setSelection(mSex);
             // размер 1
             // размер 2
-            Cursor sizeCursor = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN)));
-            Cursor sizeCursor2 = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL)));
             updateAdaptersForSizes(
                     currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE)),
                     currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE))
             );
-            AutoCompleteTextView sizeClothesTextView = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
-            sizeClothesTextView.setText(sizeCursor.getString(sizeCursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
+            Cursor sizeCursor = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN)));
+            Cursor sizeCursor2 = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL)));
+            if (sizeCursor.getCount() > 0) {
+                AutoCompleteTextView sizeClothesTextView = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
+                sizeClothesTextView.setText(sizeCursor.getString(sizeCursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
+            }
 
-            AutoCompleteTextView sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeTypeAdditionalTextView);
-            sizeClothesTextView2.setText(sizeCursor2.getString(sizeCursor2.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
+            if (sizeCursor2.getCount() > 0) {
+                AutoCompleteTextView sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeTypeAdditionalTextView);
+                sizeClothesTextView2.setText(sizeCursor2.getString(sizeCursor2.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
+            }
 
             // комментарий
             EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
@@ -360,7 +364,13 @@ public class AddNewItemActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_save_child, menu);
+        int menuId;
+        if (mItemID > 0) {
+            menuId = R.menu.menu_save_edit_item;
+        } else {
+            menuId = R.menu.menu_save_child;
+        }
+        inflater.inflate(menuId, menu);
         return true;
     }
 

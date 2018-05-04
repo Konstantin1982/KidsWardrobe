@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Size;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
@@ -377,4 +378,26 @@ public class WardrobeDBDataManager {
         return itemValues;
     }
 
+    public Bitmap GetCategoryImage (long categoryId) {
+        Bitmap result = null;
+
+        Cursor itemInCategory;
+        String selection = null;
+        String[] selectionArgs = null;
+        itemInCategory = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesItem.TABLE_NAME,
+                null,
+                WardrobeContract.ClothesItem.COLUMN_CAT_ID + " = ?",
+                new String[] {String.valueOf(categoryId)},
+                null,
+                null,
+                " RANDOM ()",
+                "1");
+        if (itemInCategory.getCount()> 0) {
+            itemInCategory.moveToFirst();
+            byte[] previewInBytes = itemInCategory.getBlob(itemInCategory.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
+            result = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CLOTHES_TYPE);
+        }
+        return result;
+    }
 }

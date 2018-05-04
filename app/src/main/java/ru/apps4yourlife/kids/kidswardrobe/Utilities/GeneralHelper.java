@@ -118,6 +118,8 @@ public class GeneralHelper implements Transformation{
         return result;
     }
 
+
+
     @Override
     public Bitmap transform(final Bitmap source) {
         final Paint paint = new Paint();
@@ -133,6 +135,7 @@ public class GeneralHelper implements Transformation{
 
         return output;
     }
+
 
     @Override
     public String key() {

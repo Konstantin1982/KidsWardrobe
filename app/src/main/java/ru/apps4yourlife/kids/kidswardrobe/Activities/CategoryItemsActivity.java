@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -32,6 +33,10 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
 
         mAdapter = new CategoryListAdapter(this, mCategoryID, this);
         mListItems.setAdapter(mAdapter);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        // actionBar.setHomeAsUpIndicator(R.drawable.);
+
     }
 
     @Override
@@ -56,5 +61,18 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
             mAdapter.updateListValues (newItemsCursor, Integer.parseInt(position));
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(399);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 }

@@ -11,6 +11,11 @@
         android:alpha="0.5"
         />
 
+    <gradient
+        android:endColor="@color/defaultBackgroundColor"
+        android:startColor="@color/gridItemStrokeColor"
+        android:angle="270" />
+
     <padding
         android:bottom="10dp"
         android:left="10dp"

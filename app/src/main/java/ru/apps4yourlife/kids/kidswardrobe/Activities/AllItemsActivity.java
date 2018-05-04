@@ -4,14 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.Image;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 public class AllItemsActivity extends AppCompatActivity {
 
@@ -40,6 +45,10 @@ public class AllItemsActivity extends AppCompatActivity {
         mGridItems = findViewById(R.id.gridItems);
         mGridItems.setAdapter(new GridAdapter(this));
         mGridItems.setOnItemClickListener(new AllItemsClickListener());
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        // actionBar.setHomeAsUpIndicator(R.drawable.);
 
     }
 
@@ -83,6 +92,10 @@ public class AllItemsActivity extends AppCompatActivity {
             TextView count = (TextView) itemView.findViewById(R.id.countItemsInCategory);
             count.setText(String.valueOf(mDataManager.GetCountItemsInCategory(catId)));
             itemView.setTag(catId);
+
+            ImageView imageView = (ImageView) itemView.findViewById(R.id.categoryImage);
+            imageView.setImageBitmap(mDataManager.GetCategoryImage(catId));
+
             return itemView;
         }
     }
@@ -96,8 +109,32 @@ public class AllItemsActivity extends AppCompatActivity {
             Toast.makeText(mContext,"Category ID clicked: " + String.valueOf(id) , Toast.LENGTH_SHORT ).show();
             Intent intent = new Intent(adapterView.getContext(), CategoryItemsActivity.class);
             intent.putExtra("ID", String.valueOf(id));
-            startActivity(intent);
+            startActivityForResult(intent, 399);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 399 && resultCode > 0) {
+            mCategoriesCursor = mDataManager.GetAllClothesCategories(false);
+            GridAdapter adapter =  (GridAdapter) mGridItems.getAdapter();
+            adapter.notifyDataSetChanged();
+            mGridItems.invalidateViews();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(0);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 }
