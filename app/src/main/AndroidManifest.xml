@@ -40,7 +40,10 @@
             android:label="@string/title_activity_new_item"
             android:screenOrientation="portrait"
         />
-        <activity android:name=".Activities.AllItemsActivity" />
+        <activity android:name=".Activities.AllItemsActivity"
+            android:label="@string/title_activity_wardrobe"
+            android:screenOrientation="portrait"
+        />
         <activity android:name=".Activities.CategoryItemsActivity" />
         <activity android:name=".Activities.AddNewChildActivity"
             android:label="@string/title_activity_new_child"

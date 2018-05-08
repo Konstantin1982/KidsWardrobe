@@ -233,7 +233,30 @@ public class WardrobeDBDataManager {
             categoryList.moveToFirst();
         }
         return categoryList;
+    }
 
+    public String GetCategoryNameById(long catId) {
+        Cursor categoryList;
+        categoryList = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesCategory.TABLE_NAME,
+                null,
+                WardrobeContract.ClothesCategory._ID + " = ?",
+                new String[] {String.valueOf(catId)},
+                null,
+                null,
+                null);
+        String categoryName = "";
+        if (categoryList.getCount()> 0) {
+            categoryList.moveToFirst();
+            categoryName = categoryList.getString(categoryList.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME));
+        }
+        return categoryName;
+    }
+
+    public Cursor GetAllComments() {
+        String sql = "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + ") FROM " + WardrobeContract.ClothesItem.TABLE_NAME + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
+        Cursor commentsCursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+        return commentsCursor;
     }
 
     public Cursor GetAllSizesTypes() {
@@ -398,6 +421,17 @@ public class WardrobeDBDataManager {
             byte[] previewInBytes = itemInCategory.getBlob(itemInCategory.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
             result = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CLOTHES_TYPE);
         }
+        return result;
+    }
+
+
+    public int DeleteItemById(long itemId) {
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        int result = db.delete(
+                WardrobeContract.ClothesItem.TABLE_NAME,
+                WardrobeContract.ClothesItem._ID + " = ? ",
+                new String[] {String.valueOf(itemId)}
+        );
         return result;
     }
 }

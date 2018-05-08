@@ -35,8 +35,12 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
         mListItems.setAdapter(mAdapter);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        // actionBar.setHomeAsUpIndicator(R.drawable.);
-
+        WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
+        String catName = dataManager.GetCategoryNameById(mCategoryID);
+        if (catName.isEmpty()) {
+            catName = this.getString(R.string.title_activity_category_default);
+        }
+        actionBar.setTitle(catName);
     }
 
     @Override
@@ -54,7 +58,10 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
         if (requestCode == 299 && resultCode > 0) {
             WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(this);
             Cursor newItemsCursor = mDataManager.GetAllItemsInCategory(mCategoryID);
-            String position = data.getStringExtra("POSITION");
+            String position = null;
+            if (data != null && data.hasExtra("POSITION")) {
+                position = data.getStringExtra("POSITION");
+            }
             if (position == null) {
                 position = "-1";
             }

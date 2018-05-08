@@ -1,6 +1,8 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -8,6 +10,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -49,6 +52,7 @@ public class AddNewItemActivity extends AppCompatActivity
     private static final String TOAST_TEXT = "Test ads are being shown. ";
     private static final int TYPE_KIND_CLOTHES = 0;
     private static final int SIZES_VALUES = 1;
+    private static final int TYPE_COMMENTS = 2;
 
     private WardrobeDBDataManager mDataManager;
 
@@ -103,6 +107,23 @@ public class AddNewItemActivity extends AppCompatActivity
                 }
             }
         });
+
+        final AutoCompleteTextView commentTextView = (AutoCompleteTextView) findViewById(R.id.commentEditText);
+        mAutoCompleteTextViewAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                getList(TYPE_COMMENTS, 0)
+        );
+        commentTextView.setAdapter(mAutoCompleteTextViewAdapter);
+        commentTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if (isFocused) {
+                    commentTextView.showDropDown();
+                }
+            }
+        });
+
 
 
         String sentId = getIntent().getStringExtra("ID");
@@ -214,6 +235,19 @@ public class AddNewItemActivity extends AppCompatActivity
                     }
                 }
                 break;
+            case TYPE_COMMENTS:
+                Cursor commentsCursor = mDataManager.GetAllComments();
+                if (commentsCursor.getCount() > 0) {
+                    for (int i = 0; i < commentsCursor.getCount(); i++) {
+                        commentsCursor.moveToPosition(i);
+                        String comment = commentsCursor.getString(commentsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
+                        if (!comment.isEmpty()) {
+                            mList.add(comment);
+                        }
+                    }
+                }
+                break;
+
         }
         return mList;
     }
@@ -390,6 +424,10 @@ public class AddNewItemActivity extends AppCompatActivity
                 LooseFocus();
                 btnSaveNewItem_click();
                 return true;
+            case R.id.menu_item_delete :
+                LooseFocus();
+                btnDeleteItem_click();
+                return true;
             case android.R.id.home:
                 LooseFocus();
                 setResult(0);
@@ -400,13 +438,43 @@ public class AddNewItemActivity extends AppCompatActivity
         }
     }
 
+    public void btnDeleteItem_click() {
+        if (mItemID > 0) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.are_you_sure_to_delete)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            ApproveDeleteRecord();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            builder.create().show();
+        }
+    }
+
+    public void ApproveDeleteRecord() {
+        if (mItemID > 0) {
+            WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
+            int result = dataManager.DeleteItemById(mItemID);
+            setResult(1);
+            finish();
+        }
+    }
+
     public void btnSaveNewItem_click() {
         boolean formIsOK = true;
-
         FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
-        if (warningButton.getVisibility() == View.VISIBLE) {
+        if (warningButton.getVisibility() == View.VISIBLE || mPhotoPreview == null) {
             formIsOK = false;
             // TODO: animation of warning button
+            if (mPhotoPreview == null) {
+                Toast.makeText(this,"Фотография - обязательна.", Toast.LENGTH_SHORT).show();
+            }
         }
 
         if (formIsOK) {
