@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.lang.reflect.Array;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -28,7 +31,12 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     private Context mContext;
     private long mCategoryId;
     private Cursor mItemsInCategoryCursor;
+    private Cursor mSizesWithNames;
     private final CategoryListAdapterClickHandler mCategoryListAdapterClickHandler;
+    private String[] mSex;
+    private String[] mSeason;
+
+
 
     public CategoryListAdapter(Context context, long categoryId, CategoryListAdapterClickHandler clickHandler) {
         mContext = context;
@@ -36,6 +44,11 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         mCategoryListAdapterClickHandler = clickHandler;
         WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(mContext);
         mItemsInCategoryCursor = mDataManager.GetAllItemsInCategory (mCategoryId);
+        // sizes with names of type
+        mSizesWithNames = mDataManager.GetAllSizesWithNamesForCategory(mCategoryId);
+        //
+        mSex = mContext.getResources().getStringArray(R.array.child_sex_array);
+        mSeason = mContext.getResources().getStringArray(R.array.season_array);
     }
 
     public interface CategoryListAdapterClickHandler {
@@ -60,8 +73,54 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     @Override
     public void onBindViewHolder(CategoryListAdapterViewHolder holder, int position) {
         mItemsInCategoryCursor.moveToPosition(position);
-        holder.firstTextView.setText(mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEX)));
-        holder.secondTextView.setText(mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEASON)));
+        int size1 = mItemsInCategoryCursor.getInt(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN));
+        int size2 = mItemsInCategoryCursor.getInt(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL));
+        int found = 0;
+        String sizeName1 = "", sizeName2 = "";
+        String topRow = "";
+        for (int i = 0; i < mSizesWithNames.getCount(); i++) {
+            mSizesWithNames.moveToPosition(i);
+            int rIndex = mSizesWithNames.getColumnIndex(WardrobeContract.Sizes._ID);
+            int dbId = mSizesWithNames.getInt(rIndex);
+            if (dbId == size1) {
+                sizeName1 = mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME)) + ": " +
+                mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+                found++;
+            }
+            if (dbId == size2) {
+                sizeName2 = mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME)) + ": " +
+                mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+                found++;
+            }
+            if (found == 2) break;
+        }
+        if (!sizeName1.isEmpty() || !sizeName2.isEmpty()) {
+            if (!sizeName1.isEmpty()) {
+                topRow = sizeName1;
+            }
+            if (topRow.length() < 20 && !sizeName2.isEmpty()) {
+                if (topRow.length() > 0) {
+                    topRow += " / ";
+                }
+                topRow += sizeName2;
+            }
+        } else {
+            topRow = "Размеры не заданы";
+        }
+        holder.firstTextView.setText(topRow);
+        String bottomRow = "";
+        bottomRow = mSeason[mItemsInCategoryCursor.getInt(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEASON))];
+        int sex = mItemsInCategoryCursor.getInt(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEX));
+        if (sex > 0) {
+            bottomRow += " / " + mSex[sex];
+        }
+        holder.secondTextView.setText(bottomRow);
+
+        String comment = mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
+        if (!comment.isEmpty()) {
+            holder.thirdTextView.setText(comment);
+        }
+
         byte[] previewInBytes = mItemsInCategoryCursor.getBlob(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
         Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CLOTHES_TYPE);
         holder.mImagePreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -86,6 +145,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         private ImageView mImagePreview;
         private TextView firstTextView;
         private TextView secondTextView;
+        private TextView thirdTextView;
 
         CategoryListAdapterViewHolder(View view) {
             super(view);
@@ -99,6 +159,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
 
             firstTextView = (TextView) view.findViewById(R.id.textView);
             secondTextView = (TextView) view.findViewById(R.id.textView2);
+            thirdTextView = (TextView) view.findViewById(R.id.textView3);
             mImagePreview = (ImageView) view.findViewById(R.id.previewItemImageInList);
             view.setOnClickListener(this);
         }

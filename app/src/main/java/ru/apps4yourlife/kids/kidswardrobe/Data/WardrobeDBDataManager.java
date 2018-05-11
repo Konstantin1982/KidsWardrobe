@@ -59,7 +59,7 @@ public class WardrobeDBDataManager {
         return result;
     }
 
-    public long InsertOrUpdateItem(long id, long cat_id, Uri linkToPhoto, Bitmap smallPhoto, int season, int sex, int size1, int size2, String comment) {
+    public long InsertOrUpdateItem(long id, long cat_id, Uri linkToPhoto, Bitmap smallPhoto, int season, int sex, long size1, long size2, String comment) {
         long result = 0;
         ContentValues newValues = new ContentValues();
         newValues.put(WardrobeContract.ClothesItem.COLUMN_CAT_ID, cat_id);
@@ -282,6 +282,7 @@ public class WardrobeDBDataManager {
     }
 
     public Cursor GetAllItemsInCategory(long catId) {
+
         Cursor itemsInCategory = mDBHelper.getReadableDatabase().query(
                 WardrobeContract.ClothesItem.TABLE_NAME,
                 null,
@@ -291,6 +292,22 @@ public class WardrobeDBDataManager {
                 null,
                 WardrobeContract.ClothesItem._ID);
         return itemsInCategory;
+    }
+
+    public Cursor GetAllSizesWithNamesForCategory(long catId)  {
+        Cursor result = null;
+        Cursor category  = GetCategoryById(catId);
+        if (category.getCount() > 0) {
+            category.moveToFirst();
+            int sizeType1 = category.getInt(category.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE));
+            int sizeType2 = category.getInt(category.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL));
+            category.close();
+            String sql = "SELECT s.*, st." + WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME + " FROM " + WardrobeContract.Sizes.TABLE_NAME + " s join " + WardrobeContract.SizesTypes.TABLE_NAME +
+                    " st on s." + WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = st." + WardrobeContract.SizesTypes.COLUMN_ID + " WHERE s." + WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " IN (?, ?)";
+            result = mDBHelper.getReadableDatabase().rawQuery(sql,new String[]{String.valueOf(sizeType1), String.valueOf(sizeType2)});
+            if (result.getCount() > 0) result.moveToFirst();
+        }
+        return result;
     }
 
     public String GetSizeTypeName(int ID) {

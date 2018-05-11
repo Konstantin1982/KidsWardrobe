@@ -181,7 +181,7 @@ public class AddNewItemActivity extends AppCompatActivity
             // размер 2
             updateAdaptersForSizes(
                     currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE)),
-                    currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE))
+                    currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL))
             );
             Cursor sizeCursor = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN)));
             Cursor sizeCursor2 = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL)));
@@ -492,10 +492,10 @@ public class AddNewItemActivity extends AppCompatActivity
             long sizeValue1 =     dataManager.FindOrInsertNewSizeValue(mPreTypeSize1, sizeClothesTextView.getText().toString());
 
             AutoCompleteTextView sizeClothesTextView2 = (AutoCompleteTextView) findViewById(R.id.sizeTypeAdditionalTextView);
-            long sizeValue2 =     dataManager.FindOrInsertNewSizeValue(mPreTypeSize1, sizeClothesTextView2.getText().toString());
+            long sizeValue2 =     dataManager.FindOrInsertNewSizeValue(mPreTypeSize2, sizeClothesTextView2.getText().toString());
 
             EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
-            long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, mPreTypeSize1, mPreTypeSize1, commentEdit.getText().toString());
+            long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, sizeValue1, sizeValue2, commentEdit.getText().toString());
             Toast.makeText(this, "New item has been inserted: " + new_id , Toast.LENGTH_SHORT).show();
             Intent data = new Intent();
             data.putExtra("POSITION", mPositionFromList);
