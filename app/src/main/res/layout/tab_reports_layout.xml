@@ -40,8 +40,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
 
-        android:onClick="btnShowAllClothes_Click"
-        android:text="Инвентаризация"
+        android:onClick="btnShowReportAllClothes_Click"
+        android:text="Где что лежит?"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

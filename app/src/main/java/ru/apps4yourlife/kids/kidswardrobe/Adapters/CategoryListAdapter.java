@@ -77,6 +77,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         int size2 = mItemsInCategoryCursor.getInt(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL));
         int found = 0;
         String sizeName1 = "", sizeName2 = "";
+        String sizeValue1 = "", sizeValue2 = "";
         String topRow = "";
         for (int i = 0; i < mSizesWithNames.getCount(); i++) {
             mSizesWithNames.moveToPosition(i);
@@ -85,16 +86,18 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
             if (dbId == size1) {
                 sizeName1 = mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME)) + ": " +
                 mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+                sizeValue1 = mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
                 found++;
             }
             if (dbId == size2) {
                 sizeName2 = mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME)) + ": " +
                 mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+                sizeValue2 = mSizesWithNames.getString(mSizesWithNames.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
                 found++;
             }
             if (found == 2) break;
         }
-        if (!sizeName1.isEmpty() || !sizeName2.isEmpty()) {
+        if (!sizeValue1.isEmpty() || !sizeValue2.isEmpty()) {
             if (!sizeName1.isEmpty()) {
                 topRow = sizeName1;
             }
@@ -117,9 +120,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         holder.secondTextView.setText(bottomRow);
 
         String comment = mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
-        if (!comment.isEmpty()) {
-            holder.thirdTextView.setText(comment);
-        }
+        holder.thirdTextView.setText(comment);
 
         byte[] previewInBytes = mItemsInCategoryCursor.getBlob(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
         Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CLOTHES_TYPE);

@@ -22,6 +22,7 @@
     <string name="title_activity_new_child">Ребенок</string>
     <string name="title_activity_wardrobe">Гардероб</string>
     <string name="title_activity_category_default">Полка с одеждой</string>
+    <string name="title_places">Места с одеждой</string>
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>
     <string name="are_you_sure_to_delete">Вы уверены, что хотите убрать вещь из гардероба?</string>

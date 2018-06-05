@@ -259,6 +259,12 @@ public class WardrobeDBDataManager {
         return commentsCursor;
     }
 
+    public Cursor GetAllCommentsWithChecked() {
+        String sql = "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + "), _id, 0 as CHECKED FROM " + WardrobeContract.ClothesItem.TABLE_NAME + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
+        Cursor commentsCursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+        return commentsCursor;
+    }
+
     public Cursor GetAllSizesTypes() {
         Cursor sizeTypes = mDBHelper.getReadableDatabase().query(
                 WardrobeContract.SizesTypes.TABLE_NAME,

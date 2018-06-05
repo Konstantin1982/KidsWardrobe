@@ -101,4 +101,9 @@ public class StartActivity extends AppCompatActivity {
         Intent intent = new Intent(this,ChildrenListActivity.class);
         startActivity(intent);
     }
+    public void btnShowReportAllClothes_Click(View view) {
+        Intent intent = new Intent(this,PlaceReportActivity.class);
+        startActivity(intent);
+    }
+
 }

@@ -38,17 +38,16 @@
         <activity
             android:name=".Activities.AddNewItemActivity"
             android:label="@string/title_activity_new_item"
-            android:screenOrientation="portrait"
-        />
-        <activity android:name=".Activities.AllItemsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.AllItemsActivity"
             android:label="@string/title_activity_wardrobe"
-            android:screenOrientation="portrait"
-        />
+            android:screenOrientation="portrait" />
         <activity android:name=".Activities.CategoryItemsActivity" />
-        <activity android:name=".Activities.AddNewChildActivity"
+        <activity
+            android:name=".Activities.AddNewChildActivity"
             android:label="@string/title_activity_new_child"
-            android:screenOrientation="portrait"
-        />
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -60,7 +59,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Activities.ChildrenListActivity"></activity>
+        <activity android:name=".Activities.ChildrenListActivity" />
+        <activity android:name=".Activities.PlaceReportActivity"></activity>
     </application>
 
 </manifest>

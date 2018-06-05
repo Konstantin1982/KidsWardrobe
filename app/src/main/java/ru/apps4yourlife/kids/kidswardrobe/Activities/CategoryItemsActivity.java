@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -79,6 +80,9 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public void btnAddNewItemFromList_Click(View v) {
+        onItemClick("0", "-1");
     }
 
 
