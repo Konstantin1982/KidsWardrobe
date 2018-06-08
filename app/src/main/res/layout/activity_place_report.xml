@@ -8,13 +8,14 @@
 
     <TextView
         android:id="@+id/placeTextView_PlaceReport"
+        style="@style/TypicalTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:inputType="textMultiLine"
         android:onClick="placeTextView_click"
-        android:text="Выбрать"
+        android:text="Все места"
         android:textAlignment="viewEnd"
         app:layout_constraintBottom_toBottomOf="@+id/textView13"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Расположение"
+        android:text="Расположение:"
         app:layout_constraintBottom_toBottomOf="@+id/imageView4"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toTopOf="@+id/imageView4" />
@@ -54,5 +55,173 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/placeTextView_PlaceReport"
         app:srcCompat="@drawable/new_entity_divide_line" />
+
+    <ImageView
+        android:id="@+id/imageView32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView31"
+        app:srcCompat="@drawable/ic_wardrobe" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Показывать только:"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView32"
+        app:layout_constraintStart_toEndOf="@+id/imageView32"
+        app:layout_constraintTop_toTopOf="@+id/imageView32" />
+
+    <TextView
+        android:id="@+id/typeClothesTextView_PlaceReport"
+        style="@style/TypicalTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:onClick="typeTextView_click"
+        android:text="Все типы"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/textView17"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+    <ImageView
+        android:id="@+id/imageView33"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeClothesTextView_PlaceReport"
+        app:srcCompat="@drawable/new_entity_divide_line" />
+
+    <ImageView
+        android:id="@+id/imageView34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView33"
+        app:srcCompat="@drawable/ic_snow_cloud" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Сезон:"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView34"
+        app:layout_constraintStart_toEndOf="@+id/imageView34"
+        app:layout_constraintTop_toTopOf="@+id/imageView34" />
+
+    <TextView
+        android:id="@+id/seazonTextView_PlaceReport"
+        style="@style/TypicalTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:onClick="seazonTextView_click"
+        android:text="Все сезоны"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/textView18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView18"
+        app:layout_constraintTop_toTopOf="@+id/textView18" />
+
+    <ImageView
+        android:id="@+id/imageView35"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seazonTextView_PlaceReport"
+        app:srcCompat="@drawable/new_entity_divide_line" />
+
+    <CheckBox
+        android:id="@+id/onlyGoodSize_checkBox"
+        style="@style/TypicalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:checked="false"
+        android:text="Только подходящие по размеру"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView37" />
+
+    <ImageView
+        android:id="@+id/imageView36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView35"
+        app:srcCompat="@drawable/ic_baby" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Для ребенка:"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView36"
+        app:layout_constraintStart_toEndOf="@+id/imageView36"
+        app:layout_constraintTop_toTopOf="@+id/imageView36" />
+
+    <TextView
+        android:id="@+id/childTextView_PlaceReport"
+        style="@style/TypicalTextView"
+        android:onClick="childTextView_click"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Для всех"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/textView20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView20"
+        app:layout_constraintTop_toTopOf="@+id/textView20" />
+
+    <ImageView
+        android:id="@+id/imageView37"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/childTextView_PlaceReport"
+        app:srcCompat="@drawable/new_entity_divide_line" />
+
+
+    <Button
+        android:id="@+id/button4"
+        style="@style/TypicalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Показать"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/onlyGoodSize_checkBox" />
+
 
 </android.support.constraint.ConstraintLayout>

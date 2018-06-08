@@ -181,6 +181,16 @@ public class WardrobeDBDataManager {
                                     WardrobeContract.ChildEntry._ID);
         return childrenList;
     }
+
+    public Cursor GetAllChildrenWithChecked() {
+
+        String sql =
+                "SELECT DISTINCT(" + WardrobeContract.ChildEntry.COLUMN_NAME + "), " +
+                        "_id, 0 as CHECKED FROM " + WardrobeContract.ChildEntry.TABLE_NAME +
+                        " ORDER BY " + WardrobeContract.ChildEntry.COLUMN_NAME;
+        Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(sql, null);
+        return cursor;
+    }
     public Cursor GetChildByIdFromDb(String ID) {
         Cursor childrenList = mDBHelper.getReadableDatabase().query(
                                     WardrobeContract.ChildEntry.TABLE_NAME,
@@ -215,8 +225,19 @@ public class WardrobeDBDataManager {
                 null,
                 WardrobeContract.ClothesCategory.COLUMN_CAT_NAME + ", " + WardrobeContract.ClothesCategory._ID);
         return categoryList;
-
     }
+
+    public Cursor GetAllClothesCategoriesWithChecked() {
+        String sql = "SELECT DISTINCT(" + WardrobeContract.ClothesCategory.COLUMN_CAT_NAME + "), _id,  0 as CHECKED FROM " + WardrobeContract.ClothesCategory.TABLE_NAME +
+                " WHERE EXISTS " +
+                "   (SELECT 1 from " + WardrobeContract.ClothesItem.TABLE_NAME + " " +
+                "           WHERE " + WardrobeContract.ClothesItem.COLUMN_CAT_ID + " =  " +
+                WardrobeContract.ClothesCategory.TABLE_NAME + "." + WardrobeContract.ClothesCategory._ID  + ")" +
+                " ORDER BY " + WardrobeContract.ClothesCategory.COLUMN_CAT_NAME;
+        Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+        return cursor;
+    }
+
     public Cursor GetCategoryById(long catId) {
         Cursor categoryList;
         String selection = null;
@@ -260,7 +281,10 @@ public class WardrobeDBDataManager {
     }
 
     public Cursor GetAllCommentsWithChecked() {
-        String sql = "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + "), _id, 0 as CHECKED FROM " + WardrobeContract.ClothesItem.TABLE_NAME + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
+        String sql =
+                "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + "), " +
+                "MAX(_id) as _id, 0 as CHECKED FROM " + WardrobeContract.ClothesItem.TABLE_NAME  +
+                " GROUP BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
         Cursor commentsCursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
         return commentsCursor;
     }
