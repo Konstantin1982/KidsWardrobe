@@ -1,10 +1,12 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.database.Cursor;
+import android.icu.text.UnicodeSetSpanner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,10 @@ public class PlaceReportActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_report);
         mDataManager = new WardrobeDBDataManager(this);
+        mSelectedPlaces = new ArrayList<Integer>();
+        mSelectedTypes = new ArrayList<Integer>();
+        mSelectedSeasons = new ArrayList<Integer>();
+        mSelectedChildren = new ArrayList<Integer>();
     }
 
 
@@ -152,7 +158,9 @@ public class PlaceReportActivity extends AppCompatActivity
     public void OnClickChild(ArrayList<Integer> selectedItems) {
         mChosenChildrenAsString = "";
         mSelectedChildren = new ArrayList<Integer>();
-        if (!selectedItems.isEmpty()) {
+        CheckBox goodSizeCheckBox = (CheckBox) findViewById(R.id.onlyGoodSize_checkBox);
+        boolean isChosen = !selectedItems.isEmpty();
+        if (isChosen) {
             String[] seasons = getResources().getStringArray(R.array.season_array);
             int i = 0;
             for (int child: selectedItems) {
@@ -161,8 +169,77 @@ public class PlaceReportActivity extends AppCompatActivity
                 mChosenChildrenAsString = mChosenChildrenAsString.concat(mItems.getString(mItems.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_NAME)));
             }
         }
+        goodSizeCheckBox.setChecked(isChosen);
+        goodSizeCheckBox.setEnabled(!isChosen);
+
         TextView places = (TextView) findViewById(R.id.childTextView_PlaceReport);
         places.setText(mChosenChildrenAsString);
 
     }
+
+    public void runReport_Places(View view) {
+        String SQL = "select * from items join categories join sizes join sizes_names";
+
+        String filterSQL = "WHERE 1 = 1 ";
+        if (!mSelectedPlaces.isEmpty()) {
+            mItems = mDataManager.GetAllCommentsWithChecked();
+            filterSQL = filterSQL.concat(" AND ( ");
+            String filterPlaces = "";
+            for (Integer cursorIndex : mSelectedPlaces) {
+                if (!filterPlaces.isEmpty()) {
+                    filterPlaces =  filterPlaces.concat(" OR ");
+                }
+                mItems.moveToPosition(cursorIndex);
+                filterPlaces =  filterPlaces.concat(" items.comment LIKE '" + mItems.getString(mItems.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)) + "'");
+            }
+            filterSQL = filterSQL.concat(filterPlaces +  " ) ");
+        }
+        //Toast.makeText(this,"After Places: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
+
+        if (!mSelectedTypes.isEmpty()) {
+            String filterTypes = "";
+            filterSQL = filterSQL.concat(" AND items.cat_id IN (");
+            mItems = mDataManager.GetAllClothesCategoriesWithChecked();
+            for (Integer cursorIndex : mSelectedTypes) {
+                if (!filterTypes.isEmpty()) {
+                    filterTypes =  filterTypes.concat(",");
+                }
+                mItems.moveToPosition(cursorIndex);
+                filterTypes =  filterTypes.concat(mItems.getString(mItems.getColumnIndex(WardrobeContract.ClothesCategory._ID)));
+            }
+            filterSQL = filterSQL.concat(filterTypes + " ) ");
+        }
+        TextView places = (TextView) findViewById(R.id.typeClothesTextView_PlaceReport);
+
+        //Toast.makeText(this,"After Types: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
+
+
+        if (!mSelectedSeasons.isEmpty()) {
+            String filterSeasons = "";
+            filterSQL = filterSQL.concat(" AND items.season IN (");
+            for (Integer cursorIndex : mSelectedSeasons) {
+                if (!filterSeasons.isEmpty()) {
+                    filterSeasons =  filterSeasons.concat(",");
+                }
+                filterSeasons =  filterSeasons.concat(String.valueOf(cursorIndex));
+            }
+            filterSQL = filterSQL.concat(filterSeasons + " ) ");
+        }
+        Toast.makeText(this,"After Seasons: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
+
+        /*
+        private ArrayList<Integer> mSelectedPlaces;
+        private String mChosenPlacesAsString;
+
+        private ArrayList<Integer> mSelectedTypes;
+        private String mChosenTypesAsString;
+
+        private ArrayList<Integer> mSelectedSeasons;
+        private String mChosenSeasonsAsString;
+
+        private ArrayList<Integer> mSelectedChildren;
+        private String mChosenChildrenAsString;
+        */
+    }
+
 }

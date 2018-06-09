@@ -89,7 +89,8 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.Sizes.TABLE_NAME + "(" +
                         WardrobeContract.Sizes._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " INTEGER, " +
-                        WardrobeContract.Sizes.COLUMN_VALUE + " VARCHAR(255)" +
+                        WardrobeContract.Sizes.COLUMN_VALUE + " VARCHAR(255)," +
+                        WardrobeContract.Sizes.COLUMN_REAL_VALUE + " DOUBLE" +
                         ")";
 
         final String SQL_CREATE_CLOTHES_SIZES_TYPES_TABLE =
@@ -138,6 +139,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                 String[] parcedSizes = type.split("\\|");
                 values.put(WardrobeContract.Sizes.COLUMN_SIZE_TYPE, Integer.valueOf(parcedSizes[0]));
                 values.put(WardrobeContract.Sizes.COLUMN_VALUE, parcedSizes[1]);
+                values.put(WardrobeContract.Sizes.COLUMN_REAL_VALUE, parcedSizes[1]);
                 db.insert(WardrobeContract.Sizes.TABLE_NAME, null, values);
             }
         } finally {

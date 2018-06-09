@@ -3,19 +3,6 @@
     <string-array name="dialog_choose_application_items">
         <item>Сделать новое фото</item>
         <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
-        <item>Выбрать из галереи</item>
     </string-array>
     <string-array name="child_sex_array">
         <item>Не указано</item>
@@ -54,98 +41,96 @@
 
     <!-- type | value -->
     <string-array name="sizes">
-        <item>1|50 см. (18)</item>
-        <item>1|56 см. (18)</item>
-        <item>1|62 см. (20)</item>
-        <item>1|68 см. (20)</item>
-        <item>1|74 см. (22)</item>
-        <item>1|80 см. (24)</item>
-        <item>1|86 см. (26)</item>
-        <item>1|92 см. (28)</item>
-        <item>1|98 см. (28–30)</item>
-        <item>1|104 см. (28–30)</item>
-        <item>1|110 см. (30)</item>
-        <item>1|116 см. (32)</item>
-        <item>1|122 см. (32–34)</item>
-        <item>1|128 см. (34)</item>
-        <item>1|134 см. (36)</item>
-        <item>1|140 см. (38)</item>
-        <item>1|146 см. (38–40)</item>
-        <item>1|152 см. (40)</item>
-        <item>1|158 см. (40–42)</item>
-        <item>1|164 см. (40–42)</item>
-        <item>1|168 см. (42)</item>
-        <item>1|172 см. (42)</item>
-        <item>1|174 см. (42–44)</item>
+        <item>1|50 см. (18)|50</item>
+        <item>1|56 см. (18)|56</item>
+        <item>1|62 см. (20)|62</item>
+        <item>1|68 см. (20)|68</item>
+        <item>1|74 см. (22)|74</item>
+        <item>1|80 см. (24)|80</item>
+        <item>1|86 см. (26)|86</item>
+        <item>1|92 см. (28)|92</item>
+        <item>1|98 см. (28–30)|98</item>
+        <item>1|104 см. (28–30)|104</item>
+        <item>1|110 см. (30)|110</item>
+        <item>1|116 см. (32)|116</item>
+        <item>1|122 см. (32–34)|122</item>
+        <item>1|128 см. (34)|128</item>
+        <item>1|134 см. (36)|134</item>
+        <item>1|140 см. (38)|140</item>
+        <item>1|146 см. (38–40)|146</item>
+        <item>1|152 см. (40)|152</item>
+        <item>1|158 см. (40–42)|158</item>
+        <item>1|164 см. (40–42)|164</item>
+        <item>1|168 см. (42)|168</item>
+        <item>1|172 см. (42)|172</item>
+        <item>1|174 см. (42–44)|174</item>
 
-        <item>2|0–3 месяца</item>
-        <item>2|3–6 месяцев</item>
-        <item>2|6–9 месяцев</item>
-        <item>2|1–1.5 года</item>
-        <item>2|1.5–2 года</item>
-        <item>2|2 года</item>
-        <item>2|3 года</item>
-        <item>2|4 года</item>
-        <item>2|5 лет</item>
-        <item>2|6 лет</item>
-        <item>2|7 лет</item>
-        <item>2|8 лет</item>
-        <item>2|9 лет</item>
-        <item>2|10 лет</item>
-        <item>2|11 лет</item>
-        <item>2|12 лет</item>
-        <item>2|13 лет</item>
-        <item>2|14 лет</item>
-        <item>2|15 лет</item>
-        <item>2|16 лет</item>
-        <item>4|16 (9.5 см.)</item>
-        <item>4|16.5 (10 см.)</item>
-        <item>4|17 (10.5 см.)</item>
-
-        <item>4|18 (11 см.)</item>
-        <item>4|19 (11.5 см.)</item>
-        <item>4|19.5 (12 см.)</item>
-        <item>4|20 (12.5 см.)</item>
-        <item>4|21 (13 см.)</item>
-        <item>4|22 (13.5 см.)</item>
-        <item>4|22.5 (14 см.)</item>
-        <item>4|23 (14.5 см.)</item>
-        <item>4|24 (15 см.)</item>
-        <item>4|25 (15.5 см.)</item>
-        <item>4|25.5 (16 см.)</item>
-        <item>4|26 (16.5 см.)</item>
-        <item>4|27 (17 см.)</item>
-        <item>4|28 (17.5 см.)</item>
-        <item>4|28.5 (18 см.)</item>
-        <item>4|29 (18.5 см.)</item>
-        <item>4|30 (19 см.)</item>
-        <item>4|31 (19.5 см.)</item>
-        <item>4|31.5 (20 см.)</item>
-        <item>4|32 (20.5 см.)</item>
-        <item>4|33 (21 см.)</item>
-        <item>4|34 (21.5 см.)</item>
-        <item>4|34.5 (22 см.)</item>
-        <item>4|35 (22.5 см.)</item>
-        <item>4|36 (23 см.)</item>
-        <item>4|37 (23.5 см.)</item>
-
-        <item>5|34 см. (0 – 3 мес.)</item>
-        <item>5|38 см. (3 мес.)</item>
-        <item>5|40 см. (3 – 6 мес.)</item>
-        <item>5|44 см. (6 мес.)</item>
-        <item>5|46 см. (9 мес.)</item>
-        <item>5|47 см. (12 мес.)</item>
-        <item>5|48 см. (1.5 года)</item>
-        <item>5|49 см. (2 года)</item>
-        <item>5|50 см. (3 года)</item>
-        <item>5|51 см. (4 года)</item>
-        <item>5|52 см. (5 лет)</item>
-        <item>5|53 см. (6 лет)</item>
-        <item>5|54 см. (7 лет)</item>
-        <item>5|55 см. (8 лет)</item>
-        <item>5|56 см. (9 – 10 лет)</item>
-        <item>5|57 см. (11 лет)</item>
-        <item>5|58 см. (12 лет)</item>
+        <item>2|0–3 месяца|0.25</item>
+        <item>2|3–6 месяцев|0.5</item>
+        <item>2|6–9 месяцев|0.75</item>
+        <item>2|1–1.5 года|1.5</item>
+        <item>2|1.5–2 года|2</item>
+        <item>2|2 года|2</item>
+        <item>2|3 года|3</item>
+        <item>2|4 года|4</item>
+        <item>2|5 лет|5</item>
+        <item>2|6 лет|6</item>
+        <item>2|7 лет|7</item>
+        <item>2|8 лет|8</item>
+        <item>2|9 лет|9</item>
+        <item>2|10 лет|10</item>
+        <item>2|11 лет|11</item>
+        <item>2|12 лет|12</item>
+        <item>2|13 лет|13</item>
+        <item>2|14 лет|14</item>
+        <item>2|15 лет|15</item>
+        <item>2|16 лет|16</item>
+        <item>4|16 (9.5 см.)|9.5</item>
+        <item>4|16.5 (10 см.)|10</item>
+        <item>4|17 (10.5 см.)|10.5</item>
+        <item>4|18 (11 см.)|11</item>
+        <item>4|19 (11.5 см.)|11.5</item>
+        <item>4|19.5 (12 см.)|12</item>
+        <item>4|20 (12.5 см.)|12.5</item>
+        <item>4|21 (13 см.)|13</item>
+        <item>4|22 (13.5 см.)|13.5</item>
+        <item>4|22.5 (14 см.)|14</item>
+        <item>4|23 (14.5 см.)|14.5</item>
+        <item>4|24 (15 см.)|15</item>
+        <item>4|25 (15.5 см.)|15.5</item>
+        <item>4|25.5 (16 см.)|16</item>
+        <item>4|26 (16.5 см.)|16.5</item>
+        <item>4|27 (17 см.)|17</item>
+        <item>4|28 (17.5 см.)|17.5</item>
+        <item>4|28.5 (18 см.)|18</item>
+        <item>4|29 (18.5 см.)|18.5</item>
+        <item>4|30 (19 см.)|19</item>
+        <item>4|31 (19.5 см.)|19.5</item>
+        <item>4|31.5 (20 см.)|20</item>
+        <item>4|32 (20.5 см.)|20.5</item>
+        <item>4|33 (21 см.)|21</item>
+        <item>4|34 (21.5 см.)|21.5</item>
+        <item>4|34.5 (22 см.)|22</item>
+        <item>4|35 (22.5 см.)|22.5</item>
+        <item>4|36 (23 см.)|23</item>
+        <item>4|37 (23.5 см.)|23.5</item>
+        <item>5|34 см. (0 – 3 мес.)|34</item>
+        <item>5|38 см. (3 мес.)|38</item>
+        <item>5|40 см. (3 – 6 мес.)|40</item>
+        <item>5|44 см. (6 мес.)|44</item>
+        <item>5|46 см. (9 мес.)|46</item>
+        <item>5|47 см. (12 мес.)|47</item>
+        <item>5|48 см. (1.5 года)|48</item>
+        <item>5|49 см. (2 года)|49</item>
+        <item>5|50 см. (3 года)|50</item>
+        <item>5|51 см. (4 года)|51</item>
+        <item>5|52 см. (5 лет)|52</item>
+        <item>5|53 см. (6 лет)|53</item>
+        <item>5|54 см. (7 лет)|54</item>
+        <item>5|55 см. (8 лет)|55</item>
+        <item>5|56 см. (9 – 10 лет)|56</item>
+        <item>5|57 см. (11 лет)|57</item>
+        <item>5|58 см. (12 лет)|58</item>
     </string-array>
 
 

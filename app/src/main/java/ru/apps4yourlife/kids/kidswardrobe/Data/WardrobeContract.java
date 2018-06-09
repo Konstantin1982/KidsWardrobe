@@ -65,7 +65,8 @@ public class WardrobeContract {
     public static final class Sizes implements BaseColumns {
         public static final String TABLE_NAME = "sizes";
         public static final String COLUMN_SIZE_TYPE = "size_type";
-        public static final String COLUMN_VALUE = "value";
+        public static final String COLUMN_VALUE = "shown_value";
+        public static final String COLUMN_REAL_VALUE = "real_value";
     }
 
     // size_type
