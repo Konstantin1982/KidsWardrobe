@@ -103,8 +103,8 @@ public class WardrobeDBDataManager {
         Cursor tmpCursor = db.query(
                 WardrobeContract.ChildSizeEntry.TABLE_NAME,
                 null,
-                WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " = ?" ,
-                new String[] { String.valueOf(todayDateAsLong)},
+                WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " = ? AND "  + WardrobeContract.ChildSizeEntry.COLUMN_CHILD_ID + " = ?",
+                new String[] { String.valueOf(todayDateAsLong), String.valueOf(idChild)},
                 null,
                 null,
                 WardrobeContract.ChildSizeEntry._ID);
@@ -112,8 +112,8 @@ public class WardrobeDBDataManager {
             result = db.update(
                         WardrobeContract.ChildSizeEntry.TABLE_NAME,
                         newValues,
-                        WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " = ?" ,
-                        new String[] { String.valueOf(todayDateAsLong)}
+                        WardrobeContract.ChildSizeEntry.COLUMN_DATE_ENTERED + " = ?" + " AND " + WardrobeContract.ChildSizeEntry.COLUMN_CHILD_ID + " =  ?",
+                        new String[] { String.valueOf(todayDateAsLong), String.valueOf(idChild)}
                     );
         } else  {
             result = db.insert(WardrobeContract.ChildSizeEntry.TABLE_NAME, null, newValues);
@@ -186,7 +186,7 @@ public class WardrobeDBDataManager {
 
         String sql =
                 "SELECT DISTINCT(" + WardrobeContract.ChildEntry.COLUMN_NAME + "), " +
-                        "_id, 0 as CHECKED FROM " + WardrobeContract.ChildEntry.TABLE_NAME +
+                        "_id, sex, 0 as CHECKED FROM " + WardrobeContract.ChildEntry.TABLE_NAME +
                         " ORDER BY " + WardrobeContract.ChildEntry.COLUMN_NAME;
         Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(sql, null);
         return cursor;
@@ -480,5 +480,43 @@ public class WardrobeDBDataManager {
                 new String[] {String.valueOf(itemId)}
         );
         return result;
+    }
+
+
+    public int GetSizeIdByFilter(int type, double value, int condition) {
+        // 0 - equal
+        // 1 - next
+        // 2 - prev
+        // SIZES
+        int result = -1;
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+        String sql  = "";
+        if (condition == 2) sql = "select * from sizes where real_value < ? and size_type = ? order by real_value desc limit 1;";
+        if (condition == 1) sql = "select * from sizes where real_value > ? and size_type = ? order by real_value limit 1;";
+        if (condition == 0) sql = "select * from sizes where real_value <= ? and size_type = ? order by real_value desc limit 1;";
+        String[] selectionArgs = new String[] {String.valueOf(value), String.valueOf(type)};
+        Cursor cursor = db.rawQuery(sql,selectionArgs);
+        //Cursor cursor = db.rawQuery(sql,null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToPosition(0);
+            result = cursor.getInt(cursor.getColumnIndex("_id"));
+            String comment = "Condition" + condition + "; Value = " + value + "; Name from DB = " + cursor.getString(cursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+            Toast.makeText(mContext, comment, Toast.LENGTH_LONG);
+        }
+        return result;
+    }
+
+
+    public Cursor GetItemsForReport(String filter) {
+        Cursor items = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.ClothesItem.TABLE_NAME,
+                null,
+                filter,
+                null,
+                null,
+                null,
+                WardrobeContract.ClothesItem._ID);
+        return items;
+
     }
 }

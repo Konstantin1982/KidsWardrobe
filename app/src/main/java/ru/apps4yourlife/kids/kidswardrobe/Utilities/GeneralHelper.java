@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -22,12 +23,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import com.squareup.picasso.Transformation;
 
@@ -161,6 +164,91 @@ public class GeneralHelper implements Transformation{
             value = Double.valueOf(valueAsString);
         }
         return value;
+    }
+
+    public static ArrayList<Integer> AddSizesForChild(Context context, long childId, ArrayList<Integer> currentList) {
+
+        ArrayList<Integer> newList = currentList;
+        if (newList == null) newList = new ArrayList<Integer>();
+
+        WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
+        Cursor childSizeCursor = mDataManager.GetLatestChildSize(String.valueOf(childId));
+        Cursor childCursor = mDataManager.GetChildByIdFromDb(String.valueOf(childId));
+        //1 - Рост
+        //2 - Возраст в годах
+        //4 - Обувь
+        double size1 = 0, size2 = 0, size4 = 0;
+        if (childSizeCursor.getCount() > 0) {
+            childSizeCursor.moveToPosition(0);
+            size1 = childSizeCursor.getDouble(childSizeCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_HEIGHT));
+            size4 = childSizeCursor.getDouble(childSizeCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE));
+        }
+
+
+        Calendar currentCalendar = new GregorianCalendar();
+        Calendar birthdayCalendar = new GregorianCalendar();
+        birthdayCalendar.setTimeInMillis(childCursor.getLong(childCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE)));
+        double tmp = (60 * 60 * 24);
+        double tmp1 =(currentCalendar.getTimeInMillis() - birthdayCalendar.getTimeInMillis()) / 365000;
+        size2 =  tmp1 / tmp;
+        int nextSize = 0;
+        if (size1 > 0) {
+            nextSize = mDataManager.GetSizeIdByFilter(1, size1, 0);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(1, size1, 1);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(1, size1, 2);
+            if (nextSize > 0) newList.add(nextSize);
+        }
+        if (size2 > 0) {
+            nextSize = mDataManager.GetSizeIdByFilter(2, size2, 0);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(2, size2, 1);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(2, size2, 2);
+            if (nextSize > 0) newList.add(nextSize);
+        }
+        if (size4 > 0) {
+            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 0);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 1);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 2);
+            if (nextSize > 0) newList.add(nextSize);
+        }
+        return newList;
+    }
+
+
+
+    public static String GetFilterForSizes(Context context, ArrayList<Integer> children, boolean isSizeChecked) {
+        String filter = "";
+        ArrayList<Integer> sizesIds = new ArrayList<Integer>();
+        if (isSizeChecked || !children.isEmpty()) {
+            if (children.isEmpty()) {
+                WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
+                Cursor childrenCursor = mDataManager.GetChildrenListFromDb("");
+                for (int i = 0; i < childrenCursor.getCount(); i++) {
+                    childrenCursor.moveToPosition(i);
+                    long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
+                    sizesIds = AddSizesForChild(context,childId,sizesIds);
+                }
+            } else {
+                WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
+                Cursor childrenCursor = mDataManager.GetAllChildrenWithChecked();
+                childrenCursor.moveToPosition(children.get(0));
+                long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
+                sizesIds = AddSizesForChild(context,childId,sizesIds);
+            }
+        }
+        if (!sizesIds.isEmpty()) {
+            filter = "(" ;
+            for (Integer id : sizesIds) {
+                filter = filter.concat(String.valueOf(id) + ", ");
+            }
+            filter = filter.concat("-1)");
+        }
+        return filter;
     }
 
 }

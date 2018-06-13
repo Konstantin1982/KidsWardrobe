@@ -182,6 +182,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                     mCurrentPhotoUri,
                     mPhotoPreview,
                     mCurrentChildID);
+            if (mCurrentChildID == null || mCurrentChildID.isEmpty()) mCurrentChildID = String.valueOf(res);
             //TODO: after insert action
             double childFoot = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.footSizeEditText));
             double childHeight = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.heightChildEditText));
@@ -189,10 +190,13 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             if (childFoot + childHeight + childShoes > 0) {
                 long resSize =
                         dataManager.InsertOrUpdateChildSize(
-                            mCurrentChildID == null ? res : Long.valueOf(mCurrentChildID),
+                            Long.valueOf(mCurrentChildID),
                             childHeight,
                             childFoot,
                             childShoes);
+
+                Toast.makeText(this, "Sizes for Child were updated. Child ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
+
             }
 
             Toast.makeText(this, "New chils has been inserted: " + res, Toast.LENGTH_SHORT).show();

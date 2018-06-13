@@ -213,16 +213,29 @@
     <Button
         android:id="@+id/button4"
         style="@style/TypicalButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="Показать"
         android:onClick="runReport_Places"
+        android:text="Показать"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/onlyGoodSize_checkBox" />
+
+    <Button
+        android:id="@+id/button5"
+        style="@style/TypicalButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Обновить детские размеры"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button4" />
 
 
 </android.support.constraint.ConstraintLayout>

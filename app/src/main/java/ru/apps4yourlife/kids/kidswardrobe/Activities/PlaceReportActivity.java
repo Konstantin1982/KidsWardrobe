@@ -1,9 +1,11 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.icu.text.UnicodeSetSpanner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -24,6 +26,7 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialog
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePlaceDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseSeasonDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseTypeDialogFragment;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 public class PlaceReportActivity extends AppCompatActivity
         implements
@@ -157,7 +160,7 @@ public class PlaceReportActivity extends AppCompatActivity
     @Override
     public void OnClickChild(ArrayList<Integer> selectedItems) {
         mChosenChildrenAsString = "";
-        mSelectedChildren = new ArrayList<Integer>();
+        mSelectedChildren = selectedItems;
         CheckBox goodSizeCheckBox = (CheckBox) findViewById(R.id.onlyGoodSize_checkBox);
         boolean isChosen = !selectedItems.isEmpty();
         if (isChosen) {
@@ -225,21 +228,36 @@ public class PlaceReportActivity extends AppCompatActivity
             }
             filterSQL = filterSQL.concat(filterSeasons + " ) ");
         }
-        Toast.makeText(this,"After Seasons: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"After Seasons: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
 
-        /*
-        private ArrayList<Integer> mSelectedPlaces;
-        private String mChosenPlacesAsString;
+        CheckBox goodSizeCheckBox = (CheckBox) findViewById(R.id.onlyGoodSize_checkBox);
+        String filterSizes = GeneralHelper.GetFilterForSizes(this, mSelectedChildren, goodSizeCheckBox.isChecked());
+        if (!filterSizes.isEmpty()) {
+            filterSQL = filterSQL.concat("AND (items.size in " + filterSizes + "OR items.size2 in " + filterSizes + " ) ");
+        }
+        Toast.makeText(this,"After Children1: FILTER = " + filterSQL, Toast.LENGTH_SHORT).show();
 
-        private ArrayList<Integer> mSelectedTypes;
-        private String mChosenTypesAsString;
 
-        private ArrayList<Integer> mSelectedSeasons;
-        private String mChosenSeasonsAsString;
+        if (!mSelectedChildren.isEmpty()) {
+            String filterSex = "";
+            //filterSQL = filterSQL.concat(" AND items.sex IN (0,");
+            mItems = mDataManager.GetAllChildrenWithChecked();
+            for (Integer cursorIndex : mSelectedChildren) {
+                mItems.moveToPosition(cursorIndex);
+                int sexValue = mItems.getInt(mItems.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_SEX));
+                if (sexValue > 0) {
+                    filterSex = "(0," + sexValue + ")";
+                }
+            }
+            if (!filterSex.isEmpty()) {
+                filterSQL = filterSQL.concat(" AND items.sex IN " + filterSex + " ");
+            }
+        }
+        Toast.makeText(this,"After Children2: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
 
-        private ArrayList<Integer> mSelectedChildren;
-        private String mChosenChildrenAsString;
-        */
+        Intent intent = new Intent(this, ReportResultListActivity.class);
+        intent.putExtra("FILTER",filterSQL);
+        startActivityForResult(intent,499);
     }
 
 }

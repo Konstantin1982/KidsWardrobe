@@ -60,7 +60,8 @@
         </provider>
 
         <activity android:name=".Activities.ChildrenListActivity" />
-        <activity android:name=".Activities.PlaceReportActivity"></activity>
+        <activity android:name=".Activities.PlaceReportActivity" />
+        <activity android:name=".Activities.ReportResultListActivity"></activity>
     </application>
 
 </manifest>

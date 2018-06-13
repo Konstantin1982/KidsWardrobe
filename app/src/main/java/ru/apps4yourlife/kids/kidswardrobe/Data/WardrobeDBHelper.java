@@ -139,7 +139,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                 String[] parcedSizes = type.split("\\|");
                 values.put(WardrobeContract.Sizes.COLUMN_SIZE_TYPE, Integer.valueOf(parcedSizes[0]));
                 values.put(WardrobeContract.Sizes.COLUMN_VALUE, parcedSizes[1]);
-                values.put(WardrobeContract.Sizes.COLUMN_REAL_VALUE, parcedSizes[1]);
+                values.put(WardrobeContract.Sizes.COLUMN_REAL_VALUE, parcedSizes[2]);
                 db.insert(WardrobeContract.Sizes.TABLE_NAME, null, values);
             }
         } finally {
