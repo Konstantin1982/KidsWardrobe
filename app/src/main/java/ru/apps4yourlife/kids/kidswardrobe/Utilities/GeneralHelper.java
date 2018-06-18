@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -249,6 +251,28 @@ public class GeneralHelper implements Transformation{
             filter = filter.concat("-1)");
         }
         return filter;
+    }
+
+    public static Map<Long, ArrayList<Integer>> GetSuitSizesByChild(Context context) {
+        Map<Long, ArrayList<Integer>> suitSizes = new HashMap<Long, ArrayList<Integer>>();
+        WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
+        Cursor childrenCursor = mDataManager.GetChildrenListFromDb("");
+        for (int i = 0; i < childrenCursor.getCount(); i++) {
+            ArrayList<Integer> sizesIds = new ArrayList<Integer>();
+            childrenCursor.moveToPosition(i);
+            long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
+            sizesIds = AddSizesForChild(context,childId,sizesIds);
+            suitSizes.put(childId,sizesIds);
+        }
+        return suitSizes;
+    }
+
+    public static String GetNewHeaderForReport(Cursor cursor, String reportType) {
+        String newHeader = "";
+        if (reportType == "comment") {
+            newHeader = cursor.getString(cursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
+        }
+        return newHeader;
     }
 
 }

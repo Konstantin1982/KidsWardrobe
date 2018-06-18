@@ -336,6 +336,11 @@ public class WardrobeDBDataManager {
                     " st on s." + WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = st." + WardrobeContract.SizesTypes.COLUMN_ID + " WHERE s." + WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " IN (?, ?)";
             result = mDBHelper.getReadableDatabase().rawQuery(sql,new String[]{String.valueOf(sizeType1), String.valueOf(sizeType2)});
             if (result.getCount() > 0) result.moveToFirst();
+        } else {
+            String sql = "SELECT s.*, st." + WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME + " FROM " + WardrobeContract.Sizes.TABLE_NAME + " s join " + WardrobeContract.SizesTypes.TABLE_NAME +
+                    " st on s." + WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = st." + WardrobeContract.SizesTypes.COLUMN_ID ;
+            result = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+            if (result.getCount() > 0) result.moveToFirst();
         }
         return result;
     }
@@ -507,7 +512,7 @@ public class WardrobeDBDataManager {
     }
 
 
-    public Cursor GetItemsForReport(String filter) {
+    public Cursor GetItemsForReport(String filter, String sortBy) {
         Cursor items = mDBHelper.getReadableDatabase().query(
                 WardrobeContract.ClothesItem.TABLE_NAME,
                 null,
@@ -515,7 +520,7 @@ public class WardrobeDBDataManager {
                 null,
                 null,
                 null,
-                WardrobeContract.ClothesItem._ID);
+                sortBy);
         return items;
 
     }

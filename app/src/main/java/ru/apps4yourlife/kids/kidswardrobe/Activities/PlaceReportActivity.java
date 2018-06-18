@@ -181,9 +181,9 @@ public class PlaceReportActivity extends AppCompatActivity
     }
 
     public void runReport_Places(View view) {
-        String SQL = "select * from items join categories join sizes join sizes_names";
+        String SQL = "select * from item join categories join sizes join sizes_names";
 
-        String filterSQL = "WHERE 1 = 1 ";
+        String filterSQL = " 1 = 1 ";
         if (!mSelectedPlaces.isEmpty()) {
             mItems = mDataManager.GetAllCommentsWithChecked();
             filterSQL = filterSQL.concat(" AND ( ");
@@ -193,7 +193,7 @@ public class PlaceReportActivity extends AppCompatActivity
                     filterPlaces =  filterPlaces.concat(" OR ");
                 }
                 mItems.moveToPosition(cursorIndex);
-                filterPlaces =  filterPlaces.concat(" items.comment LIKE '" + mItems.getString(mItems.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)) + "'");
+                filterPlaces =  filterPlaces.concat(" item.comment LIKE '" + mItems.getString(mItems.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)) + "'");
             }
             filterSQL = filterSQL.concat(filterPlaces +  " ) ");
         }
@@ -201,7 +201,7 @@ public class PlaceReportActivity extends AppCompatActivity
 
         if (!mSelectedTypes.isEmpty()) {
             String filterTypes = "";
-            filterSQL = filterSQL.concat(" AND items.cat_id IN (");
+            filterSQL = filterSQL.concat(" AND item.cat_id IN (");
             mItems = mDataManager.GetAllClothesCategoriesWithChecked();
             for (Integer cursorIndex : mSelectedTypes) {
                 if (!filterTypes.isEmpty()) {
@@ -219,7 +219,7 @@ public class PlaceReportActivity extends AppCompatActivity
 
         if (!mSelectedSeasons.isEmpty()) {
             String filterSeasons = "";
-            filterSQL = filterSQL.concat(" AND items.season IN (");
+            filterSQL = filterSQL.concat(" AND item.season IN (");
             for (Integer cursorIndex : mSelectedSeasons) {
                 if (!filterSeasons.isEmpty()) {
                     filterSeasons =  filterSeasons.concat(",");
@@ -233,7 +233,7 @@ public class PlaceReportActivity extends AppCompatActivity
         CheckBox goodSizeCheckBox = (CheckBox) findViewById(R.id.onlyGoodSize_checkBox);
         String filterSizes = GeneralHelper.GetFilterForSizes(this, mSelectedChildren, goodSizeCheckBox.isChecked());
         if (!filterSizes.isEmpty()) {
-            filterSQL = filterSQL.concat("AND (items.size in " + filterSizes + "OR items.size2 in " + filterSizes + " ) ");
+            filterSQL = filterSQL.concat("AND (item.size in " + filterSizes + "OR item.size2 in " + filterSizes + " ) ");
         }
         Toast.makeText(this,"After Children1: FILTER = " + filterSQL, Toast.LENGTH_SHORT).show();
 
@@ -250,13 +250,14 @@ public class PlaceReportActivity extends AppCompatActivity
                 }
             }
             if (!filterSex.isEmpty()) {
-                filterSQL = filterSQL.concat(" AND items.sex IN " + filterSex + " ");
+                filterSQL = filterSQL.concat(" AND item.sex IN " + filterSex + " ");
             }
         }
         Toast.makeText(this,"After Children2: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(this, ReportResultListActivity.class);
         intent.putExtra("FILTER",filterSQL);
+        intent.putExtra("SORT","comment");
         startActivityForResult(intent,499);
     }
 

@@ -12,9 +12,9 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="wrap_content"
-        android:layout_height="372dp"
-        android:layout_marginBottom="0dp"
-        ads:layout_constraintBottom_toTopOf="@id/imageView2"
+        android:layout_height="350dp"
+        android:background="@drawable/b_main3"
+        android:elevation="1dp"
         ads:layout_constraintStart_toStartOf="parent"
         ads:layout_constraintTop_toTopOf="parent">
 
@@ -26,18 +26,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.v4.view.ViewPager>
-
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/background_main"
-        android:scaleType="center"
-        android:src="@drawable/background_main"
-        app:layout_constraintBottom_toTopOf="@id/adView"
-        app:layout_constraintTop_toBottomOf="@id/viewpager" />
 
 
     <com.google.android.gms.ads.AdView
@@ -52,6 +40,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/start_randomImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        ads:layout_constraintBottom_toTopOf="@+id/adView"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="@+id/guideline"
+        ads:layout_constraintTop_toBottomOf="@+id/viewpager"
+        ads:srcCompat="@drawable/background_elephant_640" />
 
 </android.support.constraint.ConstraintLayout>
 

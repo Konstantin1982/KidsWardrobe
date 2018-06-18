@@ -28,10 +28,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 1:
                 TabReports tabChildren = new TabReports();
                 return tabChildren;
-            case 2:
-                TabReports tabReports = new TabReports();
-                return tabReports;
-
         }
         return null;
     }

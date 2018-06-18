@@ -13,6 +13,7 @@
     <color name="listItemsBackgroundColor">#FFFFFF</color>
     <color name="defaultBackgroundColor">#FAFAFA</color>
     <color name="defaultEmptyBackgroundColor">#DADADA</color>
+    <color name="halfTransparentWhiteBackground">#AAFFFFFF</color>
     <color name="divideLineColor">#DADADA</color>
 
 

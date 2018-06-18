@@ -28,8 +28,9 @@ public class ReportResultListActivity extends AppCompatActivity implements Repor
         mListReport.setHasFixedSize(true);
         mAdapter = new ReportListAdapter(this, this);
         String sentFilter = getIntent().getStringExtra("FILTER");
+        String sentType = getIntent().getStringExtra("SORT");
         if (sentFilter != null &&  !sentFilter.isEmpty()) {
-            mAdapter.SetFilter(sentFilter);
+            mAdapter.SetFilterAndType(sentFilter, sentType);
         }
         mListReport.setAdapter(mAdapter);
     }

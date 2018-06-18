@@ -1,6 +1,7 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -53,6 +55,9 @@ public class StartActivity extends AppCompatActivity {
         mpagerAdapter = new PagerAdapter(getSupportFragmentManager(),2);
         mViewPager.setAdapter(mpagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        ImageView randomImage = (ImageView) findViewById(R.id.start_randomImage);
+        randomImage.setImageResource(R.drawable.snowman);
     }
     public void btnAddNewClothes_Click(View v) {
         // Code here executes on main thread after user presses button
