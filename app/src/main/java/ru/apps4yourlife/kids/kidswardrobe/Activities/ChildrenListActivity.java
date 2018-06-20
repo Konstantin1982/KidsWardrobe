@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
@@ -32,6 +33,8 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         mListChildren.setHasFixedSize(true);
         mAdapter = new ChildrenListAdapter(this, this);
         mListChildren.setAdapter(mAdapter);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -64,4 +67,16 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         startActivityForResult(intent,199);
         return;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

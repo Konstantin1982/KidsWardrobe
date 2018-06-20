@@ -29,7 +29,7 @@
         <item name="android:paddingStart">40dp</item>
         <item name="android:paddingEnd">40dp</item>
         <item name="android:textColor">@color/buttonsTextColor</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="TypicalTextView" parent="DefaultStyle">

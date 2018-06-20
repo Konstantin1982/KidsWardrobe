@@ -6,6 +6,7 @@ import android.icu.text.UnicodeSetSpanner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -62,8 +63,21 @@ public class PlaceReportActivity extends AppCompatActivity
         mSelectedTypes = new ArrayList<Integer>();
         mSelectedSeasons = new ArrayList<Integer>();
         mSelectedChildren = new ArrayList<Integer>();
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public void placeTextView_click(View view) {
         mItems = mDataManager.GetAllCommentsWithChecked();
@@ -231,7 +245,7 @@ public class PlaceReportActivity extends AppCompatActivity
         //Toast.makeText(this,"After Seasons: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
 
         CheckBox goodSizeCheckBox = (CheckBox) findViewById(R.id.onlyGoodSize_checkBox);
-        String filterSizes = GeneralHelper.GetFilterForSizes(this, mSelectedChildren, goodSizeCheckBox.isChecked());
+        String filterSizes = GeneralHelper.GetFilterForSizes(this, mSelectedChildren, goodSizeCheckBox.isChecked(),0);
         if (!filterSizes.isEmpty()) {
             filterSQL = filterSQL.concat("AND (item.size in " + filterSizes + "OR item.size2 in " + filterSizes + " ) ");
         }
@@ -261,4 +275,8 @@ public class PlaceReportActivity extends AppCompatActivity
         startActivityForResult(intent,499);
     }
 
+    public void btnUpdateSizes_click(View view) {
+        Intent intent = new Intent(this,ChildrenListActivity.class);
+        startActivityForResult(intent,999);
+    }
 }

@@ -182,6 +182,18 @@ public class WardrobeDBDataManager {
         return childrenList;
     }
 
+    public Cursor GetChildrenIDsFromDb() {
+        Cursor childrenList = mDBHelper.getReadableDatabase().query(
+                                    WardrobeContract.ChildEntry.TABLE_NAME,
+                                    new String[]{WardrobeContract.ChildEntry._ID},
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    WardrobeContract.ChildEntry._ID);
+        return childrenList;
+    }
+
     public Cursor GetAllChildrenWithChecked() {
 
         String sql =
@@ -395,25 +407,26 @@ public class WardrobeDBDataManager {
 
     public long FindOrInsertNewSizeValue(int type, String value) {
         long result = 0;
-
-        Cursor sizeCursor = mDBHelper.getReadableDatabase().query(
-                WardrobeContract.Sizes.TABLE_NAME,
-                null,
-                WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = ? AND " + WardrobeContract.Sizes.COLUMN_VALUE + " =  ? ",
-                new String[] {String.valueOf(type), value},
-                null,
-                null,
-                WardrobeContract.Sizes._ID);
-        if (sizeCursor.getCount() > 0) {
-            sizeCursor.moveToFirst();
-            result = sizeCursor.getInt(sizeCursor.getColumnIndex(WardrobeContract.Sizes._ID));
-        } else {
-            ContentValues newValues = new ContentValues();
-            newValues.put(WardrobeContract.Sizes.COLUMN_SIZE_TYPE, String.valueOf(type));
-            newValues.put(WardrobeContract.Sizes.COLUMN_VALUE, value);
-            SQLiteDatabase db = mDBHelper.getWritableDatabase();
-            result = db.insert(WardrobeContract.Sizes.TABLE_NAME, null, newValues);
-            db.close();
+        if (!value.isEmpty()) {
+            Cursor sizeCursor = mDBHelper.getReadableDatabase().query(
+                    WardrobeContract.Sizes.TABLE_NAME,
+                    null,
+                    WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = ? AND " + WardrobeContract.Sizes.COLUMN_VALUE + " =  ? ",
+                    new String[]{String.valueOf(type), value},
+                    null,
+                    null,
+                    WardrobeContract.Sizes._ID);
+            if (sizeCursor.getCount() > 0) {
+                sizeCursor.moveToFirst();
+                result = sizeCursor.getInt(sizeCursor.getColumnIndex(WardrobeContract.Sizes._ID));
+            } else {
+                ContentValues newValues = new ContentValues();
+                newValues.put(WardrobeContract.Sizes.COLUMN_SIZE_TYPE, String.valueOf(type));
+                newValues.put(WardrobeContract.Sizes.COLUMN_VALUE, value);
+                SQLiteDatabase db = mDBHelper.getWritableDatabase();
+                result = db.insert(WardrobeContract.Sizes.TABLE_NAME, null, newValues);
+                db.close();
+            }
         }
         return result;
     }
@@ -522,6 +535,9 @@ public class WardrobeDBDataManager {
                 null,
                 sortBy);
         return items;
+    }
 
+    public Cursor GetAnyQuery(String query) {
+        return mDBHelper.getReadableDatabase().rawQuery(query,null);
     }
 }

@@ -48,6 +48,10 @@
             android:name=".Activities.AddNewChildActivity"
             android:label="@string/title_activity_new_child"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.PlaceReportActivity"
+            android:label="@string/title_activity_place_report"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -59,9 +63,12 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Activities.ChildrenListActivity" />
-        <activity android:name=".Activities.PlaceReportActivity" />
-        <activity android:name=".Activities.ReportResultListActivity"></activity>
+        <activity
+            android:name=".Activities.ChildrenListActivity"
+            android:label="@string/title_activity_children_list" />
+        <activity android:name=".Activities.ReportResultListActivity" />
+        <activity android:name=".Activities.ChildReportActivity"
+            android:label="@string/title_activity_children_report"></activity>
     </application>
 
 </manifest>

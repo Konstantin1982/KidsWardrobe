@@ -223,24 +223,35 @@ public class GeneralHelper implements Transformation{
 
 
 
-    public static String GetFilterForSizes(Context context, ArrayList<Integer> children, boolean isSizeChecked) {
+    public static String GetFilterForSizes(Context context, ArrayList<Integer> children, boolean isSizeChecked, int typeList) {
         String filter = "";
         ArrayList<Integer> sizesIds = new ArrayList<Integer>();
-        if (isSizeChecked || !children.isEmpty()) {
-            if (children.isEmpty()) {
-                WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
-                Cursor childrenCursor = mDataManager.GetChildrenListFromDb("");
-                for (int i = 0; i < childrenCursor.getCount(); i++) {
-                    childrenCursor.moveToPosition(i);
+        if (typeList == 0) {
+            if (isSizeChecked || !children.isEmpty()) {
+                if (children.isEmpty()) {
+                    WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
+                    Cursor childrenCursor = mDataManager.GetChildrenListFromDb("");
+                    for (int i = 0; i < childrenCursor.getCount(); i++) {
+                        childrenCursor.moveToPosition(i);
+                        long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
+                        sizesIds = AddSizesForChild(context, childId, sizesIds);
+                    }
+                } else {
+                    WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
+                    Cursor childrenCursor = mDataManager.GetAllChildrenWithChecked();
+                    childrenCursor.moveToPosition(children.get(0));
                     long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
-                    sizesIds = AddSizesForChild(context,childId,sizesIds);
+                    sizesIds = AddSizesForChild(context, childId, sizesIds);
                 }
-            } else {
-                WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
-                Cursor childrenCursor = mDataManager.GetAllChildrenWithChecked();
-                childrenCursor.moveToPosition(children.get(0));
-                long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
-                sizesIds = AddSizesForChild(context,childId,sizesIds);
+            }
+        }
+        if (typeList == 1) {
+            if (isSizeChecked || !children.isEmpty()) {
+                    WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
+                    Cursor childrenCursor = mDataManager.GetChildByIdFromDb(String.valueOf(children.get(0)));
+                    childrenCursor.moveToPosition(0);
+                    long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
+                    sizesIds = AddSizesForChild(context, childId, sizesIds);
             }
         }
         if (!sizesIds.isEmpty()) {

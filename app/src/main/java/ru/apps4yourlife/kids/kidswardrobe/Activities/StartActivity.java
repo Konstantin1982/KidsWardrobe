@@ -1,11 +1,15 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +43,7 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_start);
         // Load an ad into the AdMob banner view.
         AdView adView = (AdView) findViewById(R.id.adView);
@@ -58,6 +63,7 @@ public class StartActivity extends AppCompatActivity {
 
         ImageView randomImage = (ImageView) findViewById(R.id.start_randomImage);
         randomImage.setImageResource(R.drawable.snowman);
+
     }
     public void btnAddNewClothes_Click(View v) {
         // Code here executes on main thread after user presses button
@@ -111,4 +117,8 @@ public class StartActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void btnShowReportChildClothes_Click(View view) {
+        Intent intent = new Intent(this,ChildReportActivity.class);
+        startActivity(intent);
+    }
 }
