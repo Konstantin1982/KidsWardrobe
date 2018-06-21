@@ -54,7 +54,7 @@ public class ChooseChildDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(mContext, mSelectedItems.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, mSelectedItems.toString(), Toast.LENGTH_SHORT).show();
                         mListener.OnClickChild(mSelectedItems);
                     }
                 })

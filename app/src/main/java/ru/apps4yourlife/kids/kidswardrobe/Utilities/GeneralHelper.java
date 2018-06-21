@@ -30,6 +30,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -44,6 +45,45 @@ public class GeneralHelper implements Transformation{
 
     public static final int GENERAL_HELPER_CHILD_TYPE = 106;
     public static final int GENERAL_HELPER_CLOTHES_TYPE = 107;
+
+
+    public static int GetRandomImageId() {
+        Random r = new Random();
+        int imageNumber = r.nextInt(9);
+        int result;
+        switch (imageNumber) {
+            case 0:
+                result = R.drawable.background_easter_640;
+                break;
+            case 1:
+                result = R.drawable.background_flower_640;
+                break;
+            case 2:
+                result = R.drawable.background_girl_640;
+                break;
+            case 3:
+                result = R.drawable.background_mushrooms_640;
+                break;
+            case 4:
+                result = R.drawable.background_puffin_640;
+                break;
+            case 5:
+                result = R.drawable.background_reindeer_640;
+                break;
+            case 6:
+                result = R.drawable.background_snowman_640;
+                break;
+            case 7:
+                result = R.drawable.background_stones_640;
+                break;
+            case 8:
+                result = R.drawable.background_unicorn_640;
+                break;
+            default:
+                result = R.drawable.background_elephant_640;
+        }
+        return result;
+    }
 
     public static File createImageFile(Context context) throws IOException {
         // Create an image file name

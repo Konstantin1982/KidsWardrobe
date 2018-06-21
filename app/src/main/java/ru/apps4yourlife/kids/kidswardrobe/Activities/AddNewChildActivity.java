@@ -58,7 +58,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
         setContentView(R.layout.activity_add_new_child);
         mCurrentChildID = getIntent().getStringExtra("ID");
         mPositionFromList = getIntent().getStringExtra("POSITION");
-        Log.e("ACTIVITY ADD","Received POSITION = " + mPositionFromList);
+        //Log.e("ACTIVITY ADD","Received POSITION = " + mPositionFromList);
 
         Spinner childSexSpinner = (Spinner) findViewById(R.id.child_sex_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.child_sex_array, android.R.layout.simple_spinner_item);
@@ -72,8 +72,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             mPhotoPreview  = BitmapFactory.decodeResource(getResources(), R.drawable.default_photo);
             mCurrentPhotoUri = null;
         } else {
-            // TODO: fill parameters for child
-            Toast.makeText(this,"ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
             Cursor currentChildCursor = new WardrobeDBDataManager(this).GetChildByIdFromDb(mCurrentChildID);
             // Name
             TextView mName = (TextView) findViewById(R.id.nameChild);
@@ -195,11 +194,11 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                             childFoot,
                             childShoes);
 
-                Toast.makeText(this, "Sizes for Child were updated. Child ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Sizes for Child were updated. Child ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
 
             }
 
-            Toast.makeText(this, "New chils has been inserted: " + res, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "New chils has been inserted: " + res, Toast.LENGTH_SHORT).show();
             Intent data = new Intent();
             data.putExtra("POSITION", mPositionFromList);
             setResult(1, data);
@@ -230,13 +229,13 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-        Toast.makeText(this,"Variant clicked: " + position,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Variant clicked: " + position,Toast.LENGTH_SHORT).show();
         mChildSex = position;
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        Toast.makeText(this,"Nothing clicked!!!",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Nothing clicked!!!",Toast.LENGTH_SHORT).show();
 
     }
 

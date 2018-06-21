@@ -106,7 +106,7 @@ public class AllItemsActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             mCategoriesCursor.moveToPosition(i);
             long id = mCategoriesCursor.getLong(mCategoriesCursor.getColumnIndex(WardrobeContract.ClothesCategory._ID));
-            Toast.makeText(mContext,"Category ID clicked: " + String.valueOf(id) , Toast.LENGTH_SHORT ).show();
+            //Toast.makeText(mContext,"Category ID clicked: " + String.valueOf(id) , Toast.LENGTH_SHORT ).show();
             Intent intent = new Intent(adapterView.getContext(), CategoryItemsActivity.class);
             intent.putExtra("ID", String.valueOf(id));
             startActivityForResult(intent, 399);

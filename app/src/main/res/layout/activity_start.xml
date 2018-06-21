@@ -7,7 +7,8 @@
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.StartActivity">
+    tools:context=".Activities.StartActivity"
+    android:background="@color/whiteColor">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
@@ -54,7 +55,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:scaleType="fitEnd"
+        android:layout_marginTop="24dp"
         ads:layout_constraintBottom_toTopOf="@+id/adView"
         ads:layout_constraintEnd_toEndOf="parent"
         ads:layout_constraintStart_toStartOf="@+id/guideline"

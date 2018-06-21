@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/listItemsBackgroundColor"
+    android:background="@drawable/list_item_background_shape"
     android:minHeight="100dp"
     android:maxHeight="100dp"
     android:padding="8dp"
@@ -38,7 +38,7 @@
         android:layout_marginStart="8dp"
         android:text="Имя ребенка"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toStartOf="@+id/moreChildDetailsButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/previewPhotoChildInList" />
 
     <TextView
@@ -48,21 +48,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        tools:text="Размер цвет"
-        app:layout_constraintEnd_toStartOf="@+id/moreChildDetailsButton"
-        app:layout_constraintStart_toEndOf="@+id/previewPhotoChildInList"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <ImageButton
-        android:id="@+id/moreChildDetailsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_margin="0dp"
-        android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/previewPhotoChildInList"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
+        tools:text="Размер цвет" />
+
 
 
 </android.support.constraint.ConstraintLayout>

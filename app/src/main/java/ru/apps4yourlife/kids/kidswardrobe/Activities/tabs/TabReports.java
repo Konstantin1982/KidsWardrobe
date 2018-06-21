@@ -21,26 +21,28 @@ public class TabReports extends Fragment {
     //Overriden method onCreateView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        //Returning the layout file after inflating
-        //Change R.layout.tab1 in you classes
         View view =inflater.inflate(R.layout.tab_reports_layout, container, false);
-                AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+        Drawable placesIcon, childrenIcon;
+        Button placesButton, childrenButton;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Drawable icon =  getResources().getDrawable( R.drawable.ic_baby_boy );
-            Button b = (Button) view.findViewById(R.id.button_clothes_for_child);
-            b.setCompoundDrawables( icon, null, null, null );
+            placesIcon =  getResources().getDrawable( R.drawable.ic_search );
+            childrenIcon =  getResources().getDrawable( R.drawable.ic_baby_clothes );
+
         } else {
             Drawable icon = AppCompatResources.getDrawable(container.getContext(), R.drawable.ic_baby_boy );
-            icon.setBounds( 0, 0, 60, 60 );
-            Button b = (Button) view.findViewById(R.id.button_clothes_for_child);
-            b.setCompoundDrawables( icon, null, null, null );
+            placesIcon =  AppCompatResources.getDrawable(container.getContext(), R.drawable.ic_search );
+            childrenIcon =  AppCompatResources.getDrawable(container.getContext(), R.drawable.ic_baby_clothes );
         }
+        placesIcon.setBounds( 0, 0, 100, 100 );
+        childrenIcon.setBounds( 0, 0, 100, 100 );
+        placesButton = (Button) view.findViewById(R.id.button_clothes_for_review);
+        childrenButton = (Button) view.findViewById(R.id.button_clothes_for_child);
 
+        placesButton.setCompoundDrawables( placesIcon,  null, null, null );
+        childrenButton.setCompoundDrawables( childrenIcon,  null, null, null );
 
         return view;
-
     }
 
 

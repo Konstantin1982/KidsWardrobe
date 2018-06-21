@@ -282,7 +282,7 @@ public class ChildReportActivity extends AppCompatActivity
 
                 SQL = SQL + filterSQL;
             }
-            Toast.makeText(this,"Final SQL = " + SQL, Toast.LENGTH_LONG).show();
+           // Toast.makeText(this,"Final SQL = " + SQL, Toast.LENGTH_LONG).show();
             Log.e("SQL",SQL);
             // TODO: rework stupid feature;
             mSelectedChildren = tmpChildrenSelection;

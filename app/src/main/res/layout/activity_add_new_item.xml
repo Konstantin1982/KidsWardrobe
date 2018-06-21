@@ -49,36 +49,37 @@
         android:layout_marginTop="8dp"
         android:completionThreshold="0"
         android:hint="Например, Куртка"
+        android:imeOptions="actionNext"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
         android:textAlignment="viewEnd"
+        ads:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="@+id/textView8"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:selectAllOnFocus="true"
-        />
+        app:layout_constraintTop_toTopOf="@+id/textView8" />
 
     <AutoCompleteTextView
         android:id="@+id/sizeClothesTextView"
         style="@style/TypicalTextView"
+        android:layout_height="15dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:hint="Тип размера зависит от полки"
+        android:completionThreshold="0"
+        android:hint="Тип зависит от полки"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
         android:textAlignment="viewEnd"
+        ads:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="@+id/sizeMainLabel"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sizeMainLabel"
-        app:layout_constraintTop_toTopOf="@+id/sizeMainLabel"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:selectAllOnFocus="true"
-        android:inputType="numberDecimal"
-        android:completionThreshold="0"
-
-        />
+        app:layout_constraintTop_toTopOf="@+id/sizeMainLabel" />
     <ImageView
         android:id="@+id/imageView18"
         android:layout_width="wrap_content"
@@ -181,29 +182,6 @@
         app:layout_constraintStart_toEndOf="@+id/imageView19"
         app:layout_constraintTop_toTopOf="@+id/imageView19" />
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Дополнительные параметры"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView23" />
-
-    <ImageView
-        android:id="@+id/imageView24"
-        android:layout_width="0dp"
-        android:layout_height="3dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        ads:srcCompat="@drawable/new_entity_divide_line"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
     <ImageView
         android:id="@+id/imageView25"
@@ -213,7 +191,7 @@
         android:layout_marginTop="8dp"
         ads:srcCompat="@drawable/ic_sex_item"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView24" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView23" />
 
     <TextView
         android:id="@+id/textView16"
@@ -235,6 +213,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textAlignment="textEnd"
+        ads:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="@+id/textView16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView16"
@@ -281,19 +261,19 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:hint="Тип размера зависит от полки"
+        android:completionThreshold="0"
+        android:hint="Тип зависит от полки"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
         android:textAlignment="viewEnd"
+        ads:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="@+id/sizeTypeAdditionalLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/sizeTypeAdditionalLabel"
-        app:layout_constraintTop_toTopOf="@+id/sizeTypeAdditionalLabel"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:selectAllOnFocus="true"
-        android:completionThreshold="0"
 
-        />
+        app:layout_constraintStart_toEndOf="@+id/sizeTypeAdditionalLabel"
+        app:layout_constraintTop_toTopOf="@+id/sizeTypeAdditionalLabel" />
 
     <ImageView
         android:id="@+id/imageView28"
@@ -337,16 +317,17 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:completionThreshold="0"
         android:hint="например,шкаф в детской"
+        android:imeOptions="actionNext"
         android:inputType="textPersonName"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
         android:textAlignment="viewEnd"
+        ads:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="@+id/textView18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView18"
-        android:singleLine="true"
-        android:imeOptions="actionNext"
-        android:selectAllOnFocus="true"
-        android:completionThreshold="0"
         app:layout_constraintTop_toTopOf="@+id/textView18" />
 
 
@@ -370,6 +351,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textAlignment="textEnd"
+        ads:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="@+id/textView14"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView14"
@@ -382,6 +365,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:clickable="true"
+        android:focusable="true"
         android:scaleType="fitXY"
         android:visibility="gone"
         android:onClick="btnShowSizeTypeDialog_click"
@@ -390,6 +374,15 @@
         ads:layout_constraintStart_toEndOf="@+id/textView8"
         ads:layout_constraintTop_toTopOf="@+id/typeClothesTextView"
         ads:srcCompat="@android:drawable/ic_dialog_alert" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+
 
 </android.support.constraint.ConstraintLayout>
 </ScrollView>
@@ -405,5 +398,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

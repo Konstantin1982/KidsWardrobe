@@ -167,8 +167,8 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Toast.makeText(mContext,"Oncreate DB is called",Toast.LENGTH_LONG).show();
-        Log.e("DB","DB IS CREATED!!");
+        //Toast.makeText(mContext,"Oncreate DB is called",Toast.LENGTH_LONG).show();
+       // Log.e("DB","DB IS CREATED!!");
 
         CreateTables(sqLiteDatabase);
 

@@ -11,7 +11,7 @@
     <color name="gridItemStrokeColor">#DADADA</color>
     <color name="gridItemBackgroundColor">#99FFF9C4</color>
     <color name="listItemsBackgroundColor">#FFFFFF</color>
-    <color name="defaultBackgroundColor">#FAFAFA</color>
+    <color name="defaultBackgroundColor">#FFFFFF</color>
     <color name="defaultEmptyBackgroundColor">#DADADA</color>
     <color name="halfTransparentWhiteBackground">#AAFFFFFF</color>
     <color name="divideLineColor">#DADADA</color>

@@ -26,6 +26,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:clickable="true"
+        android:focusable="true"
         android:onClick="btnAddNewChildFromList_Click"
         app:backgroundTint="@color/buttonsColor"
         app:layout_constraintEnd_toEndOf="parent"

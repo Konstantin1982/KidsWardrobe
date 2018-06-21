@@ -1,6 +1,4 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
-
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,21 +19,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
@@ -56,7 +49,6 @@ public class AddNewItemActivity extends AppCompatActivity
 
     private WardrobeDBDataManager mDataManager;
 
-
     private Uri mCurrentPhotoUri;
     private Bitmap mPhotoPreview;
     private ImageButton maddNewItemImageButton;
@@ -64,8 +56,6 @@ public class AddNewItemActivity extends AppCompatActivity
 
     private AutoCompleteTextView mTypeClothesTextView;
     private Cursor mClothesCategoriesCursor;
-    private Cursor mSizesValuesCursor;
-
     // predefined Type
     private String mPreType = "";
     private long mPreTypeID = 0;
@@ -105,6 +95,30 @@ public class AddNewItemActivity extends AppCompatActivity
                     checkIsItNewValue(mTypeClothesTextView.getText().toString());
 
                 }
+            }
+        });
+        mTypeClothesTextView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                Object item = adapterView.getItemAtPosition(position);
+                if (item!= null) {
+                    checkIsItNewValue(item.toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        mTypeClothesTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Object item = adapterView.getItemAtPosition(position);
+                if (item!= null) {
+                    checkIsItNewValue(item.toString());
+                }
+
             }
         });
 
@@ -158,8 +172,7 @@ public class AddNewItemActivity extends AppCompatActivity
             mCurrentPhotoUri = Uri.parse(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_LINK_TO_PHOTO)));
 
             byte[] previewInBytes = currentItemCursor.getBlob(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
-            Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
-            mPhotoPreview = smallPhoto;
+            mPhotoPreview = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
             maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
             maddNewItemImageButton.setImageBitmap(mPhotoPreview);
             maddNewItemImageButton.setBackground(null);
@@ -196,8 +209,7 @@ public class AddNewItemActivity extends AppCompatActivity
             }
 
             // комментарий
-            EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
-            commentEdit.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)));
+            commentTextView.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)));
         }
 
     }
@@ -221,7 +233,7 @@ public class AddNewItemActivity extends AppCompatActivity
                 }
                 break;
             case SIZES_VALUES:
-                mSizesValuesCursor = mDataManager.GetSizesValuesByType(typeOfValues);
+                Cursor mSizesValuesCursor = mDataManager.GetSizesValuesByType(typeOfValues);
                 if (mSizesValuesCursor.getCount() > 0) {
                     for (int i = 0; i < mSizesValuesCursor.getCount(); i++) {
                         mSizesValuesCursor.moveToPosition(i);
@@ -304,7 +316,7 @@ public class AddNewItemActivity extends AppCompatActivity
 
     private void checkIsItNewValue(String chosenType) {
         mNeedSaveType = false;
-        if (chosenType != "" && !chosenType.equals(mPreType)) {
+        if (!chosenType.equalsIgnoreCase("") && !chosenType.equalsIgnoreCase(mPreType)) {
             boolean isFind = false;
             mPreType = chosenType;
             for (int i = 0; i < mClothesCategoriesCursor.getCount(); i++) {
@@ -381,6 +393,7 @@ public class AddNewItemActivity extends AppCompatActivity
     }
 
     public void btnShowSizeTypeDialog_click(View view) {
+        LooseFocus();
         ChooseSizeTypesDialogFragment applicationDialogFragment = new ChooseSizeTypesDialogFragment();
         applicationDialogFragment.setmListener(this);
         applicationDialogFragment.show(getSupportFragmentManager(),"ChooseSizeTypesDialogFragment");
@@ -390,7 +403,7 @@ public class AddNewItemActivity extends AppCompatActivity
         updateAdaptersForSizes(type1, type2);
         mPreTypeSize1 = type1;
         mPreTypeSize2 = type2;
-        Toast.makeText(this,"TYpes: " + type1 + type2, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"TYpes: " + type1 + type2, Toast.LENGTH_SHORT).show();
         FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
         warningButton.setVisibility(View.GONE);
     }
@@ -496,7 +509,7 @@ public class AddNewItemActivity extends AppCompatActivity
 
             EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
             long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, sizeValue1, sizeValue2, commentEdit.getText().toString());
-            Toast.makeText(this, "New item has been inserted: " + new_id , Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "New item has been inserted: " + new_id , Toast.LENGTH_SHORT).show();
             Intent data = new Intent();
             data.putExtra("POSITION", mPositionFromList);
             setResult(1, data);

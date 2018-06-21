@@ -50,7 +50,7 @@ public class WardrobeDBDataManager {
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW, smallPhotoBytes);
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         if (idEntry == null) {
-            Toast.makeText(mContext, "To Insert: = " + childBirthdate, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(mContext, "To Insert: = " + childBirthdate, Toast.LENGTH_SHORT).show();
             result = db.insert(WardrobeContract.ChildEntry.TABLE_NAME, null, newChildValues);
         } else {
             result = db.update(WardrobeContract.ChildEntry.TABLE_NAME, newChildValues, WardrobeContract.ChildEntry._ID + " = ? ", new String[]{idEntry});
@@ -518,8 +518,8 @@ public class WardrobeDBDataManager {
         if (cursor.getCount() > 0) {
             cursor.moveToPosition(0);
             result = cursor.getInt(cursor.getColumnIndex("_id"));
-            String comment = "Condition" + condition + "; Value = " + value + "; Name from DB = " + cursor.getString(cursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
-            Toast.makeText(mContext, comment, Toast.LENGTH_LONG);
+            //String comment = "Condition" + condition + "; Value = " + value + "; Name from DB = " + cursor.getString(cursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+           // Toast.makeText(mContext, comment, Toast.LENGTH_LONG);
         }
         return result;
     }

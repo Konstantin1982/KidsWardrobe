@@ -19,7 +19,9 @@
     <string-array name="clothes_categories_values">
         <item>0|0|Неразобранное</item>
         <item>1|2|Куртки</item>
-        <item>1|2|Штаны</item>
+        <item>1|2|Штаны, Брюки</item>
+        <item>1|2|Шорты</item>
+        <item>1|2|Юбки</item>
         <item>4|6|Обувь</item>
         <item>1|2|Нижнее бельё</item>
         <item>5|2|Шапки</item>
@@ -28,14 +30,17 @@
         <item>2|1|Носки</item>
         <item>1|2|Варежки, Перчатки</item>
         <item>2|1|Свитера</item>
-        <item>3|1|Рубашки</item>
+        <item>2|1|Рубашки</item>
+        <item>2|1|Кофты</item>
+        <item>5|2|Головные уборы</item>
+        <item>2|1|Футболки</item>
     </string-array>
     <string-array name="sizes_types">
-        <item>0|Размер </item>
-        <item>1|Рост (размер РОС.)</item>
+        <item>0|Размер не определен</item>
+        <item>1|Рост </item>
         <item>2|Возраст</item>
-        <item>4|Размер обуви (размер ноги)</item>
-        <item>5|Обхват головы (возраст)</item>
+        <item>4|Размер обуви</item>
+        <item>5|Обхват головы </item>
         <item>6|Размер стельки (см.) </item>
     </string-array>
 

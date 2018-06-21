@@ -4,34 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:background="@color/halfTransparentWhiteBackground"
-    >
+    android:layout_height="380dp"
+    android:background="@color/halfTransparentWhiteBackground">
     <!-- TODO: change text of buttons -->
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/add_new_item_button"
         style="@style/TypicalButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="4dp"
         android:onClick="btnAddNewClothes_Click"
         android:text="Положить в шкаф"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/organize_items_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/organize_items_button"
         style="@style/TypicalButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="80dp"
         android:onClick="btnShowAllClothes_Click"
-
         android:text="Навести порядок"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,16 +38,14 @@
         android:id="@+id/button_edit_children"
         style="@style/TypicalButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
 
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:onClick="btnShowListChildren_Click"
         android:text="Информация о детях"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        app:layout_constraintTop_toBottomOf="@+id/organize_items_button" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -61,5 +53,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Button"
+        android:onClick="btnDropDB_Click"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

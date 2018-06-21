@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:background="@color/halfTransparentWhiteBackground"
-    >
+    android:layout_height="280dp"
+    android:background="@color/halfTransparentWhiteBackground">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
@@ -19,8 +18,7 @@
         android:id="@+id/button_clothes_for_child"
         style="@style/TypicalButton"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-
+        android:layout_height="100dp"
         android:layout_marginBottom="2dp"
         android:onClick="btnShowReportChildClothes_Click"
         android:text="Одеть ребенка"
@@ -33,15 +31,13 @@
         android:id="@+id/button_clothes_for_review"
         style="@style/TypicalButton"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:layout_marginTop="2dp"
-
         android:onClick="btnShowReportAllClothes_Click"
         android:text="@string/title_activity_place_report"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
-        />
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
 </android.support.constraint.ConstraintLayout>

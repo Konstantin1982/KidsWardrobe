@@ -249,7 +249,7 @@ public class PlaceReportActivity extends AppCompatActivity
         if (!filterSizes.isEmpty()) {
             filterSQL = filterSQL.concat("AND (item.size in " + filterSizes + "OR item.size2 in " + filterSizes + " ) ");
         }
-        Toast.makeText(this,"After Children1: FILTER = " + filterSQL, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this,"After Children1: FILTER = " + filterSQL, Toast.LENGTH_SHORT).show();
 
 
         if (!mSelectedChildren.isEmpty()) {
@@ -267,7 +267,7 @@ public class PlaceReportActivity extends AppCompatActivity
                 filterSQL = filterSQL.concat(" AND item.sex IN " + filterSex + " ");
             }
         }
-        Toast.makeText(this,"After Children2: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"After Children2: FILTER = " + filterSQL, Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(this, ReportResultListActivity.class);
         intent.putExtra("FILTER",filterSQL);
