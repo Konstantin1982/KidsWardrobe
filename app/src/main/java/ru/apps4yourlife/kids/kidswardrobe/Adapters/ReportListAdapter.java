@@ -40,6 +40,14 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
     private Cursor mSizesWithNames;
     private Map<Long, ArrayList<Integer>> mSuitableSizesByChildren;
 
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        if (mListItemsCursor != null) mListItemsCursor.close();
+        if (mSizesWithNames != null) mSizesWithNames.close();
+        super.onDetachedFromRecyclerView(recyclerView);
+    }
+
     public interface ItemListAdapterClickHandler {
         void onItemClick(String itemId, String itemPositionInList);
     }

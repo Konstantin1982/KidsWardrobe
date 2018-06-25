@@ -69,6 +69,12 @@ public class PlaceReportActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        if (mItems  != null) mItems.close();
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

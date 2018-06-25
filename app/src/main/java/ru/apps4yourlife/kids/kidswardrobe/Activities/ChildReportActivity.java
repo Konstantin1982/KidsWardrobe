@@ -29,39 +29,45 @@ public class ChildReportActivity extends AppCompatActivity
     ChooseSeasonDialogFragment.ChooseSeasonDialogFragmentListener,
     ChooseChildDialogFragment.ChooseChildDialogFragmentListener{
 
-        private ArrayList<Integer> mSelectedPlaces;
-        private String mChosenPlacesAsString;
+    private ArrayList<Integer> mSelectedPlaces;
+    private String mChosenPlacesAsString;
 
-        private ArrayList<Integer> mSelectedTypes;
-        private String mChosenTypesAsString;
+    private ArrayList<Integer> mSelectedTypes;
+    private String mChosenTypesAsString;
 
-        private ArrayList<Integer> mSelectedSeasons;
-        private String mChosenSeasonsAsString;
+    private ArrayList<Integer> mSelectedSeasons;
+    private String mChosenSeasonsAsString;
 
-        private ArrayList<Integer> mSelectedChildren;
-        private String mChosenChildrenAsString;
-
-
+    private ArrayList<Integer> mSelectedChildren;
+    private String mChosenChildrenAsString;
 
 
-        private WardrobeDBDataManager mDataManager;
-        private Cursor mItems;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_child_report);
-            mDataManager = new WardrobeDBDataManager(this);
-            mSelectedPlaces = new ArrayList<Integer>();
-            mSelectedTypes = new ArrayList<Integer>();
-            mSelectedSeasons = new ArrayList<Integer>();
-            mSelectedChildren = new ArrayList<Integer>();
 
-            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    private WardrobeDBDataManager mDataManager;
+    private Cursor mItems;
 
-        @Override
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_child_report);
+        mDataManager = new WardrobeDBDataManager(this);
+        mSelectedPlaces = new ArrayList<Integer>();
+        mSelectedTypes = new ArrayList<Integer>();
+        mSelectedSeasons = new ArrayList<Integer>();
+        mSelectedChildren = new ArrayList<Integer>();
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mItems != null) mItems.close();
+        super.onDestroy();
+    }
+
+    @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
                 case android.R.id.home:
@@ -192,6 +198,7 @@ public class ChildReportActivity extends AppCompatActivity
                     mSelectedChildren.add(childIDs.getInt(childIDs.getColumnIndex(WardrobeContract.ChildEntry._ID)));
                 }
             }
+            childIDs.close();
         } else {
             mItems = mDataManager.GetAllChildrenWithChecked();
             tmpChildrenSelection = mSelectedChildren;
@@ -203,7 +210,7 @@ public class ChildReportActivity extends AppCompatActivity
             }
         }
         if (mSelectedChildren.isEmpty()) {
-            Toast.makeText(this,"В приложении нет ни одного ребенка", Toast.LENGTH_LONG);
+            Toast.makeText(this,"В приложении нет ни одного ребенка. Отчет отображен не будет. ", Toast.LENGTH_LONG).show();
         } else {
             String SQL = "";
             String filterSQL = "WHERE  1 = 1 ";
@@ -281,9 +288,10 @@ public class ChildReportActivity extends AppCompatActivity
                 }
 
                 SQL = SQL + filterSQL;
+                if (childCursor != null) childCursor.close();
             }
            // Toast.makeText(this,"Final SQL = " + SQL, Toast.LENGTH_LONG).show();
-            Log.e("SQL",SQL);
+            //Log.e("SQL",SQL);
             // TODO: rework stupid feature;
             mSelectedChildren = tmpChildrenSelection;
             Intent intent = new Intent(this, ReportResultListActivity.class);
@@ -298,3 +306,4 @@ public class ChildReportActivity extends AppCompatActivity
         Intent intent = new Intent(this,ChildrenListActivity.class);
         startActivityForResult(intent,999);
     }}
+

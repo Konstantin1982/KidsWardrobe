@@ -210,6 +210,10 @@ public class AddNewItemActivity extends AppCompatActivity
 
             // комментарий
             commentTextView.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)));
+            currentItemCursor.close();
+            currentCat.close();
+            sizeCursor.close();
+            sizeCursor2.close();
         }
 
     }
@@ -246,6 +250,7 @@ public class AddNewItemActivity extends AppCompatActivity
                         );
                     }
                 }
+                mSizesValuesCursor.close();
                 break;
             case TYPE_COMMENTS:
                 Cursor commentsCursor = mDataManager.GetAllComments();
@@ -258,6 +263,7 @@ public class AddNewItemActivity extends AppCompatActivity
                         }
                     }
                 }
+                commentsCursor.close();
                 break;
 
         }
@@ -532,5 +538,11 @@ public class AddNewItemActivity extends AppCompatActivity
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mClothesCategoriesCursor != null) mClothesCategoriesCursor.close();
+        super.onDestroy();
     }
 }

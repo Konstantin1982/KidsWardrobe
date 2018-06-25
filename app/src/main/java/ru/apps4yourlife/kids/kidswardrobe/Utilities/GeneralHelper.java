@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -258,6 +259,8 @@ public class GeneralHelper implements Transformation{
             nextSize = mDataManager.GetSizeIdByFilter(4, size4, 2);
             if (nextSize > 0) newList.add(nextSize);
         }
+        childCursor.close();
+        childSizeCursor.close();
         return newList;
     }
 
@@ -276,12 +279,14 @@ public class GeneralHelper implements Transformation{
                         long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
                         sizesIds = AddSizesForChild(context, childId, sizesIds);
                     }
+                    childrenCursor.close();
                 } else {
                     WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
                     Cursor childrenCursor = mDataManager.GetAllChildrenWithChecked();
                     childrenCursor.moveToPosition(children.get(0));
                     long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
                     sizesIds = AddSizesForChild(context, childId, sizesIds);
+                    childrenCursor.close();
                 }
             }
         }
@@ -292,6 +297,7 @@ public class GeneralHelper implements Transformation{
                     childrenCursor.moveToPosition(0);
                     long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
                     sizesIds = AddSizesForChild(context, childId, sizesIds);
+                    childrenCursor.close();
             }
         }
         if (!sizesIds.isEmpty()) {
@@ -315,6 +321,7 @@ public class GeneralHelper implements Transformation{
             sizesIds = AddSizesForChild(context,childId,sizesIds);
             suitSizes.put(childId,sizesIds);
         }
+        childrenCursor.close();
         return suitSizes;
     }
 

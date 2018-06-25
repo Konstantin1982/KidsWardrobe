@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ChildrenListAdapter;
@@ -21,9 +26,14 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
     private ChildrenListAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("ACTIVITY: ","On Create is called for List");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_children_list);
+
+        AdView adView = (AdView) findViewById(R.id.adView_children);
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        adView.loadAd(adRequest);
 
         mListChildren = (RecyclerView) findViewById(R.id.childrenList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -59,6 +69,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
                 position = "-1";
             }
             mAdapter.updateListValues(newChildrenCursor, Integer.parseInt(position));
+            newChildrenCursor.close();
         }
     }
 
@@ -69,10 +80,22 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_to_home, menu);
+        return true;
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.menu_item_home:
+                Intent intent = new Intent(this, StartActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

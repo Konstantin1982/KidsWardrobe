@@ -37,6 +37,12 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     private String[] mSeason;
 
 
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        if (mItemsInCategoryCursor != null) mItemsInCategoryCursor.close();
+        if (mSizesWithNames != null) mSizesWithNames.close();
+        super.onDetachedFromRecyclerView(recyclerView);
+    }
 
     public CategoryListAdapter(Context context, long categoryId, CategoryListAdapterClickHandler clickHandler) {
         mContext = context;

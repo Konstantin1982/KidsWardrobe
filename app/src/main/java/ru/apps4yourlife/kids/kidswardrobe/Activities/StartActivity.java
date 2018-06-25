@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -34,7 +36,10 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         ImageView randomImage = (ImageView) findViewById(R.id.start_randomImage);
-        randomImage.setImageResource(GeneralHelper.GetRandomImageId());
+        int imageId = GeneralHelper.GetRandomImageId();
+        //Toast.makeText(this,, Toast.LENGTH_SHORT).show();
+        Log.e("IMAGE", "NUMBER = " + imageId);
+        randomImage.setImageResource(imageId);
         super.onResume();
     }
 

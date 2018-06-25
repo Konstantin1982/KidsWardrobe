@@ -106,6 +106,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 EditText childShoes = (EditText) findViewById(R.id.shoesSizeEditText);
                 childShoes.setText(currentChildSizesCursor.getString(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE)));
             }
+            currentChildSizesCursor.close();
         }
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

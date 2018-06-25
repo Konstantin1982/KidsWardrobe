@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -24,6 +29,11 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_items);
+
+        AdView adView = (AdView) findViewById(R.id.adView_items);
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        adView.loadAd(adRequest);
 
         mListItems = (RecyclerView) findViewById(R.id.categoryListItems);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -67,7 +77,14 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
                 position = "-1";
             }
             mAdapter.updateListValues (newItemsCursor, Integer.parseInt(position));
+            newItemsCursor.close();
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_to_home, menu);
+        return true;
     }
 
     @Override
@@ -76,6 +93,10 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
             case android.R.id.home:
                 setResult(399);
                 finish();
+                return true;
+            case R.id.menu_item_home:
+                Intent intent = new Intent(this, StartActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -354,6 +354,7 @@ public class WardrobeDBDataManager {
             result = mDBHelper.getReadableDatabase().rawQuery(sql,null);
             if (result.getCount() > 0) result.moveToFirst();
         }
+        if (category != null) category.close();
         return result;
     }
 
@@ -371,6 +372,7 @@ public class WardrobeDBDataManager {
             sizeType.moveToFirst();
             sizeTypeName = sizeType.getString(sizeType.getColumnIndex(WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME));
         }
+        if (sizeType != null) sizeType.close();
         return sizeTypeName;
     }
 
@@ -427,6 +429,7 @@ public class WardrobeDBDataManager {
                 result = db.insert(WardrobeContract.Sizes.TABLE_NAME, null, newValues);
                 db.close();
             }
+            if (sizeCursor != null) sizeCursor.close();
         }
         return result;
     }
@@ -521,6 +524,7 @@ public class WardrobeDBDataManager {
             //String comment = "Condition" + condition + "; Value = " + value + "; Name from DB = " + cursor.getString(cursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
            // Toast.makeText(mContext, comment, Toast.LENGTH_LONG);
         }
+        cursor.close();
         return result;
     }
 

@@ -39,6 +39,12 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         void onChildClick(String childId, String itemPositionInList);
     }
 
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        if (mListChildrenCursor != null) mListChildrenCursor.close();
+        super.onDetachedFromRecyclerView(recyclerView);
+    }
+
     private final ChildrenListAdapterClickHandler mChildrenListAdapterClickHandler;
 
     public ChildrenListAdapter(Context context, ChildrenListAdapterClickHandler clickHandler) {
