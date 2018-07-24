@@ -34,7 +34,6 @@
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
-        <activity android:name=".Test" />
         <activity
             android:name=".Activities.AddNewItemActivity"
             android:label="@string/title_activity_new_item"

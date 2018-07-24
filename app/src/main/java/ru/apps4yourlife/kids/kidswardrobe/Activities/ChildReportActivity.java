@@ -63,7 +63,7 @@ public class ChildReportActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        if (mItems != null) mItems.close();
+        // if (mItems != null) mItems.close();
         super.onDestroy();
     }
 
@@ -198,7 +198,7 @@ public class ChildReportActivity extends AppCompatActivity
                     mSelectedChildren.add(childIDs.getInt(childIDs.getColumnIndex(WardrobeContract.ChildEntry._ID)));
                 }
             }
-            childIDs.close();
+            //childIDs.close();
         } else {
             mItems = mDataManager.GetAllChildrenWithChecked();
             tmpChildrenSelection = mSelectedChildren;
@@ -288,7 +288,7 @@ public class ChildReportActivity extends AppCompatActivity
                 }
 
                 SQL = SQL + filterSQL;
-                if (childCursor != null) childCursor.close();
+                //if (childCursor != null) childCursor.close();
             }
            // Toast.makeText(this,"Final SQL = " + SQL, Toast.LENGTH_LONG).show();
             //Log.e("SQL",SQL);

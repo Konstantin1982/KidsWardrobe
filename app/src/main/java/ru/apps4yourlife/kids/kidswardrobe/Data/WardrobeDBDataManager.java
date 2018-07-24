@@ -343,7 +343,7 @@ public class WardrobeDBDataManager {
             category.moveToFirst();
             int sizeType1 = category.getInt(category.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE));
             int sizeType2 = category.getInt(category.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL));
-            category.close();
+            //category.close();
             String sql = "SELECT s.*, st." + WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME + " FROM " + WardrobeContract.Sizes.TABLE_NAME + " s join " + WardrobeContract.SizesTypes.TABLE_NAME +
                     " st on s." + WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " = st." + WardrobeContract.SizesTypes.COLUMN_ID + " WHERE s." + WardrobeContract.Sizes.COLUMN_SIZE_TYPE + " IN (?, ?)";
             result = mDBHelper.getReadableDatabase().rawQuery(sql,new String[]{String.valueOf(sizeType1), String.valueOf(sizeType2)});
@@ -354,7 +354,7 @@ public class WardrobeDBDataManager {
             result = mDBHelper.getReadableDatabase().rawQuery(sql,null);
             if (result.getCount() > 0) result.moveToFirst();
         }
-        if (category != null) category.close();
+        //if (category != null) category.close();
         return result;
     }
 
@@ -372,7 +372,7 @@ public class WardrobeDBDataManager {
             sizeType.moveToFirst();
             sizeTypeName = sizeType.getString(sizeType.getColumnIndex(WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME));
         }
-        if (sizeType != null) sizeType.close();
+        //if (sizeType != null) sizeType.close();
         return sizeTypeName;
     }
 
@@ -429,7 +429,7 @@ public class WardrobeDBDataManager {
                 result = db.insert(WardrobeContract.Sizes.TABLE_NAME, null, newValues);
                 db.close();
             }
-            if (sizeCursor != null) sizeCursor.close();
+            //if (sizeCursor != null) sizeCursor.close();
         }
         return result;
     }
@@ -524,7 +524,7 @@ public class WardrobeDBDataManager {
             //String comment = "Condition" + condition + "; Value = " + value + "; Name from DB = " + cursor.getString(cursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
            // Toast.makeText(mContext, comment, Toast.LENGTH_LONG);
         }
-        cursor.close();
+        //cursor.close();
         return result;
     }
 

@@ -63,7 +63,6 @@ public class ChooseChildDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
-        mItems.close();
         return builder.create();
     }
 

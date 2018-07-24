@@ -28,7 +28,7 @@
         android:onClick="btnAddNewItemFromList_Click"
 
         app:backgroundTint="@color/buttonsColor"
-        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintBottom_toTopOf="@+id/adView_items"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_black_24dp" />
 

@@ -106,13 +106,14 @@ public class GeneralHelper implements Transformation{
     }
 
     public static Intent prepareTakePhotoIntent(Intent intent, Context context, Uri photoURI) {
+        /*
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo resolveInfo : resInfoList) {
             String packageName = resolveInfo.activityInfo.packageName;
             context.grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
-
+        */
         return intent;
     }
 
@@ -259,8 +260,8 @@ public class GeneralHelper implements Transformation{
             nextSize = mDataManager.GetSizeIdByFilter(4, size4, 2);
             if (nextSize > 0) newList.add(nextSize);
         }
-        childCursor.close();
-        childSizeCursor.close();
+        //childCursor.close();
+        //childSizeCursor.close();
         return newList;
     }
 
@@ -279,14 +280,14 @@ public class GeneralHelper implements Transformation{
                         long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
                         sizesIds = AddSizesForChild(context, childId, sizesIds);
                     }
-                    childrenCursor.close();
+                    //childrenCursor.close();
                 } else {
                     WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(context);
                     Cursor childrenCursor = mDataManager.GetAllChildrenWithChecked();
                     childrenCursor.moveToPosition(children.get(0));
                     long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
                     sizesIds = AddSizesForChild(context, childId, sizesIds);
-                    childrenCursor.close();
+                    //childrenCursor.close();
                 }
             }
         }
@@ -297,7 +298,7 @@ public class GeneralHelper implements Transformation{
                     childrenCursor.moveToPosition(0);
                     long childId = childrenCursor.getLong(childrenCursor.getColumnIndex("_id"));
                     sizesIds = AddSizesForChild(context, childId, sizesIds);
-                    childrenCursor.close();
+                    //childrenCursor.close();
             }
         }
         if (!sizesIds.isEmpty()) {
@@ -321,7 +322,7 @@ public class GeneralHelper implements Transformation{
             sizesIds = AddSizesForChild(context,childId,sizesIds);
             suitSizes.put(childId,sizesIds);
         }
-        childrenCursor.close();
+        //childrenCursor.close();
         return suitSizes;
     }
 

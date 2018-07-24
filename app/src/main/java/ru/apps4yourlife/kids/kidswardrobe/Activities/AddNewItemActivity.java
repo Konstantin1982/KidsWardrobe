@@ -11,6 +11,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -210,10 +211,10 @@ public class AddNewItemActivity extends AppCompatActivity
 
             // комментарий
             commentTextView.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)));
-            currentItemCursor.close();
-            currentCat.close();
-            sizeCursor.close();
-            sizeCursor2.close();
+            //currentItemCursor.close();
+            //currentCat.close();
+            //sizeCursor.close();
+            //sizeCursor2.close();
         }
 
     }
@@ -250,7 +251,7 @@ public class AddNewItemActivity extends AppCompatActivity
                         );
                     }
                 }
-                mSizesValuesCursor.close();
+                //mSizesValuesCursor.close();
                 break;
             case TYPE_COMMENTS:
                 Cursor commentsCursor = mDataManager.GetAllComments();
@@ -263,7 +264,7 @@ public class AddNewItemActivity extends AppCompatActivity
                         }
                     }
                 }
-                commentsCursor.close();
+                //commentsCursor.close();
                 break;
 
         }
@@ -361,32 +362,52 @@ public class AddNewItemActivity extends AppCompatActivity
     public void onTakeNewPhotoClick() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = GeneralHelper.createImageFile(this);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            if (photoFile != null) {
-                mCurrentPhotoUri = FileProvider.getUriForFile(this,
-                        "ru.apps4yourlife.kids.fileprovider",
-                        photoFile);
+
+            //File photoFile = null;
+            //try {
+            //    photoFile = GeneralHelper.createImageFile(this);
+            //} catch (IOException ex) {
+            //    ex.printStackTrace();
+            //}
+            //if (photoFile != null) {
+            //    mCurrentPhotoUri = FileProvider.getUriForFile(this,
+            //            "ru.apps4yourlife.kids.fileprovider",
+            //            photoFile);
+            //    if (mCurrentPhotoUri == null) {
+             //       Log.e("PHOTO", "URI NULL FROM FILEPROVIDER!!!!");
+             //   }
                 takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
                 startActivityForResult(takePictureIntent, 0);
-            }
+            //}
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if((requestCode == 1 || requestCode == 0) && resultCode == RESULT_OK) {
-            if (requestCode == 1) {
+            if (requestCode == 1)  {
+                Log.e("PHOTO","Uri is null, getting thumbnail");
                 mCurrentPhotoUri = data.getData();
             }
-            mPhotoPreview = GeneralHelper.resizeBitmapFile(this, maddNewItemImageButton.getWidth()-10, maddNewItemImageButton.getHeight()-10, mCurrentPhotoUri);
-            maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            maddNewItemImageButton.setImageBitmap(mPhotoPreview);
-            maddNewItemImageButton.setBackground(null);
+            if (mCurrentPhotoUri != null) {
+                Log.e("PHOTO","Uri is OK");
+                mPhotoPreview = GeneralHelper.resizeBitmapFile(this, maddNewItemImageButton.getWidth() - 10, maddNewItemImageButton.getHeight() - 10, mCurrentPhotoUri);
+                maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                maddNewItemImageButton.setImageBitmap(mPhotoPreview);
+                maddNewItemImageButton.setBackground(null);
+            } else {
+                if (requestCode == 0) {
+                    Log.e("PHOTO","Uri is NOT OK");
+                    Bundle extras = data.getExtras();
+
+                    mPhotoPreview = (Bitmap) extras.get("data");
+                    maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    maddNewItemImageButton.setImageBitmap(mPhotoPreview);
+                    maddNewItemImageButton.setBackground(null);
+                } else {
+                    Toast.makeText(this,"Ошибка при передаче фотографии. Попробуйте еще раз!", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
@@ -542,7 +563,7 @@ public class AddNewItemActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        if (mClothesCategoriesCursor != null) mClothesCategoriesCursor.close();
+        //if (mClothesCategoriesCursor != null) mClothesCategoriesCursor.close();
         super.onDestroy();
     }
 }

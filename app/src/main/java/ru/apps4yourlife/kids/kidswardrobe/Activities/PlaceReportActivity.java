@@ -70,7 +70,7 @@ public class PlaceReportActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        if (mItems  != null) mItems.close();
+        //if (mItems  != null) mItems.close();
         super.onDestroy();
     }
 

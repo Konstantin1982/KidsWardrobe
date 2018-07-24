@@ -40,14 +40,6 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
     private Cursor mSizesWithNames;
     private Map<Long, ArrayList<Integer>> mSuitableSizesByChildren;
 
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        if (mListItemsCursor != null) mListItemsCursor.close();
-        if (mSizesWithNames != null) mSizesWithNames.close();
-        super.onDetachedFromRecyclerView(recyclerView);
-    }
-
     public interface ItemListAdapterClickHandler {
         void onItemClick(String itemId, String itemPositionInList);
     }
@@ -171,13 +163,13 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
 
             //mCurrentHeader
             String itemLocation = mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
-            if (itemLocation != mCurrentHeader) {
+            if (!itemLocation.equalsIgnoreCase(mCurrentHeader)) {
                 // time to change header
                 mCurrentHeader = itemLocation;
                 if (mCurrentHeader.isEmpty()) {
                     mCurrentHeader = "Место не определено";
                 }
-                if (mShownHeader != mCurrentHeader) {
+                if (!mShownHeader.equalsIgnoreCase(mCurrentHeader)) {
                     holder.headerTextView.setVisibility(View.VISIBLE);
                     holder.headerTextView.setText(mCurrentHeader);
                     mShownHeader = mCurrentHeader;

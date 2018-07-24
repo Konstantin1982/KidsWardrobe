@@ -7,7 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +44,10 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 
 
-public class AddNewChildActivity extends AppCompatActivity implements ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener, AdapterView.OnItemSelectedListener {
+public class AddNewChildActivity extends AppCompatActivity implements
+        ChoosePhotoApplicationDialogFragment.ChoosePhotoApplicationDialogListener,
+        //LoaderManager.LoaderCallbacks<Uri>,
+        AdapterView.OnItemSelectedListener {
 
     private ImageButton mAddChildButton;
     private Uri mCurrentPhotoUri;
@@ -51,6 +57,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     private String mCurrentChildID;
     private String mPositionFromList;
     private int mChildSex;
+    private Intent mPhotoIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +100,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
             // Sex
             mChildSex = currentChildCursor.getInt(currentChildCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_SEX));
             childSexSpinner.setSelection(mChildSex);
-            currentChildCursor.close();
+            //currentChildCursor.close();
             // SIZE
             Cursor currentChildSizesCursor = new WardrobeDBDataManager(this).GetLatestChildSize(mCurrentChildID);
             if (currentChildSizesCursor.getCount() > 0) {
@@ -106,7 +113,7 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 EditText childShoes = (EditText) findViewById(R.id.shoesSizeEditText);
                 childShoes.setText(currentChildSizesCursor.getString(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE)));
             }
-            currentChildSizesCursor.close();
+            //currentChildSizesCursor.close();
         }
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -143,14 +150,31 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if((requestCode == 1 || requestCode == 0) && resultCode == RESULT_OK) {
-            if (requestCode == 1) {
+            if (requestCode == 1)  {
+                Log.e("PHOTO","Uri is null, getting thumbnail");
                 mCurrentPhotoUri = data.getData();
             }
-            mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
-            mPhotoPreview = new GeneralHelper().transform(GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth()-10, mAddChildButton.getHeight()-10, mCurrentPhotoUri));
-            mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            mAddChildButton.setImageBitmap(mPhotoPreview);
-            mAddChildButton.setBackground(null);
+            if (mCurrentPhotoUri != null) {
+                // move it to LoaderComplete
+                mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
+                mPhotoPreview = new GeneralHelper().transform(GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth()-10, mAddChildButton.getHeight()-10, mCurrentPhotoUri));
+                mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                mAddChildButton.setImageBitmap(mPhotoPreview);
+                mAddChildButton.setBackground(null);
+            }
+            else {
+                if (requestCode == 0) {
+                    Log.e("PHOTO","Uri is NOT OK");
+                    Bundle extras = data.getExtras();
+                    mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
+                    mPhotoPreview = (Bitmap) extras.get("data");
+                    mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    mAddChildButton.setImageBitmap(mPhotoPreview);
+                    mAddChildButton.setBackground(null);
+                } else {
+                    Toast.makeText(this,"Ошибка при передаче фотографии. Попробуйте еще раз!", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
@@ -272,4 +296,60 @@ public class AddNewChildActivity extends AppCompatActivity implements ChoosePhot
                 return super.onOptionsItemSelected(item);
         }
     }
+/*
+    @Override
+    public Loader<Uri> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Uri>(this) {
+
+            Uri mPhotoData = null;
+
+            @Override
+            protected void onStartLoading() {
+                if (mWeatherData != null) {
+                    deliverResult(mWeatherData);
+                } else {
+                    mLoadingIndicator.setVisibility(View.VISIBLE);
+                    forceLoad();
+                }
+            }
+
+
+            @Override
+            public String[] loadInBackground() {
+
+                String locationQuery = SunshinePreferences
+                        .getPreferredWeatherLocation(MainActivity.this);
+
+                URL weatherRequestUrl = NetworkUtils.buildUrl(locationQuery);
+
+                try {
+                    String jsonWeatherResponse = NetworkUtils
+                            .getResponseFromHttpUrl(weatherRequestUrl);
+
+                    String[] simpleJsonWeatherData = OpenWeatherJsonUtils
+                            .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
+
+                    return simpleJsonWeatherData;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            public void deliverResult(String[] data) {
+                mWeatherData = data;
+                super.deliverResult(data);
+            }
+        };    }
+
+    @Override
+    public void onLoadFinished(Loader<Uri> loader, Uri data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Uri> loader) {
+
+    }
+*/
 }

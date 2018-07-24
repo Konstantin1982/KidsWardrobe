@@ -1,6 +1,8 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.PagerAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -29,9 +32,6 @@ public class StartActivity extends AppCompatActivity {
     // pager Adapter
     private PagerAdapter mpagerAdapter;
 
-    // BUttons
-    private  Button mAddNewClothesButton;
-    private static final String TOAST_TEXT = "Test ads are being shown. ";
 
     @Override
     protected void onResume() {
@@ -48,6 +48,8 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_start);
+        MobileAds.initialize(this, getString(R.string.app_id));
+
         // Load an ad into the AdMob banner view.
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
@@ -108,5 +110,29 @@ public class StartActivity extends AppCompatActivity {
     public void btnShowReportChildClothes_Click(View view) {
         Intent intent = new Intent(this,ChildReportActivity.class);
         startActivity(intent);
+    }
+
+
+    private boolean isActivityStarted(Intent aIntent) {
+        try {
+            startActivity(aIntent);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
+        }
+    }
+    public void btnRateThisApp_click(View v) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("market://details?id=ru.apps4yourlife.kids.kidswardrobe"));
+        if (!isActivityStarted(intent)) {
+            intent.setData(Uri
+                    .parse("https://play.google.com/store/apps/details?id=ru.apps4yourlife.kids.kidswardrobe"));
+            if (!isActivityStarted(intent)) {
+                Toast.makeText(
+                        this,
+                        "Не удалось открыть Google Play.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

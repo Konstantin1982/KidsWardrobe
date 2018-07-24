@@ -77,7 +77,7 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
                 position = "-1";
             }
             mAdapter.updateListValues (newItemsCursor, Integer.parseInt(position));
-            newItemsCursor.close();
+            //newItemsCursor.close();
         }
     }
     @Override

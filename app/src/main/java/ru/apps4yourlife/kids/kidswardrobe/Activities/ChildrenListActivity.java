@@ -69,7 +69,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
                 position = "-1";
             }
             mAdapter.updateListValues(newChildrenCursor, Integer.parseInt(position));
-            newChildrenCursor.close();
+            //newChildrenCursor.close();
         }
     }
 
