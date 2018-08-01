@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -36,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.R;
@@ -57,11 +59,13 @@ public class AddNewChildActivity extends AppCompatActivity implements
     private String mCurrentChildID;
     private String mPositionFromList;
     private int mChildSex;
+    private Context mContext;
     private Intent mPhotoIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_add_new_child);
         mCurrentChildID = getIntent().getStringExtra("ID");
         mPositionFromList = getIntent().getStringExtra("POSITION");
@@ -151,10 +155,11 @@ public class AddNewChildActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if((requestCode == 1 || requestCode == 0) && resultCode == RESULT_OK) {
             if (requestCode == 1)  {
-                Log.e("PHOTO","Uri is null, getting thumbnail");
+                Log.e("PHOTO","Uri is null, getting URI from gallery");
                 mCurrentPhotoUri = data.getData();
             }
             if (mCurrentPhotoUri != null) {
+                Log.e("PHOTO","Uri is OK, getting photo from URI");
                 // move it to LoaderComplete
                 mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
                 mPhotoPreview = new GeneralHelper().transform(GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth()-10, mAddChildButton.getHeight()-10, mCurrentPhotoUri));
@@ -165,12 +170,10 @@ public class AddNewChildActivity extends AppCompatActivity implements
             else {
                 if (requestCode == 0) {
                     Log.e("PHOTO","Uri is NOT OK");
-                    Bundle extras = data.getExtras();
-                    mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
-                    mPhotoPreview = (Bitmap) extras.get("data");
-                    mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    mAddChildButton.setImageBitmap(mPhotoPreview);
-                    mAddChildButton.setBackground(null);
+                    // GET Async TASK
+                    GetPhotoURITask getPhotoTask = new GetPhotoURITask();
+                    getPhotoTask.execute();
+
                 } else {
                     Toast.makeText(this,"Ошибка при передаче фотографии. Попробуйте еще раз!", Toast.LENGTH_LONG).show();
                 }
@@ -296,60 +299,43 @@ public class AddNewChildActivity extends AppCompatActivity implements
                 return super.onOptionsItemSelected(item);
         }
     }
-/*
-    @Override
-    public Loader<Uri> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<Uri>(this) {
 
-            Uri mPhotoData = null;
+    public class GetPhotoURITask extends AsyncTask<Void,Void,Void> {
 
-            @Override
-            protected void onStartLoading() {
-                if (mWeatherData != null) {
-                    deliverResult(mWeatherData);
-                } else {
-                    mLoadingIndicator.setVisibility(View.VISIBLE);
-                    forceLoad();
-                }
-            }
+        private int res = 0;
 
-
-            @Override
-            public String[] loadInBackground() {
-
-                String locationQuery = SunshinePreferences
-                        .getPreferredWeatherLocation(MainActivity.this);
-
-                URL weatherRequestUrl = NetworkUtils.buildUrl(locationQuery);
-
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.e("PHOTO","ASYNC TASK IS STARTED!!!!!!");
+            int counter = 0;
+            while (mCurrentPhotoUri == null) {
                 try {
-                    String jsonWeatherResponse = NetworkUtils
-                            .getResponseFromHttpUrl(weatherRequestUrl);
-
-                    String[] simpleJsonWeatherData = OpenWeatherJsonUtils
-                            .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
-
-                    return simpleJsonWeatherData;
-                } catch (Exception e) {
+                    TimeUnit.SECONDS.sleep(1);
+                    counter++;
+                    if (counter > 10) {
+                        return null;
+                    }
+                } catch (InterruptedException e) {
                     e.printStackTrace();
-                    return null;
                 }
             }
+            res = 1;
+            Log.e("PHOTO","URI IS OK IN ASYNC TASK");
+            return null;
+        }
 
-            public void deliverResult(String[] data) {
-                mWeatherData = data;
-                super.deliverResult(data);
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (res == 0) Toast.makeText(mContext,"При сохранении фотографии произошла ошибка. Попробуйте еще раз!", Toast.LENGTH_LONG).show();
+            if (res == 1) {
+                mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
+                mPhotoPreview = new GeneralHelper().transform(GeneralHelper.resizeBitmapFile(mContext, mAddChildButton.getWidth()-10, mAddChildButton.getHeight()-10, mCurrentPhotoUri));
+                mAddChildButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                mAddChildButton.setImageBitmap(mPhotoPreview);
+                mAddChildButton.setBackground(null);
             }
-        };    }
-
-    @Override
-    public void onLoadFinished(Loader<Uri> loader, Uri data) {
-
+        }
     }
 
-    @Override
-    public void onLoaderReset(Loader<Uri> loader) {
-
-    }
-*/
 }

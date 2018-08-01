@@ -106,14 +106,12 @@ public class GeneralHelper implements Transformation{
     }
 
     public static Intent prepareTakePhotoIntent(Intent intent, Context context, Uri photoURI) {
-        /*
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         for (ResolveInfo resolveInfo : resInfoList) {
             String packageName = resolveInfo.activityInfo.packageName;
             context.grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
-        */
         return intent;
     }
 

@@ -1,8 +1,15 @@
 package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +20,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
@@ -44,10 +52,17 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
         void onItemClick(String itemId, String itemPositionInList);
     }
 
-    private final ItemListAdapterClickHandler mItemListAdapterClickHandler;
+    public interface ImageListAdapterClickHandler {
+        void onImageClick(Bitmap image);
+    }
 
-    public ReportListAdapter(Context context, ItemListAdapterClickHandler clickHandler) {
+    private final ItemListAdapterClickHandler mItemListAdapterClickHandler;
+    private final ImageListAdapterClickHandler mImageClickHandler;
+
+    public ReportListAdapter(Context context, ItemListAdapterClickHandler clickHandler, ImageListAdapterClickHandler clickHandler2) {
         mItemListAdapterClickHandler = clickHandler;
+        mImageClickHandler = clickHandler2;
+
         mContext = context;
         mFilter = "";
         mQuery = "";
@@ -154,7 +169,8 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
             }
             if (chidrenNames.isEmpty()) {
                 //chidrenNames = "Непонятно кому подходит";
-                holder.suiteChildren.setVisibility(View.GONE);
+                holder.suiteChildren.setHeight(0);
+                holder.suiteChildren.setVisibility(View.INVISIBLE);
             } else {
                 chidrenNames = "Подойдет: " + chidrenNames;
                 holder.suiteChildren.setVisibility(View.VISIBLE);
@@ -310,6 +326,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
         private TextView headerTextView;
         private TextView suiteChildren;
         private ImageView itemPhoto;
+        private ConstraintLayout mLayout;
 
         ItemListAdapterViewHolder(View view) {
             super(view);
@@ -319,7 +336,33 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
             suiteChildren = (TextView) view.findViewById(R.id.report_suiteChilren);
             headerTextView = (TextView) view.findViewById(R.id.report_headerSection);
             itemPhoto = (ImageView) view.findViewById(R.id.item_photo);
+            mLayout = (ConstraintLayout) view.findViewById(R.id.report_layout_item);
+            Resources resources = mContext.getResources();
+            Drawable drawable = VectorDrawableCompat.create(resources, R.drawable.ic_report_back2, mContext.getTheme() );
+            mLayout.setBackground(drawable);
             view.setOnClickListener(this);
+            itemPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bitmap bitmap = null;
+                    int position = getAdapterPosition();
+                    mListItemsCursor.moveToPosition(position);
+                    Uri fullImageUri = Uri.parse(mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_LINK_TO_PHOTO)));
+                    if (fullImageUri != null) {
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), fullImageUri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (bitmap == null) {
+                        Log.e("PHOTO", "BITMAP IS taken from PREVIEW!");
+                        BitmapDrawable drawable = (BitmapDrawable) itemPhoto.getDrawable();
+                        bitmap = drawable.getBitmap();
+                    }
+                    mImageClickHandler.onImageClick(bitmap);
+                }
+            });
         }
 
         @Override

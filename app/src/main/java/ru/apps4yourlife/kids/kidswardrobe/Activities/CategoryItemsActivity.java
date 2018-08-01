@@ -76,6 +76,9 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
             if (position == null) {
                 position = "-1";
             }
+            if (mAdapter.getItemCount() <= Integer.parseInt(position) - 1) {
+                position = "-1";
+            }
             mAdapter.updateListValues (newItemsCursor, Integer.parseInt(position));
             //newItemsCursor.close();
         }

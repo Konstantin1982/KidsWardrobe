@@ -1,15 +1,21 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ReportListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
-public class ReportResultListActivity extends AppCompatActivity implements ReportListAdapter.ItemListAdapterClickHandler {
+public class ReportResultListActivity extends AppCompatActivity implements
+        ReportListAdapter.ItemListAdapterClickHandler,
+ReportListAdapter.ImageListAdapterClickHandler{
 
     private RecyclerView mListReport;
     private ReportListAdapter mAdapter;
@@ -27,7 +33,7 @@ public class ReportResultListActivity extends AppCompatActivity implements Repor
 
         mListReport.setLayoutManager(layoutManager);
         mListReport.setHasFixedSize(true);
-        mAdapter = new ReportListAdapter(this, this);
+        mAdapter = new ReportListAdapter(this, this, this);
         String sentFilter = getIntent().getStringExtra("FILTER");
         String sentType = getIntent().getStringExtra("SORT");
         String sentQuery = getIntent().getStringExtra("QUERY");
@@ -52,7 +58,15 @@ public class ReportResultListActivity extends AppCompatActivity implements Repor
         }
         mListReport.setAdapter(mAdapter);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null)  actionBar.setDisplayHomeAsUpEnabled(true);
+
+        final ImageView zoomImage = findViewById(R.id.zoomImage);
+        zoomImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                zoomImage.setVisibility(View.GONE);
+            }
+        });
 
     }
 
@@ -69,6 +83,15 @@ public class ReportResultListActivity extends AppCompatActivity implements Repor
 
     @Override
     public void onItemClick(String itemId, String itemPositionInList) {
+        Toast.makeText(this,"ITEM CLICKED",Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public void onImageClick(Bitmap image) {
+        ImageView mImage = findViewById(R.id.zoomImage);
+        mImage.setImageBitmap(image);
+        mImage.setVisibility(View.VISIBLE);
+        Toast.makeText(this,"IMAGE! CLICKED",Toast.LENGTH_SHORT).show();
     }
 }
