@@ -83,7 +83,7 @@ ReportListAdapter.ImageListAdapterClickHandler{
 
     @Override
     public void onItemClick(String itemId, String itemPositionInList) {
-        Toast.makeText(this,"ITEM CLICKED",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"ITEM CLICKED",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -92,6 +92,6 @@ ReportListAdapter.ImageListAdapterClickHandler{
         ImageView mImage = findViewById(R.id.zoomImage);
         mImage.setImageBitmap(image);
         mImage.setVisibility(View.VISIBLE);
-        Toast.makeText(this,"IMAGE! CLICKED",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"IMAGE! CLICKED",Toast.LENGTH_SHORT).show();
     }
 }
