@@ -67,6 +67,10 @@ public class AddNewItemActivity extends AppCompatActivity
     // predefined sizes types
     private int mPreTypeSize1;
     private int mPreTypeSize2;
+    private int mPreTypeSize1_old;
+    private int mPreTypeSize2_old;
+
+
     private int mItemID = 0;
     // sex and season
     private int mSeason = 0;
@@ -78,6 +82,9 @@ public class AddNewItemActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPreTypeSize1_old = -1;
+        mPreTypeSize2_old = -1;
+
         setContentView(R.layout.activity_add_new_item);
         mContext = this;
         mDataManager = new WardrobeDBDataManager(this);
@@ -145,13 +152,12 @@ public class AddNewItemActivity extends AppCompatActivity
         });
 
 
-
         String sentId = getIntent().getStringExtra("ID");
         if (sentId != null &&  !sentId.isEmpty()) {
             mItemID = Integer.valueOf(sentId);
         }
-        mPositionFromList = getIntent().getStringExtra("POSITION");
 
+        mPositionFromList = getIntent().getStringExtra("POSITION");
         Spinner itemSexSpinner = (Spinner) findViewById(R.id.spinner_sex_item);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.child_sex_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -172,6 +178,22 @@ public class AddNewItemActivity extends AppCompatActivity
         if (mItemID == 0) {
             mCurrentPhotoUri = null;
             mPhotoPreview = null;
+            String catIdString = getIntent().getStringExtra("CATEGORY_ID");
+            if (catIdString != null &&  !catIdString.isEmpty()) {
+                // predefined Category
+                long cat_id = Long.valueOf(catIdString);
+                WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
+                if (cat_id != dataManager.GetDefaultCategoryId()) { //
+                    Cursor currentCat = mDataManager.GetCategoryById(cat_id);
+                    mPreType = currentCat.getString(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME));
+                    mPreTypeID = cat_id;
+                    mTypeClothesTextView.setText(currentCat.getString(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_CAT_NAME)));
+                    updateAdaptersForSizes(
+                            currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE)),
+                            currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL))
+                    );
+                }
+            }
         } else {
             Cursor currentItemCursor = mDataManager.GetItemById(mItemID);
             // фотография + путь к ней
@@ -198,12 +220,13 @@ public class AddNewItemActivity extends AppCompatActivity
             itemSexSpinner.setSelection(mSex);
             // размер 1
             // размер 2
-            updateAdaptersForSizes(
-                    currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE)),
-                    currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL))
-            );
+            mPreTypeSize1 = currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE));
+            mPreTypeSize2 =    currentCat.getInt(currentCat.getColumnIndex(WardrobeContract.ClothesCategory.COLUMN_SIZE_TYPE_ADDITIONAL));
+            updateAdaptersForSizes(mPreTypeSize1, mPreTypeSize2);
+
             Cursor sizeCursor = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN)));
             Cursor sizeCursor2 = mDataManager.GetSizesValuesById(currentItemCursor.getLong(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL)));
+
             if (sizeCursor.getCount() > 0) {
                 AutoCompleteTextView sizeClothesTextView = (AutoCompleteTextView) findViewById(R.id.sizeClothesTextView);
                 sizeClothesTextView.setText(sizeCursor.getString(sizeCursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
@@ -295,7 +318,6 @@ public class AddNewItemActivity extends AppCompatActivity
                 }
             }
         });
-
         TextView sizeLabel = (TextView) findViewById(R.id.sizeMainLabel);
         sizeLabel.setText(mDataManager.GetSizeTypeName(newSizeTypeMain));
 
@@ -317,11 +339,23 @@ public class AddNewItemActivity extends AppCompatActivity
                 }
             }
         });
-
         sizeLabel = (TextView) findViewById(R.id.sizeTypeAdditionalLabel);
         sizeLabel.setText(mDataManager.GetSizeTypeName(newSizeTypeAdditional));
+
+
+        if (mPreTypeSize1_old != newSizeTypeMain) {
+            sizeClothesTextView.setText("");
+        }
+        if (mPreTypeSize2_old != newSizeTypeAdditional) {
+            sizeClothesTextView2.setText("");
+        }
+
+        mPreTypeSize1_old = mPreTypeSize1;
+        mPreTypeSize2_old = mPreTypeSize2;
+
         mPreTypeSize1 = newSizeTypeMain;
         mPreTypeSize2 = newSizeTypeAdditional;
+
 
     }
 

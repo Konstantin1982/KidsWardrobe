@@ -296,6 +296,7 @@ public class WardrobeDBDataManager {
         String sql =
                 "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + "), " +
                 "MAX(_id) as _id, 0 as CHECKED FROM " + WardrobeContract.ClothesItem.TABLE_NAME  +
+                " WHERE " + WardrobeContract.ClothesItem.COLUMN_COMMENT + " != '' " + 
                 " GROUP BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
         Cursor commentsCursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
         return commentsCursor;

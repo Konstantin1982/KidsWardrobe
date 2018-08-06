@@ -56,12 +56,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     }
 
     public void updateListValues(Cursor newItemList, int position) {
+        Log.e("RECYCLER","Try to updatewith position = " + position);
         mItemsInCategoryCursor = newItemList;
+        notifyDataSetChanged();
+        /*
         if (position >= 0) {
             notifyItemChanged(position);
         } else {
             notifyDataSetChanged();
         }
+        */
     }
 
     @Override

@@ -59,7 +59,8 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
         Intent intent = new Intent(this, AddNewItemActivity.class);
         intent.putExtra("ID",ID);
         intent.putExtra("POSITION",POSITION);
-        Log.e("ACTIVITY","List received position = " + POSITION);
+        intent.putExtra("CATEGORY_ID",String.valueOf(mCategoryID));
+        // Log.e("ACTIVITY","List received position = " + POSITION);
         startActivityForResult(intent,299);
     }
 
