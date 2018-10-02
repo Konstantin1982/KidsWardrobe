@@ -1,29 +1,43 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import java.util.List;
+
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.PagerAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBHelper;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements PurchasesUpdatedListener, BillingHelper.LastPurchaseListener {
 
     //This is our tablayout
     private TabLayout mTabLayout;
@@ -32,6 +46,14 @@ public class StartActivity extends AppCompatActivity {
 
     // pager Adapter
     private PagerAdapter mpagerAdapter;
+    private BillingHelper mBillingHelper;
+    private String mLastGoodAsked;
+    private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
+
+
+    public void setLastPurchase(String code) {
+        mLastGoodAsked = code;
+    }
 
 
     @Override
@@ -48,32 +70,74 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // for case, insert default status for purchase
+        WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+        dbDataManager.InsertOrUpdatePurchase(BillingHelper.SKUCodes.noAdsCode,-1);
+        mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+
+        mLastGoodAsked = "";
         setContentView(R.layout.activity_start);
-        MobileAds.initialize(this, getString(R.string.app_id));
-
-        // Load an ad into the AdMob banner view.
-        AdView adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        adView.loadAd(adRequest);
-
-        // Toasts the test ad message on the screen. Remove this after defining your own ad unit ID.
-        //Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
-
-
+/*
+        if (mNoAdsStatus > 0) {
+            // уже все куплено
+            updateUI();
+        } else {
+            AdView adView = (AdView) findViewById(R.id.adView);
+            MobileAds.initialize(this, getString(R.string.app_id));
+            AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent("android_studio:ad_template").build();
+            adView.loadAd(adRequest);
+        }
+*/
         mTabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mpagerAdapter = new PagerAdapter(getSupportFragmentManager(),2);
         mViewPager.setAdapter(mpagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-
         ImageView randomImage = (ImageView) findViewById(R.id.start_randomImage);
         randomImage.setImageResource(GeneralHelper.GetRandomImageId());
     }
 
+    public void updateUI() {
+        AdView adView = (AdView) findViewById(R.id.adView);
+        adView.setVisibility(View.GONE);
+        invalidateOptionsMenu();
+    }
+
+    public void donateClick() {
+        Intent intent = new Intent(this, DonationActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchaseList) {
+        if (responseCode == BillingClient.BillingResponse.OK && purchaseList != null){
+            for (Purchase purchase : purchaseList) {
+                switch (purchase.getSku()) {
+                    case BillingHelper.SKUCodes.noAdsCode:
+                        Toast.makeText(this,"Спасибо за покупку! Реклама вот-вот исчезнет.", Toast.LENGTH_LONG).show();
+                        WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+                        dbDataManager.InsertOrUpdatePurchase(BillingHelper.SKUCodes.noAdsCode,1);
+                        mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+                        updateUI();
+                    break;
+                }
+            }
+        }
+        if (responseCode == BillingClient.BillingResponse.ITEM_ALREADY_OWNED) {
+            switch (mLastGoodAsked) {
+                case BillingHelper.SKUCodes.noAdsCode:
+                    Toast.makeText(this,"Похоже Вы совершили покупку ранее. Реклама вот-вот исчезнет.", Toast.LENGTH_LONG).show();
+                    WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+                    dbDataManager.InsertOrUpdatePurchase(BillingHelper.SKUCodes.noAdsCode,1);
+                    mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+                    updateUI();
+                break;
+            }
+        }
+    }
+
     public void btnAddNewClothes_Click(View v) {
-        // Code here executes on main thread after user presses button
-        //Toast.makeText(v.getContext(), "Button Clicked", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, AddNewItemActivity.class);
         startActivity(intent);
     }
@@ -145,4 +209,50 @@ public class StartActivity extends AppCompatActivity {
         //sendIntent.setType("text/html");
         this.startActivity(sendIntent);
     }
+
+    public void submitnoAdsPurchase() {
+        int noAds149Status = 0; // 0 - не куплено, 1 - куплено, -1 0 ошибка
+        // Use the Builder class for convenient dialog construction
+        // Проверка, что покупки еще нет
+        // проверка, что можно купить
+        mBillingHelper = new BillingHelper(this, this, this);
+        mBillingHelper.StartOperationInStore(BillingHelper.SKUCodes.noAdsCode, 1); // покупаем noAds149
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_noAds_buy :
+                submitnoAdsPurchase();
+                return true;
+            case R.id.action_help_buy :
+                donateClick();
+                return true;
+            case R.id.action_settings :
+                settingsClick();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void settingsClick() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        int menu_id;
+        if (mNoAdsStatus > 0) {
+            menu_id = R.menu.menu_main_noads;
+        } else  {
+            menu_id = R.menu.menu_main;
+        }
+        inflater.inflate(menu_id, menu);
+        return true;
+    }
+
+
 }

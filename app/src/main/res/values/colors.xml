@@ -15,6 +15,9 @@
     <color name="defaultEmptyBackgroundColor">#DADADA</color>
     <color name="halfTransparentWhiteBackground">#AAFFFFFF</color>
     <color name="divideLineColor">#DADADA</color>
-
+    <color name="donate_text1">#6C8EBF</color>
+    <color name="donate_text2">#82B366</color>
+    <color name="donate_text3">#9673A6</color>
+    <color name="donate_text4">#D79B00</color>
 
 </resources>

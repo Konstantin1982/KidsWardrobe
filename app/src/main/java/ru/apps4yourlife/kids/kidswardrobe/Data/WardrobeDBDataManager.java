@@ -11,6 +11,7 @@ import android.util.Size;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
 
 import java.io.ByteArrayOutputStream;
@@ -296,7 +297,7 @@ public class WardrobeDBDataManager {
         String sql =
                 "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + "), " +
                 "MAX(_id) as _id, 0 as CHECKED FROM " + WardrobeContract.ClothesItem.TABLE_NAME  +
-                " WHERE " + WardrobeContract.ClothesItem.COLUMN_COMMENT + " != '' " + 
+                " WHERE " + WardrobeContract.ClothesItem.COLUMN_COMMENT + " != '' " +
                 " GROUP BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
         Cursor commentsCursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
         return commentsCursor;
@@ -544,5 +545,62 @@ public class WardrobeDBDataManager {
 
     public Cursor GetAnyQuery(String query) {
         return mDBHelper.getReadableDatabase().rawQuery(query,null);
+    }
+
+    // 0 - don't purchased, 1 - taken, -1 - undefined.
+    public long InsertOrUpdatePurchase(String skuCode, int status ) {
+        long result = 0;
+
+        Cursor skuList;
+        skuList = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.SettingsEntry.TABLE_NAME,
+                null,
+                WardrobeContract.SettingsEntry.COLUMN_KEY + " = ?",
+                new String[] {skuCode},
+                null,
+                null,
+                WardrobeContract.SettingsEntry._ID,
+                "1");
+        String insertValue;
+        if (status >= 0) {
+            insertValue = String.valueOf(status);
+        } else {
+            insertValue = "0";
+        }
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        ContentValues newValues = new ContentValues();
+        newValues.put(WardrobeContract.SettingsEntry.COLUMN_KEY, skuCode);
+        newValues.put(WardrobeContract.SettingsEntry.COLUMN_VALUE, insertValue);
+
+        if (skuList.getCount() > 0) {
+            skuList.moveToFirst();
+            if (status >= 0) {
+                // update only if 0 or 1
+                result = db.update(WardrobeContract.SettingsEntry.TABLE_NAME, newValues, WardrobeContract.SettingsEntry.COLUMN_KEY + " = ? ", new String[]{String.valueOf(skuCode)});
+            }
+        } else {
+            // insert
+            result = db.insert(WardrobeContract.SettingsEntry.TABLE_NAME, null, newValues);
+        }
+        db.close();
+        return result;
+    }
+
+    public int getPurchaseStatus(String skuCode) {
+        int result = 0;
+        Cursor skuList = mDBHelper.getReadableDatabase().query(
+                WardrobeContract.SettingsEntry.TABLE_NAME,
+                null,
+                WardrobeContract.SettingsEntry.COLUMN_KEY + " = ?",
+                new String[] {skuCode},
+                null,
+                null,
+                WardrobeContract.SettingsEntry._ID,
+                "1");
+        if (skuList.getCount() > 0) {
+            skuList.moveToFirst();
+            result = skuList.getInt(skuList.getColumnIndex(WardrobeContract.SettingsEntry.COLUMN_VALUE));
+        }
+        return result;
     }
 }

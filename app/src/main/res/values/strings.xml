@@ -10,7 +10,7 @@
     <!- -->
     <string name="app_id">ca-app-pub-3848852788165915~3350971743</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <!-- PROD <string name="banner_ad_unit_id">ca-app-pub-3848852788165915/3616487633</string> -->
+    <!-- PROD  <string name="banner_ad_unit_id">ca-app-pub-3848852788165915/3616487633</string> -->
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="dialog_choose_application_title">Выберите источник</string>
@@ -33,5 +33,9 @@
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>
     <string name="are_you_sure_to_delete">Вы уверены, что хотите убрать вещь из гардероба?</string>
+    <string name="noAdsFramgent_title">Убрать рекламу.</string>
+    <string name="noAdsFramgent_text">Вы уверены, что хотите убрать всю рекламу из приложения за </string>
+    <string name="noAds149Code">android.test.purchased</string>
+    <!-- noAds149 in reality -->
 
 </resources>

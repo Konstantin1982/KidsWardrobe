@@ -2,6 +2,8 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import com.google.android.gms.ads.AdView;
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class CategoryItemsActivity extends AppCompatActivity implements CategoryListAdapter.CategoryListAdapterClickHandler {
 
@@ -25,15 +28,14 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
     private long mCategoryID;
     private CategoryListAdapter mAdapter;
 
+    private int mNoAdsStatus = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_items);
 
-        AdView adView = (AdView) findViewById(R.id.adView_items);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        adView.loadAd(adRequest);
+
 
         mListItems = (RecyclerView) findViewById(R.id.categoryListItems);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -48,10 +50,25 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
         actionBar.setDisplayHomeAsUpEnabled(true);
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         String catName = dataManager.GetCategoryNameById(mCategoryID);
+        mNoAdsStatus = dataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+        if (mNoAdsStatus > 0) {
+            updateUI();
+        } else {
+            AdView adView = (AdView) findViewById(R.id.adView_items);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent("android_studio:ad_template").build();
+            adView.loadAd(adRequest);
+        }
+
         if (catName.isEmpty()) {
             catName = this.getString(R.string.title_activity_category_default);
         }
         actionBar.setTitle(catName);
+    }
+
+    public void updateUI () {
+        AdView adView = (AdView) findViewById(R.id.adView_items);
+        adView.setVisibility(View.GONE);
     }
 
     @Override

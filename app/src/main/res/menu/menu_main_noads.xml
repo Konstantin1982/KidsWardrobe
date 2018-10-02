@@ -11,27 +11,20 @@
         android:orderInCategory="101"
         app:showAsAction="always"
         android:icon="@drawable/ic_more_vert_black_24dp">
-    <menu>
-    <item
-        android:id="@+id/action_noAds_buy"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_advertising"
-        android:title="Убрать рекламу"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_help_buy"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_donation"
-        android:title="Поддержать проект"
-        app:showAsAction="never" />
+        <menu>
+            <item
+                android:id="@+id/action_help_buy"
+                android:orderInCategory="100"
+                android:icon="@drawable/ic_donation"
+                android:title="Поддержать проект"
+                app:showAsAction="never" />
             <item
                 android:id="@+id/action_settings"
                 android:orderInCategory="100"
                 android:icon="@drawable/ic_donation"
                 android:title="Настройки"
                 app:showAsAction="never" />
-    </menu>
+        </menu>
     </item>
 
 

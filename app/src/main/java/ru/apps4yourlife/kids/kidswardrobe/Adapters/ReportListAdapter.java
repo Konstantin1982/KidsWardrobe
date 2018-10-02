@@ -53,7 +53,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
     }
 
     public interface ImageListAdapterClickHandler {
-        void onImageClick(Bitmap image);
+        void onImageClick(Bitmap image, View view);
     }
 
     private final ItemListAdapterClickHandler mItemListAdapterClickHandler;
@@ -360,7 +360,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
                         BitmapDrawable drawable = (BitmapDrawable) itemPhoto.getDrawable();
                         bitmap = drawable.getBitmap();
                     }
-                    mImageClickHandler.onImageClick(bitmap);
+                    mImageClickHandler.onImageClick(bitmap,view);
                 }
             });
         }

@@ -19,21 +19,31 @@ import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ChildrenListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class ChildrenListActivity extends AppCompatActivity implements ChildrenListAdapter.ChildrenListAdapterClickHandler {
 
     private RecyclerView mListChildren;
     private ChildrenListAdapter mAdapter;
+    private int mNoAdsStatus = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_children_list);
 
-        AdView adView = (AdView) findViewById(R.id.adView_children);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        adView.loadAd(adRequest);
+        WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+        mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+        if (mNoAdsStatus > 0) {
+            updateUI();
+        } else {
+            AdView adView = (AdView) findViewById(R.id.adView_children);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .setRequestAgent("android_studio:ad_template").build();
+            adView.loadAd(adRequest);
+        }
 
         mListChildren = (RecyclerView) findViewById(R.id.childrenList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -47,6 +57,11 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
+    public void updateUI () {
+        AdView adView = (AdView) findViewById(R.id.adView_children);
+        adView.setVisibility(View.GONE);
+    }
+
 
     public void onChildClick(String ID, String POSITION) {
         Intent intent = new Intent(this, AddNewChildActivity.class);

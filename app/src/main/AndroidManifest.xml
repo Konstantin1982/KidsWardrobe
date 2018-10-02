@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -66,8 +67,11 @@
             android:name=".Activities.ChildrenListActivity"
             android:label="@string/title_activity_children_list" />
         <activity android:name=".Activities.ReportResultListActivity" />
-        <activity android:name=".Activities.ChildReportActivity"
-            android:label="@string/title_activity_children_report"></activity>
+        <activity
+            android:name=".Activities.ChildReportActivity"
+            android:label="@string/title_activity_children_report" />
+        <activity android:name=".Activities.DonationActivity" />
+        <activity android:name=".Activities.SettingsActivity"></activity>
     </application>
 
 </manifest>
