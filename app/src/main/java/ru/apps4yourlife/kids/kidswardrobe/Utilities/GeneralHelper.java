@@ -105,6 +105,25 @@ public class GeneralHelper implements Transformation{
         return image;
     }
 
+    public static File createFolderForArchive(Context context) throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        try {
+            storageDir.mkdirs();
+        } catch (Exception ex) {
+        }
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        return image;
+
+    }
+
     public static Intent prepareTakePhotoIntent(Intent intent, Context context, Uri photoURI) {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
