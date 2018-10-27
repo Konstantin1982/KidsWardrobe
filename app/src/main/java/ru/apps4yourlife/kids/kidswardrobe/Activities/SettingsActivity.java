@@ -3,6 +3,7 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,11 +36,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBHelper;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -59,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private MetadataBuffer mMetadataBuffer;
     private String mBackupFolderName;
     private  String mResourceId;
-
+    private ArrayList<String> mFilesToCopy;
     protected static final int PARAM_ROOT = 0;
     protected static final int PARAM_KIDS = 1;
     protected static final int PARAM_DATE = 2;
@@ -161,7 +165,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Необходимо залогиниться в Google", Toast.LENGTH_LONG).show();
             return;
         }
-
         // Start Task
         mBackupFolderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         runTask();
@@ -442,6 +445,23 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                             })
                     ;
                 }
+                break;
+            case 8:
+                // create list of files to beckup
+                mFilesToCopy = new ArrayList<>();
+                mFilesToCopy.add(this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath());
+
+                File directory = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                File[] files = directory.listFiles();
+                if (files.length > 0) {
+                    for (int i = 0; i < files.length; i++) {
+                        mFilesToCopy.add(files[i].getAbsolutePath());
+                    }
+                }
+                RunBackupOperationStep(9);
+                break;
+            case 9:
+
                 break;
         }
     }
