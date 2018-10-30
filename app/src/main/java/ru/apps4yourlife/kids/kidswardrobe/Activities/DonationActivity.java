@@ -11,6 +11,7 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -83,9 +84,20 @@ public class DonationActivity extends AppCompatActivity implements PurchasesUpda
         });
         //drawable = VectorDrawableCompat.create(resources, R.drawable.ic_motivator, this.getTheme() );
         //layout.setBackground(drawable);
-
-
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(0);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     public void startPurchase(String skuCode) {
 

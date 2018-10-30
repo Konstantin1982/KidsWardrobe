@@ -3,13 +3,17 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,7 +85,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private boolean mResultOfStep;
     private MetadataBuffer mMetadataBuffer;
     private String mBackupFolderName;
-    private  String mResourceId;
     private ArrayList<String> mFilesToCopy;
     private int mCount;
     private DriveContents mContents;
@@ -90,15 +93,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected static final int PARAM_ROOT = 0;
     protected static final int PARAM_KIDS = 1;
     protected static final int PARAM_DATE = 2;
-    protected static final int PARAM_ROOT_ROOT = 3;
-
-    protected static final int OPERATION_CHECK_FOLDER = 0;
-    protected static final int OPERATION_CREATE_FOLDER = 1;
-    protected static final int OPERATION_GETROOT_FOLDER = 2;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +105,26 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         doNextOperation = 0;
         mSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
         updateUI(mSignInAccount);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(0);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public void updateUI(GoogleSignInAccount account) {
         if (account != null) {
-            Toast.makeText(this,"You're signed in.", Toast.LENGTH_SHORT).show();
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
             TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
@@ -137,8 +145,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void signIn() {
-        //Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        //startActivityForResult(signInIntent, RC_SIGN_IN);
         if (mSignInAccount != null && mSignInAccount.getGrantedScopes().containsAll(mRequiredScopes)) {
             if (doNextOperation == 1) {
                 doNextOperation = 0;
@@ -167,8 +173,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private void initializeDriveClient(GoogleSignInAccount signInAccount) {
         mDriveClient = Drive.getDriveClient(getApplicationContext(), signInAccount);
         mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), signInAccount);
-        //onDriveClientReady();
-        //createFile();
     }
 
 
@@ -176,7 +180,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
@@ -184,33 +187,25 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void CreateBackup_btn(View view) {
-        //Chieck SignIN
         if (mSignInAccount == null || !mSignInAccount.getGrantedScopes().containsAll(mRequiredScopes)) {
-            // no login or no enough access
             doNextOperation = 1;
             signIn();
             Toast.makeText(this, "Необходимо залогиниться в Google", Toast.LENGTH_LONG).show();
             return;
         }
-        // Start Task
         mBackupFolderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         runTask(0);
     }
 
     public void CreateRestore_btn(View view) {
-        //Chieck SignIN
         if (mSignInAccount == null || !mSignInAccount.getGrantedScopes().containsAll(mRequiredScopes)) {
-            // no login or no enough access
             doNextOperation = 2;
             signIn();
             Toast.makeText(this, "Необходимо залогиниться в Google", Toast.LENGTH_LONG).show();
             return;
         }
-        // Start Task
         runTask(1);
     }
-
-
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
@@ -220,10 +215,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 CreateBackup_btn(findViewById(android.R.id.content));
             }
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("SIGN-IN", "signInResult:failed code=" + e.getStatusCode());
-            Toast.makeText(this,"Произошла ошибка.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Произошла ошибка при попытке логина в Google.", Toast.LENGTH_LONG).show();
             updateUI(null);
         }
     }
@@ -236,8 +228,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void runTask(int direction) {
-        if (direction == 0) RunBackupOperationStep(1);
-        if (direction == 1) RunRestoreOperationStep(1);
+        CheckBox wifiCheckBox = (CheckBox) findViewById(R.id.wifiCheckBox);
+        boolean isOK = true;
+        if (wifiCheckBox.isChecked()) {
+            // WIFI only
+            ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (!mWifi.isConnected()) {
+                isOK = false;
+                Toast.makeText(this, "Wifi не подключен. Подключите Wi-Fi или разрешите приложению работать без Wi-Fi.", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (isOK) {
+            if (direction == 0) RunBackupOperationStep(1);
+            if (direction == 1) RunRestoreOperationStep(1);
+        }
     }
 
     public void signOut(View v) {
@@ -357,10 +362,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     ;
 
                 }
-                // result  - Apps driveid
                 break;
             case 4:
-                // Get Children folders
                 query = new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.MIME_TYPE, DriveFolder.MIME_TYPE))
                         .addFilter(Filters.eq(SearchableField.TITLE, getFolderName(PARAM_KIDS)))
@@ -380,10 +383,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 ShowErrorMessage(4);
                             }
                         });
-                // result - metaarray with children
                 break;
             case 5:
-                // find apps in children set / create KidsWardrobe
                 isFound = false;
                 if (mMetadataBuffer != null) {
                     if (mMetadataBuffer.getCount() > 0) {
@@ -419,10 +420,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     ;
 
                 }
-                // result  - KidsWardrobe driveid
                 break;
             case 6:
-                // Get Children folders
                 query = new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.MIME_TYPE, DriveFolder.MIME_TYPE))
                        .addFilter(Filters.eq(SearchableField.TITLE, getFolderName(PARAM_DATE)))
@@ -442,10 +441,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 ShowErrorMessage(6);
                             }
                         });
-                // result - metaarray with children
                 break;
             case 7:
-                // find apps in children set / create mBackupFolderName
                 isFound = false;
                 if (mMetadataBuffer != null) {
                     if (mMetadataBuffer.getCount() > 0) {
@@ -482,10 +479,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case 8:
-                // create list of files to backup
                 mFilesToCopy = new ArrayList<>();
                 mFilesToCopy.add(this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath());
-
                 File directory = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 File[] files = directory.listFiles();
                 if (files.length > 0) {
@@ -497,7 +492,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 RunBackupOperationStep(9);
                 break;
             case 9:
-                // getcontents for GDrive
                 UpdateBackupProgress(1);
                 getDriveResourceClient().createContents()
                     .addOnSuccessListener(this, new OnSuccessListener<DriveContents>() {
@@ -516,45 +510,41 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case 10:
                 OutputStream outputStream = mContents.getOutputStream();
-                //try {
-                    //Writer writer = new OutputStreamWriter(outputStream);
-                    final File sourceFile = new File(mFilesToCopy.get(mCount));
-                    try {
-                        FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-                        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
-                            //writer.write("Hello World!");
-                        }
-                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                .setTitle(sourceFile.getName())
-                                .setMimeType("text/plain")
-                                .setStarred(false)
-                                .build();
-                        getDriveResourceClient().createFile(mDriveFolder, changeSet, mContents)
-                                .addOnSuccessListener(this, new OnSuccessListener<DriveFile>() {
-                                    @Override
-                                    public void onSuccess(DriveFile driveFile) {
-                                        if (mCount < mFilesToCopy.size() - 1) {
-                                            mCount++;
-                                            RunBackupOperationStep(9);
-                                        } else {
-                                            ShowErrorMessage(200);
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(this, new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        ShowErrorMessage(10);
-                                    }
-                                });
-
-                    } catch (IOException e1) {
-
+                final File sourceFile = new File(mFilesToCopy.get(mCount));
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
                     }
-                //}
+                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                            .setTitle(sourceFile.getName())
+                            .setMimeType("text/plain")
+                            .setStarred(false)
+                            .build();
+                    getDriveResourceClient().createFile(mDriveFolder, changeSet, mContents)
+                            .addOnSuccessListener(this, new OnSuccessListener<DriveFile>() {
+                                @Override
+                                public void onSuccess(DriveFile driveFile) {
+                                    if (mCount < mFilesToCopy.size() - 1) {
+                                        mCount++;
+                                        RunBackupOperationStep(9);
+                                    } else {
+                                        ShowErrorMessage(200);
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(this, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    ShowErrorMessage(10);
+                                }
+                            });
+
+                } catch (IOException e1) {
+
+                }
                 break;
         }
     }
@@ -564,7 +554,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (mDriveClient == null || mDriveResourceClient == null ) {
             initializeDriveClient(mSignInAccount);
         }
-
         switch (stepNumber) {
             case 1:
                 mDriveResourceClient.getRootFolder()
@@ -582,10 +571,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 ShowErrorMessage(1001);
                             }
                         });
-                // result - driveid for root folder
                 break;
             case 2:
-                // Get Children folders
                 Query query = new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.MIME_TYPE, DriveFolder.MIME_TYPE))
                         .addFilter(Filters.eq(SearchableField.TITLE, getFolderName(PARAM_ROOT)))
@@ -596,7 +583,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                             public void onSuccess(MetadataBuffer metadata) {
                                 mMetadataBuffer = metadata;
                                 RunRestoreOperationStep(3);
-
                             }
                         })
                         .addOnFailureListener(this, new OnFailureListener() {
@@ -605,10 +591,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 ShowErrorMessage(1002);
                             }
                         });
-                // result - metaarray with children
                 break;
             case 3:
-                // find apps in children set / create Apps
                 boolean isFound = false;
                 if (mMetadataBuffer != null) {
                     if (mMetadataBuffer.getCount() > 0) {
@@ -622,10 +606,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 if (isFound == false) {
                     ShowErrorMessage(1003);
                 }
-                // result  - Apps driveid
                 break;
             case 4:
-                // Get Children folders
                 query = new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.MIME_TYPE, DriveFolder.MIME_TYPE))
                         .addFilter(Filters.eq(SearchableField.TITLE, getFolderName(PARAM_KIDS)))
@@ -636,7 +618,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                             public void onSuccess(MetadataBuffer metadata) {
                                 mMetadataBuffer = metadata;
                                 RunRestoreOperationStep(5);
-
                             }
                         })
                         .addOnFailureListener(this, new OnFailureListener() {
@@ -645,10 +626,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 ShowErrorMessage(1004);
                             }
                         });
-                // result - metaarray with children
                 break;
             case 5:
-                // find apps in children set / create KidsWardrobe
                 isFound = false;
                 if (mMetadataBuffer != null) {
                     if (mMetadataBuffer.getCount() > 0) {
@@ -662,10 +641,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 if (isFound == false) {
                     ShowErrorMessage(1005);
                 }
-                // result  - KidsWardrobe driveid
                 break;
             case 6:
-                // Get Children folders
                 query = new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.MIME_TYPE, DriveFolder.MIME_TYPE))
                         .setSortOrder(new SortOrder.Builder().addSortDescending(SortableField.CREATED_DATE).build())
@@ -684,19 +661,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 ShowErrorMessage(1006);
                             }
                         });
-                // result - metaarray with children
                 break;
             case 7:
-                // show list of children
                 isFound = false;
                 if (mMetadataBuffer != null) {
                     if (mMetadataBuffer.getCount() > 0) {
                             ChooseRestoreFolderDialogFragment dialog = new ChooseRestoreFolderDialogFragment();
                             dialog.setmListener(this);
                             dialog.show(getSupportFragmentManager(), "ChooseRestoreFolderDialogFragment");
-
-                        /*
-                        */
                         isFound = true;
                     }
                 }
@@ -711,9 +683,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 Metadata data = mMetadataBuffer.get(mCheckedRestore);
                 mDriveFolder = data.getDriveId().asDriveFolder();
                 mDriveId = data.getDriveId();
-                // Get Children folders
-                query = new Query.Builder()
-                        .build();
+                query = new Query.Builder().build();
                 getDriveResourceClient().queryChildren(mDriveFolder, query)
                         .addOnSuccessListener(this, new OnSuccessListener<MetadataBuffer>() {
                             @Override
@@ -729,27 +699,23 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                 ShowErrorMessage(1008);
                             }
                         });
-                // result - metaarray with children
                 break;
             case 9:
                 UpdateBackupProgress(2);
                 if (mMetadataBuffer.getCount() > 0 ) {
                     Metadata fileData = mMetadataBuffer.get(mCount);
-                    Log.e("RESTORE", "In step 9");
                     DriveId id = fileData.getDriveId();
                     getDriveResourceClient().openFile(id.asDriveFile(),DriveFile.MODE_READ_ONLY)
                             .addOnFailureListener(this, new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     ShowErrorMessage(1009);
-                                    Log.e("RESTORE", "Step 9 ERROR");
                                 }
                             })
                             .addOnSuccessListener(this, new OnSuccessListener<DriveContents>() {
                                 @Override
                                 public void onSuccess(DriveContents driveContents) {
                                     mContents = driveContents;
-                                    Log.e("RESTORE", "Step 9 success");
                                     RunRestoreOperationStep(10);
                                 }
                             });
@@ -758,81 +724,103 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case 10:
-                Log.e("RESTORE", "Step 10 Start");
-                Metadata fileData = mMetadataBuffer.get(mCount);
-                String targetFilePath = "";
-                if (fileData.getFileExtension().equalsIgnoreCase("db")) {
-                    targetFilePath = this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath();
-                } else {
-                    targetFilePath =  this.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + "/" + fileData.getTitle();
-                }
-                Log.e("RESTORE", "Step 10 middle");
-
                 try {
-                    File targetFile = new File(targetFilePath);
-                    FileOutputStream fileOutputStream = new FileOutputStream(targetFile, false);
-
-                    InputStream sourceFile = mContents.getInputStream();
-
-                    byte[] buffer = new byte[1024];
-                    int bytesRead = 0;
-                    int offset = 0;
-                    boolean isRead = true;
-                    while (isRead)
-                     {
-                         Log.e("RESTORE", "Step 10 reading... " + bytesRead);
-                         int currentBytesRead =sourceFile.read(buffer,offset,1024);
-                         if (currentBytesRead > 0) {
-                             bytesRead += currentBytesRead;
-                             Log.e("RESTORE", "Step 10. Start writing file " + targetFilePath);
-                             fileOutputStream.write(buffer);
-                             Log.e("RESTORE", "Step 10. After writing chunk " + currentBytesRead );
-                         } else {
-                             isRead = false;
-                             break;
-                         }
+                    Metadata fileData2 = mMetadataBuffer.get(mCount);
+                    String targetFilePath = "";
+                    if (fileData2.getFileExtension().equalsIgnoreCase("db")) {
+                        targetFilePath = this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath();
+                    } else {
+                        targetFilePath = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + "/" + fileData2.getTitle();
                     }
-                    fileOutputStream.close();
-                    getDriveResourceClient().discardContents(mContents)
-                            .addOnSuccessListener(this, new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    mCount++;
-                                    if (mCount > mMetadataBuffer.getCount() - 1) {
-                                        // FINISH
-                                        ShowErrorMessage(1200);
-                                    } else {
-                                        RunRestoreOperationStep(9);
+                    try {
+                        File targetFile = new File(targetFilePath);
+                        FileOutputStream fileOutputStream = new FileOutputStream(targetFile, false);
+                        InputStream sourceFile = mContents.getInputStream();
+                        byte[] buffer = new byte[1024];
+                        int bytesRead = 0;
+                        int offset = 0;
+                        boolean isRead = true;
+                        while (isRead) {
+                            int currentBytesRead = sourceFile.read(buffer, offset, 1024);
+                            if (currentBytesRead > 0) {
+                                bytesRead += currentBytesRead;
+                                fileOutputStream.write(buffer);
+                            } else {
+                                isRead = false;
+                                break;
+                            }
+                        }
+                        fileOutputStream.close();
+                        getDriveResourceClient().discardContents(mContents)
+                                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mCount++;
+                                        if (mCount > mMetadataBuffer.getCount() - 1) {
+                                            // FINISH
+                                            ShowErrorMessage(1200);
+                                        } else {
+                                            RunRestoreOperationStep(9);
+                                        }
                                     }
-                                }
-                            })
-                            .addOnFailureListener(this, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    ShowErrorMessage(10);
-                                }
-                            });
+                                })
+                                .addOnFailureListener(this, new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        ShowErrorMessage(1010);
+                                    }
+                                });
+                    } catch (Exception ex) {
+                        //
+                        ex.printStackTrace();
+                    }
+                } catch (NullPointerException ex) {
+                    ShowErrorMessage(1011);
                 }
-                catch (Exception ex) {
-                    //
-                    ex.printStackTrace();
-                }
+                break;
         }
     }
 
     public void ShowErrorMessage(int step) {
         findViewById(R.id.layout_progress_parent).setVisibility(View.GONE);
+        mDriveClient = null;
         if (step < 1000) {
             if (step == 200) {
                 Toast.makeText(this, "Резервное копирование проведено успешно.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Error on step " + step, Toast.LENGTH_LONG).show();
+                boolean isFound = false;
+                if (step == 1 || step == 2 || step == 4 || step == 6){
+                    Toast.makeText(this, "Ошибка на этапе поиска нужной папки в Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (step == 3 || step == 5 || step == 7){
+                    Toast.makeText(this, "Не получилось создать папку для бекапа в Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (step == 9 || step == 10) {
+                    Toast.makeText(this, "Не получилось скопировать один из файлов в Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (isFound == false) {
+                    Toast.makeText(this, "Неизвестная ошибка при операции Backup.", Toast.LENGTH_LONG).show();
+                }
             }
         } else {
             if (step == 1200) {
                 Toast.makeText(this, "Данные восстановлены из резервной копии с Google Drive.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Error on step " + step, Toast.LENGTH_LONG).show();
+                boolean isFound = false;
+                if (step < 1008){
+                    Toast.makeText(this, "Не смог найти сохраненные копии на Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (step >= 1008){
+                    Toast.makeText(this, "Не получилось скопировать папку из Google Drive", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (isFound == false) {
+                    Toast.makeText(this, "Неизвестная ошибка при операции Restore.", Toast.LENGTH_LONG).show();
+                }
             }
         }
         return;
@@ -849,19 +837,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
             progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mFilesToCopy.size() + ".");
         }
-
         if (stage == 2) {
             TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
             progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mMetadataBuffer.getCount() + ".");
         }
-
     }
 
     @Override
     public void OnClickRestoreName(int position) {
         mCheckedRestore = position;
         RunRestoreOperationStep(8);
-
     }
 
     @Override

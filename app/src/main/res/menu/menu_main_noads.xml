@@ -21,7 +21,7 @@
             <item
                 android:id="@+id/action_settings"
                 android:orderInCategory="100"
-                android:icon="@drawable/ic_donation"
+                android:icon="@drawable/ic_gear"
                 android:title="Настройки"
                 app:showAsAction="never" />
         </menu>

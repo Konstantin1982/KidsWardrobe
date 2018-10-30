@@ -50,7 +50,7 @@ public class GeneralHelper implements Transformation{
 
     public static int GetRandomImageId() {
         Random r = new Random();
-        int imageNumber = r.nextInt(9);
+        int imageNumber = r.nextInt(15);
         int result;
         switch (imageNumber) {
             case 0:
@@ -79,6 +79,24 @@ public class GeneralHelper implements Transformation{
                 break;
             case 8:
                 result = R.drawable.background_unicorn_640;
+                break;
+            case 9:
+                result = R.drawable.background_ant_640;
+                break;
+            case 10:
+                result = R.drawable.background_cat_640;
+                break;
+            case 11:
+                result = R.drawable.background_giraffe_640;
+                break;
+            case 12:
+                result = R.drawable.background_gnomes_640;
+                break;
+            case 13:
+                result = R.drawable.background_rabbit2_640;
+                break;
+            case 14:
+                result = R.drawable.background_winter_640;
                 break;
             default:
                 result = R.drawable.background_elephant_640;

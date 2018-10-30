@@ -20,4 +20,9 @@
     <color name="donate_text3">#9673A6</color>
     <color name="donate_text4">#D79B00</color>
 
+    <color name="donate_back1">#118EAFFF</color>
+    <color name="donate_back2">#1182B366</color>
+    <color name="donate_back3">#119673A6</color>
+    <color name="donate_back4">#11D79B00</color>
+
 </resources>
