@@ -6,8 +6,8 @@ android {
         applicationId "ru.apps4yourlife.kids.kidswardrobe"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 231
-        versionName "2.3.1"
+        versionCode 232
+        versionName "2.3.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true

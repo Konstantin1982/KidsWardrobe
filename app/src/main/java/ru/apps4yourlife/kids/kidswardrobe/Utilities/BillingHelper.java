@@ -65,7 +65,7 @@ public class BillingHelper {
                     builder.setMessage(message)
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    Toast.makeText(mContext,"START BUY",Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(mContext,"START BUY",Toast.LENGTH_LONG).show();
                                     startPurchase(SKUCodes.noAdsCode);
                                 }
                             })
