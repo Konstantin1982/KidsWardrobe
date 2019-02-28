@@ -56,7 +56,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     }
 
     public void updateListValues(Cursor newItemList, int position) {
-        Log.e("RECYCLER","Try to updatewith position = " + position);
+        //Log.e("RECYCLER","Try to updatewith position = " + position);
         mItemsInCategoryCursor = newItemList;
         notifyDataSetChanged();
         /*
@@ -180,7 +180,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         public void onClick(View v) {
             int position = getAdapterPosition();
             mItemsInCategoryCursor.moveToPosition(position);
-            Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
+            //Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
             mCategoryListAdapterClickHandler.onItemClick (
                     mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem._ID)),
                     String.valueOf(position)

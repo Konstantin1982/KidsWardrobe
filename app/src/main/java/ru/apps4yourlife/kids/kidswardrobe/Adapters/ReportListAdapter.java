@@ -88,7 +88,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
 
     @Override
     public ReportListAdapter.ItemListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e("RECYCLER: ", "onCreateViewHolder is called");
+        //Log.e("RECYCLER: ", "onCreateViewHolder is called");
         int viewId = R.layout.report_list_item;
         if (viewType == 100)  viewId = R.layout.report_list_header;
         View view = LayoutInflater.from(mContext).inflate(viewId, parent, false);
@@ -356,7 +356,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
                         }
                     }
                     if (bitmap == null) {
-                        Log.e("PHOTO", "BITMAP IS taken from PREVIEW!");
+                        //Log.e("PHOTO", "BITMAP IS taken from PREVIEW!");
                         BitmapDrawable drawable = (BitmapDrawable) itemPhoto.getDrawable();
                         bitmap = drawable.getBitmap();
                     }
@@ -369,7 +369,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
         public void onClick(View v) {
             int position = getAdapterPosition();
             mListItemsCursor.moveToPosition(position);
-            Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
+            //Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
             mItemListAdapterClickHandler.onItemClick(
                     mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem._ID)),
                     String.valueOf(position)

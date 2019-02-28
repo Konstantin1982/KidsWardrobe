@@ -110,7 +110,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_CATEGORY_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TYPES_TABLE);
-        Log.e("DB", "TABLES WERE CREATED");
+        //Log.e("DB", "TABLES WERE CREATED");
     }
 
     public void InsertInitialValuesToClothesCategories(SQLiteDatabase db) {

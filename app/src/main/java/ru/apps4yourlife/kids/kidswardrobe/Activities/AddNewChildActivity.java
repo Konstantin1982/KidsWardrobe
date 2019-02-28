@@ -1,15 +1,20 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -133,20 +138,34 @@ public class AddNewChildActivity extends AppCompatActivity implements
 
     @Override
     public void onTakeNewPhotoClick() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = GeneralHelper.createImageFile(this);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 100);
+        } else {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = GeneralHelper.createImageFile(this);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                if (photoFile != null) {
+                    mCurrentPhotoUri = FileProvider.getUriForFile(this,
+                            "ru.apps4yourlife.kids.fileprovider",
+                            photoFile);
+                    takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
+                    startActivityForResult(takePictureIntent, 0);
+                }
             }
-            if (photoFile != null) {
-                mCurrentPhotoUri = FileProvider.getUriForFile(this,
-                        "ru.apps4yourlife.kids.fileprovider",
-                        photoFile);
-                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
-                startActivityForResult(takePictureIntent, 0);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_DENIED) {
+                onTakeNewPhotoClick();
             }
         }
     }
@@ -155,11 +174,11 @@ public class AddNewChildActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if((requestCode == 1 || requestCode == 0) && resultCode == RESULT_OK) {
             if (requestCode == 1)  {
-                Log.e("PHOTO","Uri is null, getting URI from gallery");
+                //Log.e("PHOTO","Uri is null, getting URI from gallery");
                 mCurrentPhotoUri = data.getData();
             }
             if (mCurrentPhotoUri != null) {
-                Log.e("PHOTO","Uri is OK, getting photo from URI");
+                //Log.e("PHOTO","Uri is OK, getting photo from URI");
                 // move it to LoaderComplete
                 mAddChildButton = (ImageButton) findViewById(R.id.addNewChildImageButton);
                 mPhotoPreview = new GeneralHelper().transform(GeneralHelper.resizeBitmapFile(this, mAddChildButton.getWidth()-10, mAddChildButton.getHeight()-10, mCurrentPhotoUri));
@@ -169,7 +188,7 @@ public class AddNewChildActivity extends AppCompatActivity implements
             }
             else {
                 if (requestCode == 0) {
-                    Log.e("PHOTO","Uri is NOT OK");
+                    //Log.e("PHOTO","Uri is NOT OK");
                     // GET Async TASK
                     GetPhotoURITask getPhotoTask = new GetPhotoURITask();
                     getPhotoTask.execute();
@@ -306,7 +325,7 @@ public class AddNewChildActivity extends AppCompatActivity implements
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.e("PHOTO","ASYNC TASK IS STARTED!!!!!!");
+            //Log.e("PHOTO","ASYNC TASK IS STARTED!!!!!!");
             int counter = 0;
             while (mCurrentPhotoUri == null) {
                 try {
@@ -320,7 +339,7 @@ public class AddNewChildActivity extends AppCompatActivity implements
                 }
             }
             res = 1;
-            Log.e("PHOTO","URI IS OK IN ASYNC TASK");
+            //Log.e("PHOTO","URI IS OK IN ASYNC TASK");
             return null;
         }
 

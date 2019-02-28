@@ -28,7 +28,7 @@ import ru.apps4yourlife.kids.kidswardrobe.R;
 public class BillingHelper {
 
     public static final class SKUCodes {
-        public final static String noAdsCode = "noAds149";
+        public final static String noAdsCode = "noads149";
         //public final static String noAdsCode = "android.test.purchased";
         public final static String help2500Code = "help2500";
         public final static String help500Code = "help500";
@@ -90,7 +90,7 @@ public class BillingHelper {
                 .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
                 .build();
         int responseCode = mBillingClient.launchBillingFlow( (Activity) mContext, flowParams);
-        Log.e("ADS","CODE IS = " + responseCode);
+        //Log.e("ADS","CODE IS = " + responseCode);
     }
 
 

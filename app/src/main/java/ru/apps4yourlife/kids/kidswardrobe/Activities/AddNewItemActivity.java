@@ -1,13 +1,18 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -399,20 +404,34 @@ public class AddNewItemActivity extends AppCompatActivity
 
     @Override
     public void onTakeNewPhotoClick() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = GeneralHelper.createImageFile(this);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
+        } else {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = GeneralHelper.createImageFile(this);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                if (photoFile != null) {
+                    mCurrentPhotoUri = FileProvider.getUriForFile(this,
+                            "ru.apps4yourlife.kids.fileprovider",
+                            photoFile);
+                    takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
+                    startActivityForResult(takePictureIntent, 0);
+                }
             }
-            if (photoFile != null) {
-                mCurrentPhotoUri = FileProvider.getUriForFile(this,
-                        "ru.apps4yourlife.kids.fileprovider",
-                        photoFile);
-                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
-                startActivityForResult(takePictureIntent, 0);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_DENIED) {
+                onTakeNewPhotoClick();
             }
         }
     }
@@ -600,7 +619,7 @@ public class AddNewItemActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.e("PHOTO","ASYNC TASK IS STARTED!!!!!!");
+            //Log.e("PHOTO","ASYNC TASK IS STARTED!!!!!!");
             int counter = 0;
             while (mCurrentPhotoUri == null) {
                 try {
@@ -614,7 +633,7 @@ public class AddNewItemActivity extends AppCompatActivity
                 }
             }
             res = 1;
-            Log.e("PHOTO","URI IS OK IN ASYNC TASK");
+            //Log.e("PHOTO","URI IS OK IN ASYNC TASK");
             return null;
         }
 

@@ -216,6 +216,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         } catch (ApiException e) {
             Toast.makeText(this,"Произошла ошибка при попытке логина в Google.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
             updateUI(null);
         }
     }

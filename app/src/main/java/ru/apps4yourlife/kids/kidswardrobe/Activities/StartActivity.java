@@ -61,7 +61,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
         ImageView randomImage = (ImageView) findViewById(R.id.start_randomImage);
         int imageId = GeneralHelper.GetRandomImageId();
         //Toast.makeText(this,, Toast.LENGTH_SHORT).show();
-        Log.e("IMAGE", "NUMBER = " + imageId);
+        //Log.e("IMAGE", "NUMBER = " + imageId);
         randomImage.setImageResource(imageId);
         super.onResume();
     }
@@ -77,6 +77,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 
         mLastGoodAsked = "";
         setContentView(R.layout.activity_start);
+        /*
         if (mNoAdsStatus > 0) {
             // уже все куплено
             updateUI();
@@ -87,6 +88,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
                     .setRequestAgent("android_studio:ad_template").build();
             adView.loadAd(adRequest);
         }
+        */
         mTabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mpagerAdapter = new PagerAdapter(getSupportFragmentManager(),2);

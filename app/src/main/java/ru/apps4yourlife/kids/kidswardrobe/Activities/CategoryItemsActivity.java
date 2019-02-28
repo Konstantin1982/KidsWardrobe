@@ -50,16 +50,17 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
         actionBar.setDisplayHomeAsUpEnabled(true);
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         String catName = dataManager.GetCategoryNameById(mCategoryID);
-        mNoAdsStatus = dataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+        //mNoAdsStatus = dataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+        updateUI();
+        /*
         if (mNoAdsStatus > 0) {
-            updateUI();
         } else {
             AdView adView = (AdView) findViewById(R.id.adView_items);
             AdRequest adRequest = new AdRequest.Builder()
                     .setRequestAgent("android_studio:ad_template").build();
             adView.loadAd(adRequest);
         }
-
+        */
         if (catName.isEmpty()) {
             catName = this.getString(R.string.title_activity_category_default);
         }
@@ -67,8 +68,8 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
     }
 
     public void updateUI () {
-        AdView adView = (AdView) findViewById(R.id.adView_items);
-        adView.setVisibility(View.GONE);
+        //AdView adView = (AdView) findViewById(R.id.adView_items);
+        //adView.setVisibility(View.GONE);
     }
 
     @Override

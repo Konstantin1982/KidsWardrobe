@@ -35,6 +35,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         setContentView(R.layout.activity_children_list);
 
         WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+        /*
         mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
         if (mNoAdsStatus > 0) {
             updateUI();
@@ -44,6 +45,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
                     .setRequestAgent("android_studio:ad_template").build();
             adView.loadAd(adRequest);
         }
+        */
 
         mListChildren = (RecyclerView) findViewById(R.id.childrenList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -58,8 +60,8 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
 
     }
     public void updateUI () {
-        AdView adView = (AdView) findViewById(R.id.adView_children);
-        adView.setVisibility(View.GONE);
+        //AdView adView = (AdView) findViewById(R.id.adView_children);
+        //adView.setVisibility(View.GONE);
     }
 
 
@@ -67,7 +69,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         Intent intent = new Intent(this, AddNewChildActivity.class);
         intent.putExtra("ID",ID);
         intent.putExtra("POSITION",POSITION);
-        Log.e("ACTIVITY","List received position = " + POSITION);
+        //Log.e("ACTIVITY","List received position = " + POSITION);
         startActivityForResult(intent,199);
     }
 
@@ -75,7 +77,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 199 && resultCode > 0) {
-            Log.e("ACTIVITY: ","onActivityResult is called for List with POSITION = " + data.getStringExtra("POSITION"));
+            //Log.e("ACTIVITY: ","onActivityResult is called for List with POSITION = " + data.getStringExtra("POSITION"));
             WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(this);
             Cursor newChildrenCursor = mDataManager.GetChildrenListFromDb("");
             String position = data.getStringExtra("POSITION");
