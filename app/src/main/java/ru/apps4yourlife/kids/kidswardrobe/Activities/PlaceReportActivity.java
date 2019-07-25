@@ -2,28 +2,21 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.icu.text.UnicodeSetSpanner;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseChildDialogFragment;
-import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePhotoApplicationDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePlaceDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseSeasonDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseTypeDialogFragment;
@@ -64,7 +57,7 @@ public class PlaceReportActivity extends AppCompatActivity
         mSelectedSeasons = new ArrayList<Integer>();
         mSelectedChildren = new ArrayList<Integer>();
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 

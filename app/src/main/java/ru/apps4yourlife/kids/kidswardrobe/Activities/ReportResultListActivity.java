@@ -7,15 +7,14 @@ import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ReportListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.R;
@@ -67,7 +66,7 @@ ReportListAdapter.ImageListAdapterClickHandler{
             }
         }
         mListReport.setAdapter(mAdapter);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)  actionBar.setDisplayHomeAsUpEnabled(true);
 
         final ImageView zoomImage = findViewById(R.id.zoomImage);

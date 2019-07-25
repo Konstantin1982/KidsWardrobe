@@ -2,15 +2,12 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -18,47 +15,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveClient;
-import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.DriveResourceClient;
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataBuffer;
-import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.query.Filters;
-import com.google.android.gms.drive.query.Query;
-import com.google.android.gms.drive.query.SearchableField;
-import com.google.android.gms.drive.query.SortOrder;
-import com.google.android.gms.drive.query.SortableField;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.CharBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,8 +34,14 @@ import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBHelper;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseRestoreFolderDialogFragment;
 
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, ChooseRestoreFolderDialogFragment.ChooseRestoreFolderDialogFragmentListener {
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+    @Override
+    public void onClick(View view) {
 
+    }
+
+
+/*
 
     private static final int RC_SIGN_IN = 999;
     protected static final int REQUEST_CODE_SIGN_IN = 0;
@@ -103,10 +74,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         mRequiredScopes.add(Drive.SCOPE_FILE);
         mRequiredScopes.add(Drive.SCOPE_APPFOLDER);
         doNextOperation = 0;
-        mSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        //mSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
         updateUI(mSignInAccount);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
@@ -164,8 +135,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                             .requestEmail()
                             .requestProfile()
                             .build();
-            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
-            startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
+            //GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
+            //startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
         }
     }
 
@@ -181,8 +152,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            //Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            //handleSignInResult(task);
         }
     }
 
@@ -247,7 +218,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void signOut(View v) {
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -854,6 +824,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public MetadataBuffer SetParameters() {
         return mMetadataBuffer;
     }
+*/
 }
 
 

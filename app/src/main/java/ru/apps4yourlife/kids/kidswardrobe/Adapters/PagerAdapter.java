@@ -1,8 +1,8 @@
 package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabReports;
 import ru.apps4yourlife.kids.kidswardrobe.Activities.tabs.TabManager;

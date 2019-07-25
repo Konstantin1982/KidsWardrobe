@@ -2,12 +2,10 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +55,7 @@ public class ChildReportActivity extends AppCompatActivity
         mSelectedSeasons = new ArrayList<Integer>();
         mSelectedChildren = new ArrayList<Integer>();
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 

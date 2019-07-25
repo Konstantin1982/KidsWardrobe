@@ -1,14 +1,11 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.Image;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +13,11 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
-import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 public class AllItemsActivity extends AppCompatActivity {
 
@@ -46,7 +40,7 @@ public class AllItemsActivity extends AppCompatActivity {
         mGridItems.setAdapter(new GridAdapter(this));
         mGridItems.setOnItemClickListener(new AllItemsClickListener());
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         // actionBar.setHomeAsUpIndicator(R.drawable.);
 

@@ -3,19 +3,14 @@ package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.provider.ContactsContract;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.Size;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.lang.reflect.Array;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;

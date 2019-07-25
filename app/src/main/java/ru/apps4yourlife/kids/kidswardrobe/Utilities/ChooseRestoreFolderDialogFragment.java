@@ -2,27 +2,20 @@ package ru.apps4yourlife.kids.kidswardrobe.Utilities;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataBuffer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
-import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
 /**
  * Created by ksharafutdinov on 29-Oct-18.
  */
 
-public class ChooseRestoreFolderDialogFragment extends android.support.v4.app.DialogFragment {
-
+public class ChooseRestoreFolderDialogFragment extends DialogFragment {
+/*
     private int mSelectedPosition;
     private Context mContext;
     private MetadataBuffer metadataBuffer;
@@ -40,10 +33,6 @@ public class ChooseRestoreFolderDialogFragment extends android.support.v4.app.Di
 
         mContext = this.getContext();
         mSelectedPosition = 0;
-        /*
-        mDataManager = new WardrobeDBDataManager(mContext);
-        Cursor mItems = mDataManager.GetAllCommentsWithChecked();
-        */
 
        metadataBuffer =  mListener.SetParameters();
 
@@ -93,5 +82,5 @@ public class ChooseRestoreFolderDialogFragment extends android.support.v4.app.Di
         }
     }
 
-
+*/
 }

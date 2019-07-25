@@ -2,24 +2,19 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
-import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ChildrenListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
-import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class ChildrenListActivity extends AppCompatActivity implements ChildrenListAdapter.ChildrenListAdapterClickHandler {
 
@@ -55,7 +50,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         mListChildren.setHasFixedSize(true);
         mAdapter = new ChildrenListAdapter(this, this);
         mListChildren.setAdapter(mAdapter);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
