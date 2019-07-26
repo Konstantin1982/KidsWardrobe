@@ -121,6 +121,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         String comment = mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
         holder.thirdTextView.setText(comment);
 
+        String comment2 = mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2));
+        if (!comment2.contentEquals("")) {
+            holder.forthTextView.setText("Дополнительно:" + comment2);
+        } else {
+            holder.forthTextView.setVisibility(View.GONE);
+        }
+
         byte[] previewInBytes = mItemsInCategoryCursor.getBlob(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
         Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CLOTHES_TYPE);
         holder.mImagePreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -146,6 +153,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         private TextView firstTextView;
         private TextView secondTextView;
         private TextView thirdTextView;
+        private TextView forthTextView;
 
         CategoryListAdapterViewHolder(View view) {
             super(view);
@@ -160,6 +168,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
             firstTextView = (TextView) view.findViewById(R.id.textView);
             secondTextView = (TextView) view.findViewById(R.id.textView2);
             thirdTextView = (TextView) view.findViewById(R.id.textView3);
+            forthTextView = (TextView) view.findViewById(R.id.commentIteminList);
             mImagePreview = (ImageView) view.findViewById(R.id.previewItemImageInList);
             view.setOnClickListener(this);
         }

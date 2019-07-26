@@ -61,7 +61,7 @@ public class WardrobeDBDataManager {
         return result;
     }
 
-    public long InsertOrUpdateItem(long id, long cat_id, Uri linkToPhoto, Bitmap smallPhoto, int season, int sex, long size1, long size2, String comment) {
+    public long InsertOrUpdateItem(long id, long cat_id, Uri linkToPhoto, Bitmap smallPhoto, int season, int sex, long size1, long size2, String comment, String comment2) {
         long result = 0;
         ContentValues newValues = new ContentValues();
         newValues.put(WardrobeContract.ClothesItem.COLUMN_CAT_ID, cat_id);
@@ -79,6 +79,7 @@ public class WardrobeDBDataManager {
         newValues.put(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN, size1);
         newValues.put(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL, size2);
         newValues.put(WardrobeContract.ClothesItem.COLUMN_COMMENT, comment);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_COMMENT2, comment2);
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         if (id == 0) {
             result = db.insert(WardrobeContract.ClothesItem.TABLE_NAME, null, newValues);

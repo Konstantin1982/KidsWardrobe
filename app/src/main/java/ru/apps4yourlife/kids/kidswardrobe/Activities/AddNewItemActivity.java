@@ -243,6 +243,10 @@ public class AddNewItemActivity extends AppCompatActivity
 
             // комментарий
             commentTextView.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)));
+
+            AutoCompleteTextView commentTextView2 = (AutoCompleteTextView) findViewById(R.id.comment2EditText);
+            commentTextView2.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2)));
+
             //currentItemCursor.close();
             //currentCat.close();
             //sizeCursor.close();
@@ -579,7 +583,8 @@ public class AddNewItemActivity extends AppCompatActivity
             long sizeValue2 =     dataManager.FindOrInsertNewSizeValue(mPreTypeSize2, sizeClothesTextView2.getText().toString());
 
             EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
-            long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, sizeValue1, sizeValue2, commentEdit.getText().toString());
+            EditText comment2Edit  = (EditText ) findViewById(R.id.comment2EditText);
+            long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, sizeValue1, sizeValue2, commentEdit.getText().toString(), comment2Edit.getText().toString()) ;
             //Toast.makeText(this, "New item has been inserted: " + new_id , Toast.LENGTH_SHORT).show();
             Intent data = new Intent();
             data.putExtra("POSITION", mPositionFromList);
