@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.util.Size;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -180,6 +181,7 @@ public class WardrobeDBDataManager {
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
+        childrenList.moveToFirst();
         return childrenList;
     }
 
@@ -192,6 +194,7 @@ public class WardrobeDBDataManager {
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
+        childrenList.moveToFirst();
         return childrenList;
     }
 
@@ -202,6 +205,7 @@ public class WardrobeDBDataManager {
                         "_id, sex, 0 as CHECKED FROM " + WardrobeContract.ChildEntry.TABLE_NAME +
                         " ORDER BY " + WardrobeContract.ChildEntry.COLUMN_NAME;
         Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(sql, null);
+        cursor.moveToFirst();
         return cursor;
     }
     public Cursor GetChildByIdFromDb(String ID) {
@@ -213,7 +217,7 @@ public class WardrobeDBDataManager {
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
-        if (childrenList.getCount() > 0) childrenList.moveToFirst();
+        childrenList.moveToFirst();
         return childrenList;
     }
 
@@ -248,6 +252,7 @@ public class WardrobeDBDataManager {
                 WardrobeContract.ClothesCategory.TABLE_NAME + "." + WardrobeContract.ClothesCategory._ID  + ")" +
                 " ORDER BY " + WardrobeContract.ClothesCategory.COLUMN_CAT_NAME;
         Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+        cursor.moveToFirst();
         return cursor;
     }
 
@@ -290,6 +295,7 @@ public class WardrobeDBDataManager {
     public Cursor GetAllComments() {
         String sql = "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + ") FROM " + WardrobeContract.ClothesItem.TABLE_NAME + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
         Cursor commentsCursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+        commentsCursor.moveToFirst();
         return commentsCursor;
     }
 
@@ -312,6 +318,7 @@ public class WardrobeDBDataManager {
                 null,
                 null,
                 WardrobeContract.SizesTypes.COLUMN_ID);
+        sizeTypes.moveToFirst();
         return sizeTypes;
     }
 
@@ -540,6 +547,12 @@ public class WardrobeDBDataManager {
                 null,
                 null,
                 sortBy);
+        items.moveToFirst();
+        Log.d("SQL SQL","Count of RECORDS = " + items.getCount());
+
+        Cursor items2 = mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM ITEM WHERE 1 = 1 ORDER BY COMMENT", null);
+        Log.d("SQL SQL","The same query by RAW. Count of RECORDS = " + items2.getCount());
+
         return items;
     }
 

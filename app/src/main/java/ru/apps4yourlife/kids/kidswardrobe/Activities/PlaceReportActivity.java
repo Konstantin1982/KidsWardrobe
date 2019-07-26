@@ -11,11 +11,16 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseChildDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePlaceDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseSeasonDialogFragment;
@@ -46,6 +51,8 @@ public class PlaceReportActivity extends AppCompatActivity
 
     private WardrobeDBDataManager mDataManager;
     private Cursor mItems;
+    private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,26 @@ public class PlaceReportActivity extends AppCompatActivity
 
         androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+        mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+
+        if (mNoAdsStatus > 0) {
+            // уже все куплено
+            updateUI();
+        } else {
+            MobileAds.initialize(this, this.getString(R.string.app_id));
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
+
+    }
+
+
+    public void updateUI() {
+        AdView adView = (AdView) findViewById(R.id.adView);
+        adView.setVisibility(View.GONE);
     }
 
     @Override

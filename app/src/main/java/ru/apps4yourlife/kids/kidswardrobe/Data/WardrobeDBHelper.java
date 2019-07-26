@@ -71,6 +71,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN + " INTEGER, " +
                         WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL + " INTEGER, " +
                         WardrobeContract.ClothesItem.COLUMN_COMMENT + " VARCHAR(255), " +
+                        WardrobeContract.ClothesItem.COLUMN_COMMENT2 + " VARCHAR(255), " +
                         WardrobeContract.ClothesItem.COLUMN_LINK_TO_PHOTO + " VARCHAR(255), " +
                         WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW + " BLOB" +
                         ")";
@@ -179,6 +180,11 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        if (i == 1 && i1 == 2) {
+            final String SQL_ALTER_CLOTHES_ITEM_TABLE =
+                    "ALTER TABLE " + WardrobeContract.ClothesItem.TABLE_NAME +
+                    " ADD COLUMN " +  WardrobeContract.ClothesItem.COLUMN_COMMENT2 + " VARCHAR(255)";
+            sqLiteDatabase.execSQL(SQL_ALTER_CLOTHES_ITEM_TABLE);
+        }
     }
 }

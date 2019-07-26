@@ -214,6 +214,7 @@ public class AddNewChildActivity extends AppCompatActivity implements
         if (mNameValue.isEmpty()) {
             formIsOK = false;
             mName.setError(getResources().getString(R.string.error_name_undefinded));
+            return;
         }
 
         if (formIsOK) {

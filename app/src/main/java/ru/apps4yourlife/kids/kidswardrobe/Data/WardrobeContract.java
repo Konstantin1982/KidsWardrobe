@@ -52,6 +52,7 @@ public class WardrobeContract {
         public static final String COLUMN_SIZE_MAIN = "size";
         public static final String COLUMN_SIZE_ADDITIONAL = "size2";
         public static final String COLUMN_COMMENT = "comment";
+        public static final String COLUMN_COMMENT2 = "comment2";
 
     }
     // categories

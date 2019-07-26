@@ -16,8 +16,16 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ReportListAdapter;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class ReportResultListActivity extends AppCompatActivity implements
         ReportListAdapter.ItemListAdapterClickHandler,
@@ -27,6 +35,9 @@ ReportListAdapter.ImageListAdapterClickHandler{
     private ReportListAdapter mAdapter;
     private Animator mCurrentAnimator;
     private int mShortAnimationDuration;
+    private String mLastGoodAsked;
+    private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +47,22 @@ ReportListAdapter.ImageListAdapterClickHandler{
         mShortAnimationDuration = getResources().getInteger(R.integer.short_animation_duration);
         mListReport = (RecyclerView) findViewById(R.id.listReportRecyclerView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         layoutManager.setMeasurementCacheEnabled(false);
+
+        WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+        mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+
+        mLastGoodAsked = "";
+        if (mNoAdsStatus > 0) {
+            // уже все куплено
+            updateUI();
+        } else {
+            MobileAds.initialize(this, this.getString(R.string.app_id));
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
 
         mListReport.setLayoutManager(layoutManager);
@@ -70,13 +95,19 @@ ReportListAdapter.ImageListAdapterClickHandler{
         if (actionBar != null)  actionBar.setDisplayHomeAsUpEnabled(true);
 
         final ImageView zoomImage = findViewById(R.id.zoomImage);
-        zoomImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zoomImage.setVisibility(View.GONE);
-            }
-        });
+        if (zoomImage != null) {
+            zoomImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    zoomImage.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
 
+    public void updateUI() {
+        AdView adView = (AdView) findViewById(R.id.adView);
+        adView.setVisibility(View.GONE);
     }
 
     @Override

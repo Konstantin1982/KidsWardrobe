@@ -80,16 +80,10 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
             // уже все куплено
             updateUI();
         } else {
-            Toast.makeText(this,"Грузим рекламу.", Toast.LENGTH_LONG).show();
-            // AdView adView = (AdView) findViewById(R.id.adView);
-            MobileAds.initialize(this, new OnInitializationCompleteListener() {
-                @Override
-                public void onInitializationComplete(InitializationStatus initializationStatus) {
-                    mAdView = findViewById(R.id.adView);
-                    AdRequest adRequest = new AdRequest.Builder().build();
-                    mAdView.loadAd(adRequest);
-                }
-            });
+            MobileAds.initialize(this, this.getString(R.string.app_id));
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
         }
         mTabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -261,7 +255,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 
 // **************  RELEASE 2.5. **************** //
 // DONE: 1) Upgrade to 28.xx
-// TODO: 2) Return ADS
+// DONE: 2) Return ADS
 // TODO: 3) Add Comment2
 
 

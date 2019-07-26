@@ -387,7 +387,6 @@ public class AddNewItemActivity extends AppCompatActivity
             }
             mNeedSaveType = !isFind;
             if (!isFind) {
-                // TODO show button to link category and size!!!
                 FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
                 warningButton.setVisibility(View.VISIBLE);
 
@@ -557,7 +556,6 @@ public class AddNewItemActivity extends AppCompatActivity
         FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
         if (warningButton.getVisibility() == View.VISIBLE || mPhotoPreview == null) {
             formIsOK = false;
-            // TODO: animation of warning button
             if (mPhotoPreview == null) {
                 Toast.makeText(this,"Фотография - обязательна.", Toast.LENGTH_SHORT).show();
             }
