@@ -317,7 +317,6 @@ public class ChildReportActivity extends AppCompatActivity
             }
            // Toast.makeText(this,"Final SQL = " + SQL, Toast.LENGTH_LONG).show();
             //Log.e("SQL",SQL);
-            // TODO: rework stupid feature;
             mSelectedChildren = tmpChildrenSelection;
             Intent intent = new Intent(this, ReportResultListActivity.class);
             intent.putExtra("FILTER",filterSQL);

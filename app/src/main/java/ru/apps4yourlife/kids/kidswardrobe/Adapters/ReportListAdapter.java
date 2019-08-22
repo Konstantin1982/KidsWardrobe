@@ -103,6 +103,8 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
 
             int size1 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN));
             int size2 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL));
+            String comment2 = mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2));
+
             int found = 0;
             String sizeName1 = "", sizeName2 = "";
             String sizeValue1 = "", sizeValue2 = "";
@@ -173,6 +175,14 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
                 holder.suiteChildren.setText(chidrenNames);
             }
 
+            if (comment2.contentEquals("")) {
+                holder.commentTextView.setHeight(0);
+                holder.commentTextView.setVisibility(View.INVISIBLE);
+            } else  {
+                holder.commentTextView.setVisibility(View.VISIBLE);
+                holder.commentTextView.setText("Дополнительно: " + comment2 );
+            }
+
             //mCurrentHeader
             String itemLocation = mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
             if (!itemLocation.equalsIgnoreCase(mCurrentHeader)) {
@@ -202,6 +212,8 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
 
             int size1 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN));
             int size2 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL));
+            String comment2 = mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2));
+
             int found = 0;
             String sizeName1 = "", sizeName2 = "";
             String sizeValue1 = "", sizeValue2 = "";
@@ -271,6 +283,13 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
                 holder.suiteChildren.setVisibility(View.VISIBLE);
                 holder.suiteChildren.setText("Непонятно, где находится");
             }
+            if (comment2.contentEquals("")) {
+                holder.commentTextView.setHeight(0);
+                holder.commentTextView.setVisibility(View.INVISIBLE);
+            } else  {
+                holder.commentTextView.setVisibility(View.VISIBLE);
+                holder.commentTextView.setText("Дополнительно: " + comment2 );
+            }
 
             //mCurrentHeader
             String currentChild =   mListItemsCursor.getString(mListItemsCursor.getColumnIndex("child"));
@@ -321,6 +340,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
         private TextView typeTextView;
         private TextView headerTextView;
         private TextView suiteChildren;
+        private TextView commentTextView;
         private ImageView itemPhoto;
         private ConstraintLayout mLayout;
 
@@ -330,6 +350,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
             size2TextView = (TextView) view.findViewById(R.id.report_size2TextView);
             typeTextView = (TextView) view.findViewById(R.id.report_typeTextView);
             suiteChildren = (TextView) view.findViewById(R.id.report_suiteChilren);
+            commentTextView = (TextView) view.findViewById(R.id.report_comment);
             headerTextView = (TextView) view.findViewById(R.id.report_headerSection);
             itemPhoto = (ImageView) view.findViewById(R.id.item_photo);
             mLayout = (ConstraintLayout) view.findViewById(R.id.report_layout_item);

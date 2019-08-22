@@ -41,7 +41,7 @@ public class WardrobeDBDataManager {
         ContentValues newChildValues = new ContentValues();
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_NAME, childName);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_SEX, childSex);
-        newChildValues.put(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE, childBirthdate);//TODO: int to string
+        newChildValues.put(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE, childBirthdate);
         String stringLinktoPhoto = "";
         if (linkToPhoto != null) {
             stringLinktoPhoto = linkToPhoto.toString();
@@ -158,10 +158,6 @@ public class WardrobeDBDataManager {
         return result;
     }
 
-
-
-    // TODO: all size from child
-    // TODO: latest size from child
 
     private static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -561,12 +557,11 @@ public class WardrobeDBDataManager {
         return mDBHelper.getReadableDatabase().rawQuery(query,null);
     }
 
-    // 0 - don't purchased, 1 - taken, -1 - undefined.
-    public long InsertOrUpdatePurchase(String skuCode, int status ) {
+    public static long InsertOrUpdatePurchase(SQLiteDatabase db, String skuCode, int status ) {
         long result = 0;
 
         Cursor skuList;
-        skuList = mDBHelper.getReadableDatabase().query(
+        skuList = db.query(
                 WardrobeContract.SettingsEntry.TABLE_NAME,
                 null,
                 WardrobeContract.SettingsEntry.COLUMN_KEY + " = ?",
@@ -581,7 +576,6 @@ public class WardrobeDBDataManager {
         } else {
             insertValue = "0";
         }
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
         ContentValues newValues = new ContentValues();
         newValues.put(WardrobeContract.SettingsEntry.COLUMN_KEY, skuCode);
         newValues.put(WardrobeContract.SettingsEntry.COLUMN_VALUE, insertValue);
@@ -598,6 +592,11 @@ public class WardrobeDBDataManager {
         }
         db.close();
         return result;
+
+    }
+    // 0 - don't purchased, 1 - taken, -1 - undefined.
+    public long InsertOrUpdatePurchase(String skuCode, int status ) {
+        return InsertOrUpdatePurchase(mDBHelper.getWritableDatabase(), skuCode, status);
     }
 
     public int getPurchaseStatus(String skuCode) {

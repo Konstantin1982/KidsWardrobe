@@ -38,7 +38,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
     }
     @Override
     public CharSequence getPageTitle(int position) {
-        // TODO: real titles
         switch (position) {
             case 0:
                 return "Управление";

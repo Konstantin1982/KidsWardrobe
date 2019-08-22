@@ -205,8 +205,6 @@ public class AddNewChildActivity extends AppCompatActivity implements
     }
 
     public void btnSaveNewChild_click() {
-        //TODO: it can be cicked if photo was not changed!
-        // TODO: get sex
         boolean formIsOK = true;
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         TextView mName = (TextView) findViewById(R.id.nameChild);
@@ -226,7 +224,6 @@ public class AddNewChildActivity extends AppCompatActivity implements
                     mPhotoPreview,
                     mCurrentChildID);
             if (mCurrentChildID == null || mCurrentChildID.isEmpty()) mCurrentChildID = String.valueOf(res);
-            //TODO: after insert action
             double childFoot = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.footSizeEditText));
             double childHeight = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.heightChildEditText));
             double childShoes = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.shoesSizeEditText));

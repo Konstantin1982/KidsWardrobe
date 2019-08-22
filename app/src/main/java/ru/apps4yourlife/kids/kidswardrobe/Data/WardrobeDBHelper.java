@@ -13,6 +13,7 @@ import java.util.Map;
 
 import ru.apps4yourlife.kids.kidswardrobe.Activities.AddNewItemActivity;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 /**
  * Created by ksharafutdinov on 27-Mar-18.
@@ -20,7 +21,7 @@ import ru.apps4yourlife.kids.kidswardrobe.R;
 
 public class WardrobeDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "wardrobe.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     private Context mContext;
 
@@ -170,9 +171,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //Toast.makeText(mContext,"Oncreate DB is called",Toast.LENGTH_LONG).show();
        // Log.e("DB","DB IS CREATED!!");
-
         CreateTables(sqLiteDatabase);
-
         InsertInitialValuesToClothesCategories(sqLiteDatabase);
         InsertInitialValuesToSizes(sqLiteDatabase);
         InsertInitialValuesToSizesTypes(sqLiteDatabase);
@@ -181,10 +180,13 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         if (i == 1 && i1 == 2) {
+            Log.i("DB","DB IS UPDATED START!!");
             final String SQL_ALTER_CLOTHES_ITEM_TABLE =
                     "ALTER TABLE " + WardrobeContract.ClothesItem.TABLE_NAME +
                     " ADD COLUMN " +  WardrobeContract.ClothesItem.COLUMN_COMMENT2 + " VARCHAR(255)";
             sqLiteDatabase.execSQL(SQL_ALTER_CLOTHES_ITEM_TABLE);
+            WardrobeDBDataManager.InsertOrUpdatePurchase(sqLiteDatabase, BillingHelper.SKUCodes.noAdsCode,1);
+            Log.i("DB","DB IS UPDATED END!!");
         }
     }
 }

@@ -256,7 +256,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 // **************  RELEASE 2.5. **************** //
 // DONE: 1) Upgrade to 28.xx
 // DONE: 2) Return ADS
-// TODO: 3) Add Comment2
+// DONE: 3) Add Comment2
 
 
 // BUGS
