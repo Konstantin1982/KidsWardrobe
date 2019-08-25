@@ -38,15 +38,15 @@
 
     <Button
         android:id="@+id/sign_out_button"
+        style="@style/WhiteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="signInOnClick"
         android:text="Вход"
-        style="@style/WhiteButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView22"
-    />
+        app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
     <ImageView
         android:id="@+id/profile_photo"

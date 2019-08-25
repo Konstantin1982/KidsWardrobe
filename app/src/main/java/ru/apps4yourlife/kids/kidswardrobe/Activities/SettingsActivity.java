@@ -2,7 +2,9 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -54,12 +56,36 @@ public class SettingsActivity extends AppCompatActivity  {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        switch (requestCode) {
+            case REQUEST_CODE_SIGN_IN:
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    handleSignInResult(resultData);
+                }
+                break;
 
+            case REQUEST_CODE_OPEN_DOCUMENT:
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    Uri uri = resultData.getData();
+                    if (uri != null) {
+                        //openFileFromFilePicker(uri);
+                    }
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, resultData);
+    }
+
+    public void signInOnClick (View view) {
+        requestSignIn();
+    }
     /**
      * Starts a sign-in activity using {@link #REQUEST_CODE_SIGN_IN}.
      */
     private void requestSignIn() {
-        Log.d("GDRIVE", "Requesting sign-in");
+        Log.e("GDRIVE", "Requesting sign-in");
 
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -79,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity  {
     private void handleSignInResult(Intent result) {
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener(googleAccount -> {
-                    Log.d("GDRIVE", "Signed in as " + googleAccount.getEmail());
+                    Log.e("GDRIVE", "Signed in as " + googleAccount.getEmail());
 
                     // Use the authenticated account to sign in to the Drive service.
                     GoogleAccountCredential credential =

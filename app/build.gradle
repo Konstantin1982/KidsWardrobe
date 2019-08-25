@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "ru.apps4yourlife.kids.kidswardrobe"
@@ -21,19 +24,17 @@ android {
     compileOptions {
         targetCompatibility = '1.8'
         sourceCompatibility = '1.8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-
     //implementation 'com.google.android.gms:play-services:12.0.0'
     implementation 'com.google.android.gms:play-services-ads:18.1.0'
-
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-
-    implementation ('com.squareup.picasso:picasso:2.71828') {
+    implementation('com.squareup.picasso:picasso:2.71828') {
         exclude group: 'com.android.support'
         exclude module: ['exifinterface', 'support-annotations']
     }
@@ -43,9 +44,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-
     implementation 'com.android.billingclient:billing:1.1'
-
     // google drive rest api
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
@@ -55,5 +54,4 @@ dependencies {
     implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
         exclude group: 'org.apache.httpcomponents'
     }
-
 }
