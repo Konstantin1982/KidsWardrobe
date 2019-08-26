@@ -1,5 +1,6 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -65,13 +68,25 @@ public class SettingsActivity extends AppCompatActivity  {
     }
 
     public void updateUI(GoogleSignInAccount account) {
+        boolean isAllow = false;
         if (account != null) {
             TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
             emailTextView.setText(account.getEmail());
+
+            TextView userNameTextView  = (TextView) findViewById(R.id.userNameTextView);
+            emailTextView.setText(account.getDisplayName());
+            isAllow = true;
         } else {
             TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
             emailTextView.setText("E-mail address");
+
+            TextView userNameTextView  = (TextView) findViewById(R.id.userNameTextView);
+            emailTextView.setText("Неизвестный пользователь");
         }
+        Button backupButton  = findViewById(R.id.backupButton);
+        Button restoreButton = findViewById(R.id.restoreButton);
+        backupButton.setEnabled(isAllow);
+        restoreButton.setEnabled(isAllow);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -133,6 +148,7 @@ public class SettingsActivity extends AppCompatActivity  {
      */
     private void handleSignInResult(Intent result) {
         GoogleSignIn.getSignedInAccountFromIntent(result)
+
                 .addOnSuccessListener(googleAccount -> {
                     Log.e("GDRIVE", "Signed in as " + googleAccount.getEmail());
 
@@ -146,7 +162,7 @@ public class SettingsActivity extends AppCompatActivity  {
                                     AndroidHttp.newCompatibleTransport(),
                                     new GsonFactory(),
                                     credential)
-                                    .setApplicationName("Drive API Migration")
+                                    .setApplicationName("Детский гардероб.")
                                     .build();
 
                     // The DriveServiceHelper encapsulates all REST API and SAF functionality.
@@ -222,6 +238,12 @@ public class SettingsActivity extends AppCompatActivity  {
         findViewById(R.id.layout_progress_parent).setVisibility(View.VISIBLE);
         TextView progressHeader = (TextView) findViewById(R.id.header_progress);
         progressHeader.setText("Создаем резервную копию...");
+        switch (stepNumber) {
+            case 1 :
+                UpdateBackupProgress(0);
+                mDriveServiceHelper.g
+                break;
+        }
     }
 
 
@@ -232,6 +254,23 @@ public class SettingsActivity extends AppCompatActivity  {
         return;
     }
 
+
+    public void UpdateBackupProgress(int stage){
+        // 0 - подготовка
+        if (stage == 0) {
+            TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
+            progressFooter.setText("Идет подготовка к копированию файлов");
+        }
+        // 1 - копирование файлов
+        if (stage == 1) {
+            TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
+            //progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mFilesToCopy.size() + ".");
+        }
+        if (stage == 2) {
+            TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
+            //progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mMetadataBuffer.getCount() + ".");
+        }
+    }
 
 }
 
