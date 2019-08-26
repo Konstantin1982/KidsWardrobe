@@ -3,14 +3,23 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
@@ -19,8 +28,11 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.DriveServiceHelper;
@@ -30,6 +42,10 @@ public class SettingsActivity extends AppCompatActivity  {
 
     private static final int REQUEST_CODE_SIGN_IN = 1;
     private static final int REQUEST_CODE_OPEN_DOCUMENT = 2;
+    protected static final int PARAM_ROOT = 0;
+    protected static final int PARAM_KIDS = 1;
+    protected static final int PARAM_DATE = 2;
+    private String mBackupFolderName;
 
     private DriveServiceHelper mDriveServiceHelper;
     private String mOpenFileId;
@@ -40,10 +56,23 @@ public class SettingsActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if (lastSignedInAccount != null) {
+            updateUI (lastSignedInAccount);
+        }
         androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    public void updateUI(GoogleSignInAccount account) {
+        if (account != null) {
+            TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
+            emailTextView.setText(account.getEmail());
+        } else {
+            TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
+            emailTextView.setText("E-mail address");
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -123,6 +152,7 @@ public class SettingsActivity extends AppCompatActivity  {
                     // The DriveServiceHelper encapsulates all REST API and SAF functionality.
                     // Its instantiation is required before handling any onClick actions.
                     mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+                    updateUI(googleAccount);
                 })
                 .addOnFailureListener(exception -> Log.e("GDRIVE", "Unable to sign in.", exception));
     }
@@ -132,23 +162,66 @@ public class SettingsActivity extends AppCompatActivity  {
 
 
     public void CreateBackup_btn(View view) {
+        if (mDriveServiceHelper == null) {
+            Toast.makeText(this,"Пожалуйста, залогиньтесь в Google Drive", Toast.LENGTH_LONG).show();
+            requestSignIn();
+            return;
+        }
+        mBackupFolderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        runTask(0);
     }
 
     public void CreateRestore_btn(View view) {
+        if (mDriveServiceHelper == null) {
+            Toast.makeText(this,"Пожалуйста, залогиньтесь в Google Drive", Toast.LENGTH_LONG).show();
+            requestSignIn();
+            return;
+        }
+        runTask(1);
     }
 
 
 
     public String getFolderName(int parameter) {
-        /*
         if (parameter == PARAM_ROOT) return "Apps";
         if (parameter == PARAM_KIDS) return "KidsWardrobe";
         if (parameter == PARAM_DATE) return mBackupFolderName;
-        */
         return "";
     }
 
+    public void runTask(int direction) {
+        if (mDriveServiceHelper == null) {
+            Toast.makeText(this,"Пожалуйста, залогиньтесь в Google Drive", Toast.LENGTH_LONG).show();
+            requestSignIn();
+            return;
+        }
+        CheckBox wifiCheckBox = (CheckBox) findViewById(R.id.wifiCheckBox);
+        boolean isOK = true;
+        if (wifiCheckBox.isChecked()) {
+            try {
+                // WIFI only
+                ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo mWifi = connManager.getNetworkInfo(NetworkCapabilities.TRANSPORT_WIFI);
+                if (!mWifi.isConnected()) {
+                    isOK = false;
+                    Toast.makeText(this, "Wifi не подключен. Подключите Wi-Fi или разрешите приложению работать без Wi-Fi.", Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception ex) {
+                isOK = false;
+                Toast.makeText(this, "Wifi не подключен. Подключите Wi-Fi или разрешите приложению работать без Wi-Fi.", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (isOK) {
+            if (direction == 0) RunBackupOperationStep(1);
+            if (direction == 1) RunRestoreOperationStep(1);
+        }
+    }
+
+
     public void RunBackupOperationStep(int stepNumber) {
+        findViewById(R.id.layout_progress_parent).setVisibility(View.VISIBLE);
+        TextView progressHeader = (TextView) findViewById(R.id.header_progress);
+        progressHeader.setText("Создаем резервную копию...");
     }
 
 
