@@ -1,5 +1,6 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -75,13 +77,25 @@ public class SettingsActivity extends AppCompatActivity  {
     }
 
     public void updateUI(GoogleSignInAccount account) {
+        boolean isAllow = false;
         if (account != null) {
             TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
             emailTextView.setText(account.getEmail());
+
+            TextView userNameTextView  = (TextView) findViewById(R.id.userNameTextView);
+            emailTextView.setText(account.getDisplayName());
+            isAllow = true;
         } else {
             TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
             emailTextView.setText("E-mail address");
+
+            TextView userNameTextView  = (TextView) findViewById(R.id.userNameTextView);
+            emailTextView.setText("Неизвестный пользователь");
         }
+        Button backupButton  = findViewById(R.id.backupButton);
+        Button restoreButton = findViewById(R.id.restoreButton);
+        backupButton.setEnabled(isAllow);
+        restoreButton.setEnabled(isAllow);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -143,6 +157,7 @@ public class SettingsActivity extends AppCompatActivity  {
      */
     private void handleSignInResult(Intent result) {
         GoogleSignIn.getSignedInAccountFromIntent(result)
+
                 .addOnSuccessListener(googleAccount -> {
                     Log.e("GDRIVE", "Signed in as " + googleAccount.getEmail());
 
@@ -156,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity  {
                                     AndroidHttp.newCompatibleTransport(),
                                     new GsonFactory(),
                                     credential)
-                                    .setApplicationName("Drive API Migration")
+                                    .setApplicationName("Детский гардероб.")
                                     .build();
 
                     // The DriveServiceHelper encapsulates all REST API and SAF functionality.
@@ -319,6 +334,11 @@ public class SettingsActivity extends AppCompatActivity  {
         if (stage == 1) {
             TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
             progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mFilesToCopy.size() + ".");
+        }
+    }
+        if (stage == 2) {
+            TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
+            //progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mMetadataBuffer.getCount() + ".");
         }
     }
 
