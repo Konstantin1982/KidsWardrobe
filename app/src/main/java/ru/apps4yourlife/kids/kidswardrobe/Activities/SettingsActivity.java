@@ -335,7 +335,6 @@ public class SettingsActivity extends AppCompatActivity  {
             TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
             progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mFilesToCopy.size() + ".");
         }
-    }
         if (stage == 2) {
             TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
             //progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mMetadataBuffer.getCount() + ".");
