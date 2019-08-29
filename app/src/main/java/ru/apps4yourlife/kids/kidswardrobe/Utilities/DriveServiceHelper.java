@@ -10,6 +10,7 @@ import android.util.Pair;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -153,4 +154,65 @@ public class DriveServiceHelper {
             return Pair.create(name, content);
         });
     }
+
+    public Task<String> getFolderId(String folderName, String parentId) {
+        String query = "name = '" + folderName + "'";
+        if (!parentId.isEmpty()) {
+            query += " and parents in '" + parentId + "'";
+        }
+        query += " and mimeType = 'application/vnd.google-apps.folder'";
+        query = "mimeType = 'application/vnd.google-apps.folder'";
+        String finalQuery = query;
+        return Tasks.call(mExecutor, () -> {
+                    String result = "";
+                    FileList list = mDriveService.files().list()
+                            .setQ(finalQuery)
+                            //.setFields("id, name")
+                            .execute();
+                    if (!list.isEmpty()) {
+
+                        for (File file : list.getFiles()) {
+                            result = file.getId();
+                        }
+                    }
+                    return result;
+                }
+        );
+    }
+
+    public Task<String> createFolder(String folderName, String parentId) {
+        return Tasks.call(mExecutor, () -> {
+            // create folder
+            File fileMetadata = new File();
+            fileMetadata.setName(folderName);
+            fileMetadata.setMimeType("application/vnd.google-apps.folder");
+            if (!parentId.isEmpty()) {
+                fileMetadata.setParents(Collections.singletonList(parentId));
+            }
+            File file = mDriveService.files().create(fileMetadata)
+                    .setFields("id")
+                    .execute();
+            return file.getId();
+        });
+    }
+
+    public Task<String> uploadFile(String srcFilePath, String targetFileName, String folderId, int type) {
+        return Tasks.call(mExecutor, () -> {
+            String mimeType = "application/x-sqlite3";
+
+            java.io.File filePath = new java.io.File(srcFilePath);
+            FileContent mediaContent = new FileContent(mimeType, filePath);
+
+            File fileMetadata = new File();
+            fileMetadata.setName(targetFileName);
+            fileMetadata.setParents(Collections.singletonList(folderId));
+
+            File file = mDriveService.files().create(fileMetadata, mediaContent)
+                    .setFields("id, parents")
+                    .execute();
+            return file.getId();
+        });
+    }
+
+
 }

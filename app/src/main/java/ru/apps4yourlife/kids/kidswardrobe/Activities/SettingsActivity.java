@@ -10,6 +10,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,17 +24,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBHelper;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.DriveServiceHelper;
 
@@ -46,6 +52,10 @@ public class SettingsActivity extends AppCompatActivity  {
     protected static final int PARAM_KIDS = 1;
     protected static final int PARAM_DATE = 2;
     private String mBackupFolderName;
+    private String mBackupFolderId;
+    private String tmpFolder;
+    private ArrayList<String> mFilesToCopy;
+    private int mCount;
 
     private DriveServiceHelper mDriveServiceHelper;
     private String mOpenFileId;
@@ -168,6 +178,7 @@ public class SettingsActivity extends AppCompatActivity  {
             return;
         }
         mBackupFolderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        mBackupFolderId = "";
         runTask(0);
     }
 
@@ -222,6 +233,32 @@ public class SettingsActivity extends AppCompatActivity  {
         findViewById(R.id.layout_progress_parent).setVisibility(View.VISIBLE);
         TextView progressHeader = (TextView) findViewById(R.id.header_progress);
         progressHeader.setText("Создаем резервную копию...");
+
+        switch (stepNumber) {
+            case 1:
+                // Создание директории root
+                UpdateBackupProgress(0);
+                mDriveServiceHelper.getFolderId(getFolderName(PARAM_ROOT), "").addOnSuccessListener(folderId -> {
+                    if (!folderId.isEmpty()) {
+                        tmpFolder = folderId;
+                        Log.e("FOUND ", tmpFolder);
+                        RunBackupOperationStep(2);
+                    } else {
+                        mDriveServiceHelper.createFolder(getFolderName(PARAM_ROOT), "").addOnSuccessListener(folderIdCreated -> {
+                            tmpFolder = folderIdCreated;
+                            Log.e("CREATED ", tmpFolder);
+                            RunBackupOperationStep(2);
+                        })
+                                .addOnFailureListener(exception2 -> {
+                                    Log.e("BACKUP_ERROR1", exception2.getMessage());
+                                });
+                    }
+                }).addOnFailureListener(exception -> {
+                    Log.e("BACKUP_ERROR1", exception.getMessage());
+                });
+
+
+        }
     }
 
 
@@ -229,9 +266,61 @@ public class SettingsActivity extends AppCompatActivity  {
     }
 
     public void ShowErrorMessage(int step) {
+        findViewById(R.id.layout_progress_parent).setVisibility(View.GONE);
+        if (step < 1000) {
+            if (step == 200) {
+                Toast.makeText(this, "Резервное копирование проведено успешно.", Toast.LENGTH_LONG).show();
+            } else {
+                boolean isFound = false;
+                if (step == 1 || step == 2 || step == 4 || step == 6){
+                    Toast.makeText(this, "Ошибка на этапе поиска нужной папки в Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (step == 3 || step == 5 || step == 7){
+                    Toast.makeText(this, "Не получилось создать папку для бекапа в Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (step == 9 || step == 10) {
+                    Toast.makeText(this, "Не получилось скопировать один из файлов в Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (isFound == false) {
+                    Toast.makeText(this, "Неизвестная ошибка при операции Backup.", Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            if (step == 1200) {
+                Toast.makeText(this, "Данные восстановлены из резервной копии с Google Drive.", Toast.LENGTH_LONG).show();
+            } else {
+                boolean isFound = false;
+                if (step < 1008){
+                    Toast.makeText(this, "Не смог найти сохраненные копии на Google Drive.", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (step >= 1008){
+                    Toast.makeText(this, "Не получилось скопировать папку из Google Drive", Toast.LENGTH_LONG).show();
+                    isFound = true;
+                }
+                if (isFound == false) {
+                    Toast.makeText(this, "Неизвестная ошибка при операции Restore.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
         return;
     }
 
+    public void UpdateBackupProgress(int stage){
+        // 0 - подготовка
+        if (stage == 0) {
+            TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
+            progressFooter.setText("Идет подготовка к копированию файлов");
+        }
+        // 1 - копирование файлов
+        if (stage == 1) {
+            TextView progressFooter = (TextView) findViewById(R.id.footer_progress);
+            progressFooter.setText("Копирую файл " + (mCount+1) + " из " + mFilesToCopy.size() + ".");
+        }
+    }
 
 }
 
