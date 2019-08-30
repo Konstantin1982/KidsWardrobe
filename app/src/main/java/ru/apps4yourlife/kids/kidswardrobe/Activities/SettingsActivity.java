@@ -251,7 +251,7 @@ public class SettingsActivity extends AppCompatActivity  {
 
         switch (stepNumber) {
             case 1:
-                // Создание директории root
+                // Создание директории Apps
                 UpdateBackupProgress(0);
                 mDriveServiceHelper.getFolderId(getFolderName(PARAM_ROOT), "").addOnSuccessListener(folderId -> {
                     if (!folderId.isEmpty()) {
@@ -264,17 +264,76 @@ public class SettingsActivity extends AppCompatActivity  {
                             Log.e("CREATED ", tmpFolder);
                             RunBackupOperationStep(2);
                         })
-                                .addOnFailureListener(exception2 -> {
-                                    Log.e("BACKUP_ERROR1", exception2.getMessage());
-                                });
+                        .addOnFailureListener(exception2 -> {
+                            Log.e("BACKUP_ERROR1", exception2.getMessage());
+                            ShowErrorMessage(1);
+                        });
                     }
                 }).addOnFailureListener(exception -> {
                     Log.e("BACKUP_ERROR1", exception.getMessage());
+                    ShowErrorMessage(1);
                 });
+            break;
+            case 2:
+                // Создание директории Kids
+                mDriveServiceHelper.getFolderId(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderId -> {
+                    if (!folderId.isEmpty()) {
+                        tmpFolder = folderId;
+                        RunBackupOperationStep(3);
+                    } else {
+                        mDriveServiceHelper.createFolder(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderIdCreated -> {
+                            tmpFolder = folderIdCreated;
+                            RunBackupOperationStep(3);
+                        })
+                        .addOnFailureListener(exception2 -> {
+                            Log.e("BACKUP_ERROR1", exception2.getMessage());
+                            ShowErrorMessage(1);
+                        });
+                    }
+                }).addOnFailureListener(exception -> {
+                    Log.e("BACKUP_ERROR1", exception.getMessage());
+                    ShowErrorMessage(1);
+                });
+            break;
+            case 3:
+                // Создание директории с текущей датой
+                mDriveServiceHelper.getFolderId(getFolderName(PARAM_DATE), tmpFolder).addOnSuccessListener(folderId -> {
+                    if (!folderId.isEmpty()) {
+                        tmpFolder = folderId;
+                        RunBackupOperationStep(4);
+                    } else {
+                        mDriveServiceHelper.createFolder(getFolderName(PARAM_DATE), tmpFolder).addOnSuccessListener(folderIdCreated -> {
+                            tmpFolder = folderIdCreated;
+                            RunBackupOperationStep(4);
+                        })
+                        .addOnFailureListener(exception2 -> {
+                            Log.e("BACKUP_ERROR1", exception2.getMessage());
+                            ShowErrorMessage(1);
+                        });
+                    }
+                }).addOnFailureListener(exception -> {
+                    Log.e("BACKUP_ERROR1", exception.getMessage());
+                    ShowErrorMessage(1);
+                });
+            break;
+
+            case 4:
+
+                // загрузка файла в папку
+                mBackupFolderId = tmpFolder;
+                mDriveServiceHelper.uploadFile(this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath(),WardrobeDBHelper.DATABASE_NAME, mBackupFolderId,0)
+                    .addOnSuccessListener(fileId -> {
+                        ShowErrorMessage(200);
+                    })
+                    .addOnFailureListener(exception -> {
+                        ShowErrorMessage(2);
+                    });
+
 
 
         }
     }
+
 
 
     public void RunRestoreOperationStep(int stepNumber) {
@@ -287,16 +346,12 @@ public class SettingsActivity extends AppCompatActivity  {
                 Toast.makeText(this, "Резервное копирование проведено успешно.", Toast.LENGTH_LONG).show();
             } else {
                 boolean isFound = false;
-                if (step == 1 || step == 2 || step == 4 || step == 6){
-                    Toast.makeText(this, "Ошибка на этапе поиска нужной папки в Google Drive.", Toast.LENGTH_LONG).show();
-                    isFound = true;
-                }
-                if (step == 3 || step == 5 || step == 7){
+                if (step == 1){
                     Toast.makeText(this, "Не получилось создать папку для бекапа в Google Drive.", Toast.LENGTH_LONG).show();
                     isFound = true;
                 }
-                if (step == 9 || step == 10) {
-                    Toast.makeText(this, "Не получилось скопировать один из файлов в Google Drive.", Toast.LENGTH_LONG).show();
+                if (step == 3){
+                    Toast.makeText(this, "Не получилось загрузить файл в папку Google Drive.", Toast.LENGTH_LONG).show();
                     isFound = true;
                 }
                 if (isFound == false) {
