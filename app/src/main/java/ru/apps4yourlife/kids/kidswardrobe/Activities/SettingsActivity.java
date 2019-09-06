@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,20 +34,29 @@ import com.google.api.client.http.FileContent;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.FileList;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBHelper;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseRestoreFolderDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.DriveServiceHelper;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
+import com.google.api.services.drive.model.File;
 
-public class SettingsActivity extends AppCompatActivity  {
+public class SettingsActivity extends AppCompatActivity  implements ChooseRestoreFolderDialogFragment.ChooseRestoreFolderDialogFragmentListener {
 
     private static final int REQUEST_CODE_SIGN_IN = 1;
     private static final int REQUEST_CODE_OPEN_DOCUMENT = 2;
@@ -61,6 +71,7 @@ public class SettingsActivity extends AppCompatActivity  {
 
     private DriveServiceHelper mDriveServiceHelper;
     private String mOpenFileId;
+    private FileList mAllFiles;
 
 
     @Override
@@ -316,7 +327,6 @@ public class SettingsActivity extends AppCompatActivity  {
                     ShowErrorMessage(1);
                 });
             break;
-
             case 4:
 
                 // загрузка файла в папку
@@ -328,15 +338,34 @@ public class SettingsActivity extends AppCompatActivity  {
                     .addOnFailureListener(exception -> {
                         ShowErrorMessage(2);
                     });
-
-
-
         }
     }
 
 
 
     public void RunRestoreOperationStep(int stepNumber) {
+        switch (stepNumber) {
+            case 1:
+                if (mDriveServiceHelper != null) {
+                    Log.d("Restore backup", "Querying for files.");
+
+                    mDriveServiceHelper.queryFiles(WardrobeDBHelper.DATABASE_NAME)
+                            .addOnSuccessListener(fileList -> {
+                                StringBuilder builder = new StringBuilder();
+                                mAllFiles = fileList;
+                                if (!mAllFiles.isEmpty()) {
+                                    ChooseRestoreFolderDialogFragment dialog = new ChooseRestoreFolderDialogFragment();
+                                    dialog.setmListener(this);
+                                    dialog.show(getSupportFragmentManager(), "ChooseRestoreFolderDialogFragment");
+                                } else {
+                                    ShowErrorMessage(1001);
+                                }
+                                //
+                            })
+                            .addOnFailureListener(exception -> Log.e("Restore backup", "Unable to query files.", exception));
+                }
+            break;
+        }
     }
 
     public void ShowErrorMessage(int step) {
@@ -363,12 +392,12 @@ public class SettingsActivity extends AppCompatActivity  {
                 Toast.makeText(this, "Данные восстановлены из резервной копии с Google Drive.", Toast.LENGTH_LONG).show();
             } else {
                 boolean isFound = false;
-                if (step < 1008){
+                if (step == 1001){
                     Toast.makeText(this, "Не смог найти сохраненные копии на Google Drive.", Toast.LENGTH_LONG).show();
                     isFound = true;
                 }
-                if (step >= 1008){
-                    Toast.makeText(this, "Не получилось скопировать папку из Google Drive", Toast.LENGTH_LONG).show();
+                if (step == 1002){
+                    Toast.makeText(this, "Не удалось скопировать файл.", Toast.LENGTH_LONG).show();
                     isFound = true;
                 }
                 if (isFound == false) {
@@ -396,6 +425,28 @@ public class SettingsActivity extends AppCompatActivity  {
         }
     }
 
+    @Override
+    public void OnClickRestoreName(int position) {
+        List<File> files = mAllFiles.getFiles();
+        File choosenFile = files.get(position);
+        mDriveServiceHelper.downloadFile(choosenFile.getId()).addOnSuccessListener(stream -> {
+            try {
+                java.io.File targetFile = new java.io.File(this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath());
+                FileOutputStream fileOutputStream = new FileOutputStream(targetFile, false);
+                byte[] buffer = stream.toByteArray();
+                fileOutputStream.write(buffer);
+                fileOutputStream.close();
+                ShowErrorMessage(1200);
+            }catch (Exception e) {
+                Log.e("WRITE_FILE", e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public FileList SetParameters() {
+        return mAllFiles;
+    }
 }
 
 

@@ -262,7 +262,11 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 // BUGS
 
 // DONE: CLICK TO ITEM IN REPORT
-// TODO: GOOGLE DRIVE REWORK!!
+// DONE: GOOGLE DRIVE REWORK!!
+
+// TODO: new images asset
+// todo: google drive sign-in redesign
+// todo:test test test
 
 
 // **************  RELEASE 2.5. **************** //

@@ -8,6 +8,18 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 
 
+import com.google.api.client.util.DateTime;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
+
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import ru.apps4yourlife.kids.kidswardrobe.R;
 
 /**
@@ -15,14 +27,14 @@ import ru.apps4yourlife.kids.kidswardrobe.R;
  */
 
 public class ChooseRestoreFolderDialogFragment extends DialogFragment {
-/*
+
     private int mSelectedPosition;
     private Context mContext;
-    private MetadataBuffer metadataBuffer;
+    private FileList filesList;
 
     public interface ChooseRestoreFolderDialogFragmentListener {
         void OnClickRestoreName(int position);
-        MetadataBuffer SetParameters();
+        FileList SetParameters();
     }
 
     private ChooseRestoreFolderDialogFragment.ChooseRestoreFolderDialogFragmentListener mListener;
@@ -34,19 +46,32 @@ public class ChooseRestoreFolderDialogFragment extends DialogFragment {
         mContext = this.getContext();
         mSelectedPosition = 0;
 
-       metadataBuffer =  mListener.SetParameters();
+       filesList =  mListener.SetParameters();
+       final int count = filesList.getFiles().size() > 10 ? 10 : filesList.getFiles().size();
+
+
+        String items[] = new String[count];
+        int i = 0;
+        //ArrayList<String> items = new ArrayList<>();
+        for (File file : filesList.getFiles())  {
+            String createdTmString = "";
+            DateTime createdTm = file.getCreatedTime();
+            try {
+                SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                Date date = currentFormat.parse(createdTm.toStringRfc3339());
+                SimpleDateFormat goodFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                createdTmString = goodFormat.format(date);
+            } catch (Exception e) {
+                createdTmString = createdTm.toString();
+                e.printStackTrace();
+            }
+            String newTitle = "Создан " + createdTmString;
+            items[i] = newTitle;
+            i++;
+            if (i >= count) break;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String items[] = new String[5];
-        //ArrayList<String> items = new ArrayList<>();
-        for (int i = 0; i < metadataBuffer.getCount(); i++) {
-            if (i > 4) break;
-            Metadata data = metadataBuffer.get(i);
-
-            String title = data.getTitle();
-            String newTitle = "Создан " + title.substring(0,4) + "-" + title.substring(4,6) + "-" + title.substring(6,8) + " в " + title.substring(9,11) + ":" + title.substring(11,13);
-            items[i] = newTitle;
-        }
         builder.setTitle("Выберите копию для восстановления")
                 .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
                     @Override
@@ -81,6 +106,4 @@ public class ChooseRestoreFolderDialogFragment extends DialogFragment {
                     + " must implement ChoosePlaceDialogFragmentListener");
         }
     }
-
-*/
 }
