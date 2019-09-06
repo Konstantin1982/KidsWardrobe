@@ -89,19 +89,18 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
 
     public void updateUI(GoogleSignInAccount account) {
         boolean isAllow = false;
+        Button signButton = findViewById(R.id.sign_inout_button);
+        TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
+        TextView userNameTextView  = (TextView) findViewById(R.id.userNameTextView);
         if (account != null) {
-            TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
             emailTextView.setText(account.getEmail());
-
-            TextView userNameTextView  = (TextView) findViewById(R.id.userNameTextView);
-            emailTextView.setText(account.getDisplayName());
+            userNameTextView.setText(account.getDisplayName());
+            signButton.setText("Перевойти");
             isAllow = true;
         } else {
-            TextView emailTextView = (TextView) findViewById(R.id.email_text_view);
             emailTextView.setText("E-mail address");
-
-            TextView userNameTextView  = (TextView) findViewById(R.id.userNameTextView);
-            emailTextView.setText("Неизвестный пользователь");
+            userNameTextView.setText("Аноним");
+            signButton.setText("Вход");
         }
         Button backupButton  = findViewById(R.id.backupButton);
         Button restoreButton = findViewById(R.id.restoreButton);
@@ -263,6 +262,7 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
         switch (stepNumber) {
             case 1:
                 // Создание директории Apps
+                Log.e("STEP1", "Step 1 Started");
                 UpdateBackupProgress(0);
                 mDriveServiceHelper.getFolderId(getFolderName(PARAM_ROOT), "").addOnSuccessListener(folderId -> {
                     if (!folderId.isEmpty()) {
@@ -286,14 +286,17 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
                 });
             break;
             case 2:
+                Log.e("STEP2", "Step 2 Started");
                 // Создание директории Kids
-                mDriveServiceHelper.getFolderId(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderId -> {
-                    if (!folderId.isEmpty()) {
-                        tmpFolder = folderId;
+                mDriveServiceHelper.getFolderId(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderId2 -> {
+                    if (!folderId2.isEmpty()) {
+                        tmpFolder = folderId2;
+                        Log.e("FOUND2 ", tmpFolder);
                         RunBackupOperationStep(3);
                     } else {
-                        mDriveServiceHelper.createFolder(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderIdCreated -> {
-                            tmpFolder = folderIdCreated;
+                        mDriveServiceHelper.createFolder(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderIdCreated2 -> {
+                            tmpFolder = folderIdCreated2;
+                            Log.e("CREATED2 ", tmpFolder);
                             RunBackupOperationStep(3);
                         })
                         .addOnFailureListener(exception2 -> {
@@ -308,13 +311,14 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
             break;
             case 3:
                 // Создание директории с текущей датой
-                mDriveServiceHelper.getFolderId(getFolderName(PARAM_DATE), tmpFolder).addOnSuccessListener(folderId -> {
-                    if (!folderId.isEmpty()) {
-                        tmpFolder = folderId;
+                Log.e("STEP3", "Step 3 Started");
+                mDriveServiceHelper.getFolderId(getFolderName(PARAM_DATE), tmpFolder).addOnSuccessListener(folderId3 -> {
+                    if (!folderId3.isEmpty()) {
+                        tmpFolder = folderId3;
                         RunBackupOperationStep(4);
                     } else {
-                        mDriveServiceHelper.createFolder(getFolderName(PARAM_DATE), tmpFolder).addOnSuccessListener(folderIdCreated -> {
-                            tmpFolder = folderIdCreated;
+                        mDriveServiceHelper.createFolder(getFolderName(PARAM_DATE), tmpFolder).addOnSuccessListener(folderIdCreated3 -> {
+                            tmpFolder = folderIdCreated3;
                             RunBackupOperationStep(4);
                         })
                         .addOnFailureListener(exception2 -> {
@@ -330,6 +334,7 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
             case 4:
 
                 // загрузка файла в папку
+                Log.e("STEP4", "Step 4 Started");
                 mBackupFolderId = tmpFolder;
                 mDriveServiceHelper.uploadFile(this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath(),WardrobeDBHelper.DATABASE_NAME, mBackupFolderId,0)
                     .addOnSuccessListener(fileId -> {
@@ -427,6 +432,11 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
 
     @Override
     public void OnClickRestoreName(int position) {
+        findViewById(R.id.layout_progress_parent).setVisibility(View.VISIBLE);
+        TextView progressHeader = (TextView) findViewById(R.id.header_progress);
+        progressHeader.setText("Восстановление резервной копии...");
+
+        UpdateBackupProgress(0);
         List<File> files = mAllFiles.getFiles();
         File choosenFile = files.get(position);
         mDriveServiceHelper.downloadFile(choosenFile.getId()).addOnSuccessListener(stream -> {
@@ -439,6 +449,7 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
                 ShowErrorMessage(1200);
             }catch (Exception e) {
                 Log.e("WRITE_FILE", e.getMessage());
+                ShowErrorMessage(1002);
             }
         });
     }
