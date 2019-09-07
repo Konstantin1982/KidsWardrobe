@@ -122,7 +122,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         holder.thirdTextView.setText(comment);
 
         String comment2 = mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2));
-        if (!comment2.contentEquals("")) {
+        if (comment2 != null && !comment2.isEmpty()) {
             holder.forthTextView.setText("Дополнительно:" + comment2);
         } else {
             holder.forthTextView.setVisibility(View.GONE);

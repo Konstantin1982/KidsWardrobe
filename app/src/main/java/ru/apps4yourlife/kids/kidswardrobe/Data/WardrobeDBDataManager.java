@@ -31,6 +31,8 @@ public class WardrobeDBDataManager {
 
     public WardrobeDBDataManager(Context context) {
         mDBHelper = new WardrobeDBHelper(context);
+        int some = mDBHelper.getWritableDatabase().getVersion();
+        Log.e("DB VERSION", String.valueOf(some) );
         mContext = context;
         //mDBHelper.getWritableDatabase(); // just to fix crash
     }
@@ -57,7 +59,7 @@ public class WardrobeDBDataManager {
         } else {
             result = db.update(WardrobeContract.ChildEntry.TABLE_NAME, newChildValues, WardrobeContract.ChildEntry._ID + " = ? ", new String[]{idEntry});
         }
-        db.close();
+        //db.close();
         return result;
     }
 
@@ -86,7 +88,7 @@ public class WardrobeDBDataManager {
         } else {
             result = db.update(WardrobeContract.ClothesItem.TABLE_NAME, newValues, WardrobeContract.ClothesItem._ID + " = ? ", new String[]{String.valueOf(id)});
         }
-        db.close();
+        //db.close();
         return result;
     }
 
@@ -139,7 +141,7 @@ public class WardrobeDBDataManager {
         } else {
             result = db.update(WardrobeContract.ClothesCategory.TABLE_NAME, newValues, WardrobeContract.ClothesCategory._ID + " = ? ", new String[]{String.valueOf(id)});
         }
-        db.close();
+        //db.close();
         return result;
     }
 
@@ -433,7 +435,7 @@ public class WardrobeDBDataManager {
                 newValues.put(WardrobeContract.Sizes.COLUMN_VALUE, value);
                 SQLiteDatabase db = mDBHelper.getWritableDatabase();
                 result = db.insert(WardrobeContract.Sizes.TABLE_NAME, null, newValues);
-                db.close();
+                //db.close();
             }
             //if (sizeCursor != null) sizeCursor.close();
         }
@@ -590,7 +592,7 @@ public class WardrobeDBDataManager {
             // insert
             result = db.insert(WardrobeContract.SettingsEntry.TABLE_NAME, null, newValues);
         }
-        db.close();
+        //db.close();
         return result;
 
     }
