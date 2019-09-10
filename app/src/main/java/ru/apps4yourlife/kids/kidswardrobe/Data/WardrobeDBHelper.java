@@ -179,15 +179,12 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        Log.e("DBLOG", "VERSION I = " + i + "; I1 = " + i1);
         if (i == 1 && i1 == 2) {
-            Log.i("DB","DB IS UPDATED START!!");
             final String SQL_ALTER_CLOTHES_ITEM_TABLE =
                     "ALTER TABLE " + WardrobeContract.ClothesItem.TABLE_NAME +
                     " ADD COLUMN " +  WardrobeContract.ClothesItem.COLUMN_COMMENT2 + " VARCHAR(255) DEFAULT ''";
             sqLiteDatabase.execSQL(SQL_ALTER_CLOTHES_ITEM_TABLE);
             WardrobeDBDataManager.InsertOrUpdatePurchase(sqLiteDatabase, BillingHelper.SKUCodes.noAdsCode,1);
-            Log.i("DB","DB IS UPDATED END!!");
         }
     }
 }

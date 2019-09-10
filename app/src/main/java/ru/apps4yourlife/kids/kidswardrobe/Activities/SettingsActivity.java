@@ -148,7 +148,7 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
      * Starts a sign-in activity using {@link #REQUEST_CODE_SIGN_IN}.
      */
     private void requestSignIn() {
-        Log.e("GDRIVE", "Requesting sign-in");
+        // Log.e("GDRIVE", "Requesting sign-in");
 
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -169,7 +169,7 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
         GoogleSignIn.getSignedInAccountFromIntent(result)
 
                 .addOnSuccessListener(googleAccount -> {
-                    Log.e("GDRIVE", "Signed in as " + googleAccount.getEmail());
+                    // Log.e("GDRIVE", "Signed in as " + googleAccount.getEmail());
 
                     // Use the authenticated account to sign in to the Drive service.
                     GoogleAccountCredential credential =
@@ -262,17 +262,17 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
         switch (stepNumber) {
             case 1:
                 // Создание директории Apps
-                Log.e("STEP1", "Step 1 Started");
+                //  Log.e("STEP1", "Step 1 Started");
                 UpdateBackupProgress(0);
                 mDriveServiceHelper.getFolderId(getFolderName(PARAM_ROOT), "").addOnSuccessListener(folderId -> {
                     if (!folderId.isEmpty()) {
                         tmpFolder = folderId;
-                        Log.e("FOUND ", tmpFolder);
+                        //Log.e("FOUND ", tmpFolder);
                         RunBackupOperationStep(2);
                     } else {
                         mDriveServiceHelper.createFolder(getFolderName(PARAM_ROOT), "").addOnSuccessListener(folderIdCreated -> {
                             tmpFolder = folderIdCreated;
-                            Log.e("CREATED ", tmpFolder);
+                            //Log.e("CREATED ", tmpFolder);
                             RunBackupOperationStep(2);
                         })
                         .addOnFailureListener(exception2 -> {
@@ -286,17 +286,17 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
                 });
             break;
             case 2:
-                Log.e("STEP2", "Step 2 Started");
+                //Log.e("STEP2", "Step 2 Started");
                 // Создание директории Kids
                 mDriveServiceHelper.getFolderId(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderId2 -> {
                     if (!folderId2.isEmpty()) {
                         tmpFolder = folderId2;
-                        Log.e("FOUND2 ", tmpFolder);
+                        //Log.e("FOUND2 ", tmpFolder);
                         RunBackupOperationStep(3);
                     } else {
                         mDriveServiceHelper.createFolder(getFolderName(PARAM_KIDS), tmpFolder).addOnSuccessListener(folderIdCreated2 -> {
                             tmpFolder = folderIdCreated2;
-                            Log.e("CREATED2 ", tmpFolder);
+                            //Log.e("CREATED2 ", tmpFolder);
                             RunBackupOperationStep(3);
                         })
                         .addOnFailureListener(exception2 -> {
@@ -311,7 +311,7 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
             break;
             case 3:
                 // Создание директории с текущей датой
-                Log.e("STEP3", "Step 3 Started");
+                //Log.e("STEP3", "Step 3 Started");
                 mDriveServiceHelper.getFolderId(getFolderName(PARAM_DATE), tmpFolder).addOnSuccessListener(folderId3 -> {
                     if (!folderId3.isEmpty()) {
                         tmpFolder = folderId3;
@@ -334,7 +334,7 @@ public class SettingsActivity extends AppCompatActivity  implements ChooseRestor
             case 4:
 
                 // загрузка файла в папку
-                Log.e("STEP4", "Step 4 Started");
+                //Log.e("STEP4", "Step 4 Started");
                 mBackupFolderId = tmpFolder;
                 mDriveServiceHelper.uploadFile(this.getDatabasePath(WardrobeDBHelper.DATABASE_NAME).getPath(),WardrobeDBHelper.DATABASE_NAME, mBackupFolderId,0)
                     .addOnSuccessListener(fileId -> {

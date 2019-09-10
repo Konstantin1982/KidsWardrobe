@@ -547,10 +547,10 @@ public class WardrobeDBDataManager {
                 null,
                 sortBy);
         items.moveToFirst();
-        Log.d("SQL SQL","Count of RECORDS = " + items.getCount());
+        //Log.d("SQL SQL","Count of RECORDS = " + items.getCount());
 
-        Cursor items2 = mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM ITEM WHERE 1 = 1 ORDER BY COMMENT", null);
-        Log.d("SQL SQL","The same query by RAW. Count of RECORDS = " + items2.getCount());
+        //Cursor items2 = mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM ITEM WHERE 1 = 1 ORDER BY COMMENT", null);
+        //Log.d("SQL SQL","The same query by RAW. Count of RECORDS = " + items2.getCount());
 
         return items;
     }

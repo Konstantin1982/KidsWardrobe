@@ -204,7 +204,7 @@ public class DriveServiceHelper {
             File file = mDriveService.files().create(fileMetadata)
                     .setFields("id")
                     .execute();
-            Log.e("Creating folders", "NAME = " + folderName);
+            //Log.e("Creating folders", "NAME = " + folderName);
             return file.getId();
         });
     }
