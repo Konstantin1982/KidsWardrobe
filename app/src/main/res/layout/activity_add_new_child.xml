@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:fillViewport="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_layout_add_new_child"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -170,7 +170,7 @@
             app:srcCompat="@drawable/new_entity_divide_line" />
 
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
@@ -181,7 +181,7 @@
             app:layout_constraintTop_toBottomOf="@id/imageView17"
             app:layout_constraintStart_toStartOf="parent">
 
-            <android.support.constraint.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                 app:srcCompat="@drawable/background_elephant_640" />
 
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
             android:id="@+id/shoesSizeEditText"
@@ -381,6 +381,6 @@
             app:srcCompat="@drawable/new_entity_divide_line" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

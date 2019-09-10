@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
 
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/backupButton"
         style="@style/TypicalButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toBottomOf="@+id/email_text_view" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/restoreButton"
         style="@style/TypicalButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,40 +33,19 @@
         android:text="Восстановить из Google Drive"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button7" />
+        app:layout_constraintTop_toBottomOf="@+id/backupButton" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView22"
-    />
+
     <Button
-        android:id="@+id/sign_out_button"
+        android:id="@+id/sign_inout_button"
+        style="@style/WhiteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Выход"
-        style="@style/WhiteButton"
-        android:onClick="signOut"
+        android:onClick="signInOnClick"
+        android:text="Вход"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView22"
-    />
-
-    <ImageView
-        android:id="@+id/profile_photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/round_button"
-        android:padding="0dp"
-        android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/textView22"
         app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
 
@@ -88,14 +67,12 @@
         android:id="@+id/email_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="E-mail address"
         android:textAlignment="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/profile_photo"
-        app:layout_constraintTop_toBottomOf="@+id/profile_photo" />
+        app:layout_constraintTop_toBottomOf="@+id/sign_inout_button" />
     <CheckBox
         android:id="@+id/wifiCheckBox"
         style="@style/TypicalTextView"
@@ -106,11 +83,11 @@
         android:checked="true"
         android:text="Только через Wi-Fi"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button8" />
+        app:layout_constraintTop_toBottomOf="@+id/restoreButton" />
 
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_progress_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -126,7 +103,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="128dp"
         android:layout_marginBottom="8dp"
@@ -180,8 +157,20 @@
             app:layout_constraintStart_toStartOf="parent" />
 
 
-    </android.support.constraint.ConstraintLayout>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/userNameTextView"
+        style="@style/BiggerStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="Аноним"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/sign_inout_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sign_inout_button" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

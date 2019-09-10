@@ -3,19 +3,14 @@ package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.provider.ContactsContract;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.Size;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.lang.reflect.Array;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
@@ -56,7 +51,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
     }
 
     public void updateListValues(Cursor newItemList, int position) {
-        Log.e("RECYCLER","Try to updatewith position = " + position);
+        //Log.e("RECYCLER","Try to updatewith position = " + position);
         mItemsInCategoryCursor = newItemList;
         notifyDataSetChanged();
         /*
@@ -126,6 +121,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         String comment = mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
         holder.thirdTextView.setText(comment);
 
+        String comment2 = mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2));
+        if (comment2 != null && !comment2.isEmpty()) {
+            holder.forthTextView.setText("Дополнительно:" + comment2);
+        } else {
+            holder.forthTextView.setVisibility(View.GONE);
+        }
+
         byte[] previewInBytes = mItemsInCategoryCursor.getBlob(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW));
         Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CLOTHES_TYPE);
         holder.mImagePreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -151,6 +153,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         private TextView firstTextView;
         private TextView secondTextView;
         private TextView thirdTextView;
+        private TextView forthTextView;
 
         CategoryListAdapterViewHolder(View view) {
             super(view);
@@ -165,6 +168,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
             firstTextView = (TextView) view.findViewById(R.id.textView);
             secondTextView = (TextView) view.findViewById(R.id.textView2);
             thirdTextView = (TextView) view.findViewById(R.id.textView3);
+            forthTextView = (TextView) view.findViewById(R.id.commentIteminList);
             mImagePreview = (ImageView) view.findViewById(R.id.previewItemImageInList);
             view.setOnClickListener(this);
         }
@@ -180,7 +184,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter <CategoryListAdapt
         public void onClick(View v) {
             int position = getAdapterPosition();
             mItemsInCategoryCursor.moveToPosition(position);
-            Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
+            //Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
             mCategoryListAdapterClickHandler.onItemClick (
                     mItemsInCategoryCursor.getString(mItemsInCategoryCursor.getColumnIndex(WardrobeContract.ClothesItem._ID)),
                     String.valueOf(position)

@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.util.Size;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ public class WardrobeDBDataManager {
 
     public WardrobeDBDataManager(Context context) {
         mDBHelper = new WardrobeDBHelper(context);
+        int some = mDBHelper.getWritableDatabase().getVersion();
+        Log.e("DB VERSION", String.valueOf(some) );
         mContext = context;
         //mDBHelper.getWritableDatabase(); // just to fix crash
     }
@@ -40,7 +43,7 @@ public class WardrobeDBDataManager {
         ContentValues newChildValues = new ContentValues();
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_NAME, childName);
         newChildValues.put(WardrobeContract.ChildEntry.COLUMN_SEX, childSex);
-        newChildValues.put(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE, childBirthdate);//TODO: int to string
+        newChildValues.put(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE, childBirthdate);
         String stringLinktoPhoto = "";
         if (linkToPhoto != null) {
             stringLinktoPhoto = linkToPhoto.toString();
@@ -56,11 +59,11 @@ public class WardrobeDBDataManager {
         } else {
             result = db.update(WardrobeContract.ChildEntry.TABLE_NAME, newChildValues, WardrobeContract.ChildEntry._ID + " = ? ", new String[]{idEntry});
         }
-        db.close();
+        //db.close();
         return result;
     }
 
-    public long InsertOrUpdateItem(long id, long cat_id, Uri linkToPhoto, Bitmap smallPhoto, int season, int sex, long size1, long size2, String comment) {
+    public long InsertOrUpdateItem(long id, long cat_id, Uri linkToPhoto, Bitmap smallPhoto, int season, int sex, long size1, long size2, String comment, String comment2) {
         long result = 0;
         ContentValues newValues = new ContentValues();
         newValues.put(WardrobeContract.ClothesItem.COLUMN_CAT_ID, cat_id);
@@ -78,13 +81,14 @@ public class WardrobeDBDataManager {
         newValues.put(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN, size1);
         newValues.put(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL, size2);
         newValues.put(WardrobeContract.ClothesItem.COLUMN_COMMENT, comment);
+        newValues.put(WardrobeContract.ClothesItem.COLUMN_COMMENT2, comment2);
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         if (id == 0) {
             result = db.insert(WardrobeContract.ClothesItem.TABLE_NAME, null, newValues);
         } else {
             result = db.update(WardrobeContract.ClothesItem.TABLE_NAME, newValues, WardrobeContract.ClothesItem._ID + " = ? ", new String[]{String.valueOf(id)});
         }
-        db.close();
+        //db.close();
         return result;
     }
 
@@ -137,7 +141,7 @@ public class WardrobeDBDataManager {
         } else {
             result = db.update(WardrobeContract.ClothesCategory.TABLE_NAME, newValues, WardrobeContract.ClothesCategory._ID + " = ? ", new String[]{String.valueOf(id)});
         }
-        db.close();
+        //db.close();
         return result;
     }
 
@@ -156,10 +160,6 @@ public class WardrobeDBDataManager {
         return result;
     }
 
-
-
-    // TODO: all size from child
-    // TODO: latest size from child
 
     private static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -180,6 +180,7 @@ public class WardrobeDBDataManager {
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
+        childrenList.moveToFirst();
         return childrenList;
     }
 
@@ -192,6 +193,7 @@ public class WardrobeDBDataManager {
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
+        childrenList.moveToFirst();
         return childrenList;
     }
 
@@ -202,6 +204,7 @@ public class WardrobeDBDataManager {
                         "_id, sex, 0 as CHECKED FROM " + WardrobeContract.ChildEntry.TABLE_NAME +
                         " ORDER BY " + WardrobeContract.ChildEntry.COLUMN_NAME;
         Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(sql, null);
+        cursor.moveToFirst();
         return cursor;
     }
     public Cursor GetChildByIdFromDb(String ID) {
@@ -213,7 +216,7 @@ public class WardrobeDBDataManager {
                                     null,
                                     null,
                                     WardrobeContract.ChildEntry._ID);
-        if (childrenList.getCount() > 0) childrenList.moveToFirst();
+        childrenList.moveToFirst();
         return childrenList;
     }
 
@@ -248,6 +251,7 @@ public class WardrobeDBDataManager {
                 WardrobeContract.ClothesCategory.TABLE_NAME + "." + WardrobeContract.ClothesCategory._ID  + ")" +
                 " ORDER BY " + WardrobeContract.ClothesCategory.COLUMN_CAT_NAME;
         Cursor cursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+        cursor.moveToFirst();
         return cursor;
     }
 
@@ -290,6 +294,7 @@ public class WardrobeDBDataManager {
     public Cursor GetAllComments() {
         String sql = "SELECT DISTINCT(" + WardrobeContract.ClothesItem.COLUMN_COMMENT + ") FROM " + WardrobeContract.ClothesItem.TABLE_NAME + " ORDER BY " + WardrobeContract.ClothesItem.COLUMN_COMMENT;
         Cursor commentsCursor = mDBHelper.getReadableDatabase().rawQuery(sql,null);
+        commentsCursor.moveToFirst();
         return commentsCursor;
     }
 
@@ -312,6 +317,7 @@ public class WardrobeDBDataManager {
                 null,
                 null,
                 WardrobeContract.SizesTypes.COLUMN_ID);
+        sizeTypes.moveToFirst();
         return sizeTypes;
     }
 
@@ -429,7 +435,7 @@ public class WardrobeDBDataManager {
                 newValues.put(WardrobeContract.Sizes.COLUMN_VALUE, value);
                 SQLiteDatabase db = mDBHelper.getWritableDatabase();
                 result = db.insert(WardrobeContract.Sizes.TABLE_NAME, null, newValues);
-                db.close();
+                //db.close();
             }
             //if (sizeCursor != null) sizeCursor.close();
         }
@@ -540,6 +546,12 @@ public class WardrobeDBDataManager {
                 null,
                 null,
                 sortBy);
+        items.moveToFirst();
+        //Log.d("SQL SQL","Count of RECORDS = " + items.getCount());
+
+        //Cursor items2 = mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM ITEM WHERE 1 = 1 ORDER BY COMMENT", null);
+        //Log.d("SQL SQL","The same query by RAW. Count of RECORDS = " + items2.getCount());
+
         return items;
     }
 
@@ -547,12 +559,11 @@ public class WardrobeDBDataManager {
         return mDBHelper.getReadableDatabase().rawQuery(query,null);
     }
 
-    // 0 - don't purchased, 1 - taken, -1 - undefined.
-    public long InsertOrUpdatePurchase(String skuCode, int status ) {
+    public static long InsertOrUpdatePurchase(SQLiteDatabase db, String skuCode, int status ) {
         long result = 0;
 
         Cursor skuList;
-        skuList = mDBHelper.getReadableDatabase().query(
+        skuList = db.query(
                 WardrobeContract.SettingsEntry.TABLE_NAME,
                 null,
                 WardrobeContract.SettingsEntry.COLUMN_KEY + " = ?",
@@ -567,7 +578,6 @@ public class WardrobeDBDataManager {
         } else {
             insertValue = "0";
         }
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
         ContentValues newValues = new ContentValues();
         newValues.put(WardrobeContract.SettingsEntry.COLUMN_KEY, skuCode);
         newValues.put(WardrobeContract.SettingsEntry.COLUMN_VALUE, insertValue);
@@ -582,8 +592,13 @@ public class WardrobeDBDataManager {
             // insert
             result = db.insert(WardrobeContract.SettingsEntry.TABLE_NAME, null, newValues);
         }
-        db.close();
+        //db.close();
         return result;
+
+    }
+    // 0 - don't purchased, 1 - taken, -1 - undefined.
+    public long InsertOrUpdatePurchase(String skuCode, int status ) {
+        return InsertOrUpdatePurchase(mDBHelper.getWritableDatabase(), skuCode, status);
     }
 
     public int getPurchaseStatus(String skuCode) {

@@ -2,25 +2,21 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.CategoryListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
-import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class CategoryItemsActivity extends AppCompatActivity implements CategoryListAdapter.CategoryListAdapterClickHandler {
 
@@ -46,20 +42,21 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
 
         mAdapter = new CategoryListAdapter(this, mCategoryID, this);
         mListItems.setAdapter(mAdapter);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         String catName = dataManager.GetCategoryNameById(mCategoryID);
-        mNoAdsStatus = dataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+        //mNoAdsStatus = dataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+        updateUI();
+        /*
         if (mNoAdsStatus > 0) {
-            updateUI();
         } else {
             AdView adView = (AdView) findViewById(R.id.adView_items);
             AdRequest adRequest = new AdRequest.Builder()
                     .setRequestAgent("android_studio:ad_template").build();
             adView.loadAd(adRequest);
         }
-
+        */
         if (catName.isEmpty()) {
             catName = this.getString(R.string.title_activity_category_default);
         }
@@ -67,8 +64,8 @@ public class CategoryItemsActivity extends AppCompatActivity implements Category
     }
 
     public void updateUI () {
-        AdView adView = (AdView) findViewById(R.id.adView_items);
-        adView.setVisibility(View.GONE);
+        //AdView adView = (AdView) findViewById(R.id.adView_items);
+        //adView.setVisibility(View.GONE);
     }
 
     @Override

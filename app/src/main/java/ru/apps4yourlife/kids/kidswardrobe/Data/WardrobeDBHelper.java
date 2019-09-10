@@ -13,6 +13,7 @@ import java.util.Map;
 
 import ru.apps4yourlife.kids.kidswardrobe.Activities.AddNewItemActivity;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 /**
  * Created by ksharafutdinov on 27-Mar-18.
@@ -20,7 +21,7 @@ import ru.apps4yourlife.kids.kidswardrobe.R;
 
 public class WardrobeDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "wardrobe.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     private Context mContext;
 
@@ -71,6 +72,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN + " INTEGER, " +
                         WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL + " INTEGER, " +
                         WardrobeContract.ClothesItem.COLUMN_COMMENT + " VARCHAR(255), " +
+                        WardrobeContract.ClothesItem.COLUMN_COMMENT2 + " VARCHAR(255), " +
                         WardrobeContract.ClothesItem.COLUMN_LINK_TO_PHOTO + " VARCHAR(255), " +
                         WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW + " BLOB" +
                         ")";
@@ -110,7 +112,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_CATEGORY_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TYPES_TABLE);
-        Log.e("DB", "TABLES WERE CREATED");
+        //Log.e("DB", "TABLES WERE CREATED");
     }
 
     public void InsertInitialValuesToClothesCategories(SQLiteDatabase db) {
@@ -169,9 +171,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //Toast.makeText(mContext,"Oncreate DB is called",Toast.LENGTH_LONG).show();
        // Log.e("DB","DB IS CREATED!!");
-
         CreateTables(sqLiteDatabase);
-
         InsertInitialValuesToClothesCategories(sqLiteDatabase);
         InsertInitialValuesToSizes(sqLiteDatabase);
         InsertInitialValuesToSizesTypes(sqLiteDatabase);
@@ -179,6 +179,12 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        if (i == 1 && i1 == 2) {
+            final String SQL_ALTER_CLOTHES_ITEM_TABLE =
+                    "ALTER TABLE " + WardrobeContract.ClothesItem.TABLE_NAME +
+                    " ADD COLUMN " +  WardrobeContract.ClothesItem.COLUMN_COMMENT2 + " VARCHAR(255) DEFAULT ''";
+            sqLiteDatabase.execSQL(SQL_ALTER_CLOTHES_ITEM_TABLE);
+            WardrobeDBDataManager.InsertOrUpdatePurchase(sqLiteDatabase, BillingHelper.SKUCodes.noAdsCode,1);
+        }
     }
 }

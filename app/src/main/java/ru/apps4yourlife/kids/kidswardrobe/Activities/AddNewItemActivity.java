@@ -1,18 +1,22 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -171,7 +175,7 @@ public class AddNewItemActivity extends AppCompatActivity
         itemSeasonSpinner.setOnItemSelectedListener(this);
 
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
 
@@ -239,6 +243,10 @@ public class AddNewItemActivity extends AppCompatActivity
 
             // комментарий
             commentTextView.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT)));
+
+            AutoCompleteTextView commentTextView2 = (AutoCompleteTextView) findViewById(R.id.comment2EditText);
+            commentTextView2.setText(currentItemCursor.getString(currentItemCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2)));
+
             //currentItemCursor.close();
             //currentCat.close();
             //sizeCursor.close();
@@ -383,7 +391,6 @@ public class AddNewItemActivity extends AppCompatActivity
             }
             mNeedSaveType = !isFind;
             if (!isFind) {
-                // TODO show button to link category and size!!!
                 FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
                 warningButton.setVisibility(View.VISIBLE);
 
@@ -399,20 +406,34 @@ public class AddNewItemActivity extends AppCompatActivity
 
     @Override
     public void onTakeNewPhotoClick() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = GeneralHelper.createImageFile(this);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
+        } else {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = GeneralHelper.createImageFile(this);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                if (photoFile != null) {
+                    mCurrentPhotoUri = FileProvider.getUriForFile(this,
+                            "ru.apps4yourlife.kids.fileprovider",
+                            photoFile);
+                    takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
+                    startActivityForResult(takePictureIntent, 0);
+                }
             }
-            if (photoFile != null) {
-                mCurrentPhotoUri = FileProvider.getUriForFile(this,
-                        "ru.apps4yourlife.kids.fileprovider",
-                        photoFile);
-                takePictureIntent = GeneralHelper.prepareTakePhotoIntent(takePictureIntent, this, mCurrentPhotoUri);
-                startActivityForResult(takePictureIntent, 0);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_DENIED) {
+                onTakeNewPhotoClick();
             }
         }
     }
@@ -539,7 +560,6 @@ public class AddNewItemActivity extends AppCompatActivity
         FloatingActionButton warningButton = (FloatingActionButton) findViewById(R.id.warningSizeButton);
         if (warningButton.getVisibility() == View.VISIBLE || mPhotoPreview == null) {
             formIsOK = false;
-            // TODO: animation of warning button
             if (mPhotoPreview == null) {
                 Toast.makeText(this,"Фотография - обязательна.", Toast.LENGTH_SHORT).show();
             }
@@ -563,7 +583,8 @@ public class AddNewItemActivity extends AppCompatActivity
             long sizeValue2 =     dataManager.FindOrInsertNewSizeValue(mPreTypeSize2, sizeClothesTextView2.getText().toString());
 
             EditText commentEdit  = (EditText ) findViewById(R.id.commentEditText);
-            long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, sizeValue1, sizeValue2, commentEdit.getText().toString());
+            EditText comment2Edit  = (EditText ) findViewById(R.id.comment2EditText);
+            long new_id = dataManager.InsertOrUpdateItem(mItemID, mPreTypeID, mCurrentPhotoUri, mPhotoPreview, mSeason, mSex, sizeValue1, sizeValue2, commentEdit.getText().toString(), comment2Edit.getText().toString()) ;
             //Toast.makeText(this, "New item has been inserted: " + new_id , Toast.LENGTH_SHORT).show();
             Intent data = new Intent();
             data.putExtra("POSITION", mPositionFromList);
@@ -600,7 +621,7 @@ public class AddNewItemActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.e("PHOTO","ASYNC TASK IS STARTED!!!!!!");
+            //Log.e("PHOTO","ASYNC TASK IS STARTED!!!!!!");
             int counter = 0;
             while (mCurrentPhotoUri == null) {
                 try {
@@ -614,7 +635,7 @@ public class AddNewItemActivity extends AppCompatActivity
                 }
             }
             res = 1;
-            Log.e("PHOTO","URI IS OK IN ASYNC TASK");
+            //Log.e("PHOTO","URI IS OK IN ASYNC TASK");
             return null;
         }
 

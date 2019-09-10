@@ -180,8 +180,8 @@ public class GeneralHelper implements Transformation{
         Bitmap resultBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         if (resultBitmap == null) {
             switch (type) {
-                case GENERAL_HELPER_CHILD_TYPE: // TODO Default bitmap for children
-                case GENERAL_HELPER_CLOTHES_TYPE: // TODO Default bitmap for clothes
+                case GENERAL_HELPER_CHILD_TYPE:
+                case GENERAL_HELPER_CLOTHES_TYPE:
             }
         }
         return resultBitmap;

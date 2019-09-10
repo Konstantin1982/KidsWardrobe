@@ -2,20 +2,23 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseChildDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChoosePlaceDialogFragment;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.ChooseSeasonDialogFragment;
@@ -46,6 +49,9 @@ public class ChildReportActivity extends AppCompatActivity
 
     private WardrobeDBDataManager mDataManager;
     private Cursor mItems;
+    private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
+    private AdView mAdView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +63,27 @@ public class ChildReportActivity extends AppCompatActivity
         mSelectedSeasons = new ArrayList<Integer>();
         mSelectedChildren = new ArrayList<Integer>();
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+        mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+
+        if (mNoAdsStatus > 0) {
+            // уже все куплено
+            updateUI();
+        } else {
+            MobileAds.initialize(this, this.getString(R.string.app_id));
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
+
+    }
+
+    public void updateUI() {
+        AdView adView = (AdView) findViewById(R.id.adView);
+        adView.setVisibility(View.GONE);
     }
 
     @Override
@@ -292,7 +317,6 @@ public class ChildReportActivity extends AppCompatActivity
             }
            // Toast.makeText(this,"Final SQL = " + SQL, Toast.LENGTH_LONG).show();
             //Log.e("SQL",SQL);
-            // TODO: rework stupid feature;
             mSelectedChildren = tmpChildrenSelection;
             Intent intent = new Intent(this, ReportResultListActivity.class);
             intent.putExtra("FILTER",filterSQL);

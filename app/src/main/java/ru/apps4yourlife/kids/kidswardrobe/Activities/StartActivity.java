@@ -1,38 +1,36 @@
 package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.util.Log;
+import androidx.annotation.Nullable;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import java.util.List;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.PagerAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
-import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBHelper;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
@@ -50,6 +48,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
     private String mLastGoodAsked;
     private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
 
+    private AdView mAdView;
 
     public void setLastPurchase(String code) {
         mLastGoodAsked = code;
@@ -61,7 +60,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
         ImageView randomImage = (ImageView) findViewById(R.id.start_randomImage);
         int imageId = GeneralHelper.GetRandomImageId();
         //Toast.makeText(this,, Toast.LENGTH_SHORT).show();
-        Log.e("IMAGE", "NUMBER = " + imageId);
+        //Log.e("IMAGE", "NUMBER = " + imageId);
         randomImage.setImageResource(imageId);
         super.onResume();
     }
@@ -81,11 +80,10 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
             // уже все куплено
             updateUI();
         } else {
-            AdView adView = (AdView) findViewById(R.id.adView);
-            MobileAds.initialize(this, getString(R.string.app_id));
-            AdRequest adRequest = new AdRequest.Builder()
-                    .setRequestAgent("android_studio:ad_template").build();
-            adView.loadAd(adRequest);
+            MobileAds.initialize(this, this.getString(R.string.app_id));
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
         }
         mTabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -254,3 +252,19 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 
 
 }
+
+// **************  RELEASE 2.5. **************** //
+// DONE: 1) Upgrade to 28.xx
+// DONE: 2) Return ADS
+// DONE: 3) Add Comment2
+
+
+// BUGS
+
+// DONE: CLICK TO ITEM IN REPORT
+// DONE: GOOGLE DRIVE REWORK!!
+
+// todo:test test test
+
+
+// **************  RELEASE 2.5. **************** //

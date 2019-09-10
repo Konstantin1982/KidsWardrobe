@@ -3,29 +3,19 @@ package ru.apps4yourlife.kids.kidswardrobe.Adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
-
-import static ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper.getBitmapFromBytes;
 
 /**
  * Created by ksharafutdinov on 29-Mar-18.
@@ -49,7 +39,7 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
     }
     public void updateListValues(Cursor newChildData, int position) {
         mListChildrenCursor = newChildData;
-        Log.e("CURSOR","Count of new cursor = " + mListChildrenCursor.getCount() + "; Position = " + position);
+        //Log.e("CURSOR","Count of new cursor = " + mListChildrenCursor.getCount() + "; Position = " + position);
         if (position >= 0) {
             notifyItemChanged(position);
         } else {
@@ -59,14 +49,14 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
 
     @Override
     public ChildrenListAdapter.ChildrenListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e("RECYCLER: ", "onCreateViewHolder is called");
+        //Log.e("RECYCLER: ", "onCreateViewHolder is called");
         View view = LayoutInflater.from(mContext).inflate(R.layout.child_list_item, parent, false);
         return new ChildrenListAdapter.ChildrenListAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ChildrenListAdapter.ChildrenListAdapterViewHolder holder, int position) {
-        Log.e("RECYCLER: ", "onBindViewHolder is called with position: " + position);
+        //Log.e("RECYCLER: ", "onBindViewHolder is called with position: " + position);
 
         mListChildrenCursor.moveToPosition(position);
         // ID and Name
@@ -84,7 +74,7 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         byte[] previewInBytes = mListChildrenCursor.getBlob(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_PHOTO_PREVIEW));
         Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes, GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
         holder.smallPhotoImageView.setImageBitmap(smallPhoto);
-        Log.e("RECYCLER: ", "height of view is : " + holder.itemView.getHeight());
+        //Log.e("RECYCLER: ", "height of view is : " + holder.itemView.getHeight());
 
         return;
     }
@@ -116,7 +106,7 @@ public class ChildrenListAdapter extends RecyclerView.Adapter <ChildrenListAdapt
         public void onClick(View v) {
             int position = getAdapterPosition();
             mListChildrenCursor.moveToPosition(position);
-            Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
+            //Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
             mChildrenListAdapterClickHandler.onChildClick(
                     mListChildrenCursor.getString(mListChildrenCursor.getColumnIndex(WardrobeContract.ChildEntry._ID)),
                     String.valueOf(position)

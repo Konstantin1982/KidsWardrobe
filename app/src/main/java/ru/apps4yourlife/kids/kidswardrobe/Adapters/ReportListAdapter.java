@@ -8,20 +8,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.constraint.ConstraintLayout;
-import android.support.graphics.drawable.VectorDrawableCompat;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -88,7 +84,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
 
     @Override
     public ReportListAdapter.ItemListAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e("RECYCLER: ", "onCreateViewHolder is called");
+        //Log.e("RECYCLER: ", "onCreateViewHolder is called");
         int viewId = R.layout.report_list_item;
         if (viewType == 100)  viewId = R.layout.report_list_header;
         View view = LayoutInflater.from(mContext).inflate(viewId, parent, false);
@@ -107,6 +103,8 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
 
             int size1 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN));
             int size2 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL));
+            String comment2 = mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2));
+
             int found = 0;
             String sizeName1 = "", sizeName2 = "";
             String sizeValue1 = "", sizeValue2 = "";
@@ -177,6 +175,14 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
                 holder.suiteChildren.setText(chidrenNames);
             }
 
+            if (comment2.contentEquals("")) {
+                holder.commentTextView.setHeight(0);
+                holder.commentTextView.setVisibility(View.INVISIBLE);
+            } else  {
+                holder.commentTextView.setVisibility(View.VISIBLE);
+                holder.commentTextView.setText("Дополнительно: " + comment2 );
+            }
+
             //mCurrentHeader
             String itemLocation = mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT));
             if (!itemLocation.equalsIgnoreCase(mCurrentHeader)) {
@@ -206,6 +212,8 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
 
             int size1 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_MAIN));
             int size2 = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SIZE_ADDITIONAL));
+            String comment2 = mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_COMMENT2));
+
             int found = 0;
             String sizeName1 = "", sizeName2 = "";
             String sizeValue1 = "", sizeValue2 = "";
@@ -275,6 +283,13 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
                 holder.suiteChildren.setVisibility(View.VISIBLE);
                 holder.suiteChildren.setText("Непонятно, где находится");
             }
+            if (comment2.contentEquals("")) {
+                holder.commentTextView.setHeight(0);
+                holder.commentTextView.setVisibility(View.INVISIBLE);
+            } else  {
+                holder.commentTextView.setVisibility(View.VISIBLE);
+                holder.commentTextView.setText("Дополнительно: " + comment2 );
+            }
 
             //mCurrentHeader
             String currentChild =   mListItemsCursor.getString(mListItemsCursor.getColumnIndex("child"));
@@ -325,6 +340,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
         private TextView typeTextView;
         private TextView headerTextView;
         private TextView suiteChildren;
+        private TextView commentTextView;
         private ImageView itemPhoto;
         private ConstraintLayout mLayout;
 
@@ -334,6 +350,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
             size2TextView = (TextView) view.findViewById(R.id.report_size2TextView);
             typeTextView = (TextView) view.findViewById(R.id.report_typeTextView);
             suiteChildren = (TextView) view.findViewById(R.id.report_suiteChilren);
+            commentTextView = (TextView) view.findViewById(R.id.report_comment);
             headerTextView = (TextView) view.findViewById(R.id.report_headerSection);
             itemPhoto = (ImageView) view.findViewById(R.id.item_photo);
             mLayout = (ConstraintLayout) view.findViewById(R.id.report_layout_item);
@@ -351,12 +368,12 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
                     if (fullImageUri != null) {
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), fullImageUri);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                     if (bitmap == null) {
-                        Log.e("PHOTO", "BITMAP IS taken from PREVIEW!");
+                        //Log.e("PHOTO", "BITMAP IS taken from PREVIEW!");
                         BitmapDrawable drawable = (BitmapDrawable) itemPhoto.getDrawable();
                         bitmap = drawable.getBitmap();
                     }
@@ -369,7 +386,7 @@ public class ReportListAdapter extends RecyclerView.Adapter <ReportListAdapter.I
         public void onClick(View v) {
             int position = getAdapterPosition();
             mListItemsCursor.moveToPosition(position);
-            Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
+            //Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
             mItemListAdapterClickHandler.onItemClick(
                     mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem._ID)),
                     String.valueOf(position)
