@@ -10,9 +10,10 @@
         android:id="@+id/placeTextView_PlaceReport"
         style="@style/TypicalTextView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical"
         android:inputType="textMultiLine"
         android:onClick="placeTextView_click"
         android:text="Все места"
@@ -21,15 +22,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView13"
-        app:layout_constraintTop_toTopOf="@+id/textView13"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/textView13" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_wardrobe" />
@@ -48,12 +48,12 @@
         android:id="@+id/imageView31"
         android:layout_width="0dp"
         android:layout_height="3dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/placeTextView_PlaceReport"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4"
         app:srcCompat="@drawable/new_entity_divide_line" />
 
     <ImageView
@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView31"
         app:srcCompat="@drawable/ic_wardrobe" />
@@ -80,9 +80,10 @@
         android:id="@+id/typeClothesTextView_PlaceReport"
         style="@style/TypicalTextView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical"
         android:onClick="typeTextView_click"
         android:text="Все типы"
         android:textAlignment="textEnd"
@@ -95,12 +96,12 @@
         android:id="@+id/imageView33"
         android:layout_width="0dp"
         android:layout_height="3dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeClothesTextView_PlaceReport"
+        app:layout_constraintTop_toBottomOf="@+id/imageView32"
         app:srcCompat="@drawable/new_entity_divide_line" />
 
     <ImageView
@@ -108,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView33"
         app:srcCompat="@drawable/ic_snow_cloud" />
@@ -127,9 +128,10 @@
         android:id="@+id/seazonTextView_PlaceReport"
         style="@style/TypicalTextView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical"
         android:onClick="seazonTextView_click"
         android:text="Все сезоны"
         android:textAlignment="textEnd"
@@ -142,12 +144,12 @@
         android:id="@+id/imageView35"
         android:layout_width="0dp"
         android:layout_height="3dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seazonTextView_PlaceReport"
+        app:layout_constraintTop_toBottomOf="@+id/imageView34"
         app:srcCompat="@drawable/new_entity_divide_line" />
 
     <CheckBox
@@ -155,8 +157,8 @@
         style="@style/TypicalTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="16dp"
         android:checked="false"
         android:text="Только подходящие по размеру"
         app:layout_constraintEnd_toEndOf="parent"
@@ -167,7 +169,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView35"
         app:srcCompat="@drawable/ic_baby" />
@@ -185,11 +187,12 @@
     <TextView
         android:id="@+id/childTextView_PlaceReport"
         style="@style/TypicalTextView"
-        android:onClick="childTextView_click"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical"
+        android:onClick="childTextView_click"
         android:text="Для всех"
         android:textAlignment="textEnd"
         app:layout_constraintBottom_toBottomOf="@+id/textView20"
@@ -201,12 +204,12 @@
         android:id="@+id/imageView37"
         android:layout_width="0dp"
         android:layout_height="3dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/childTextView_PlaceReport"
+        app:layout_constraintTop_toBottomOf="@+id/imageView36"
         app:srcCompat="@drawable/new_entity_divide_line" />
 
 

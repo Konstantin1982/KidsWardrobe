@@ -3,12 +3,11 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout_add_new_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:id="@+id/main_layout_add_new_item"
-    >
+    android:focusableInTouchMode="true">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -39,9 +38,10 @@
             <AutoCompleteTextView
                 android:id="@+id/typeClothesTextView"
                 style="@style/TypicalTextView"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
 
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:completionThreshold="0"
@@ -50,16 +50,16 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:textAlignment="viewEnd"
-                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintBottom_toBottomOf="@+id/textView8"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toEndOf="@+id/textView8"
+                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintTop_toTopOf="@+id/textView8" />
 
             <AutoCompleteTextView
                 android:id="@+id/sizeClothesTextView"
                 style="@style/TypicalTextView"
-                android:layout_height="15dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
@@ -71,11 +71,11 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:textAlignment="viewEnd"
-                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintBottom_toBottomOf="@+id/sizeMainLabel"
-
                 ads:layout_constraintEnd_toEndOf="parent"
+
                 ads:layout_constraintStart_toEndOf="@+id/sizeMainLabel"
+                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintTop_toTopOf="@+id/sizeMainLabel" />
 
             <ImageView
@@ -84,9 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                ads:srcCompat="@drawable/ic_wardrobe"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/addNewItemImageButton" />
+                ads:layout_constraintTop_toBottomOf="@+id/addNewItemImageButton"
+                ads:srcCompat="@drawable/ic_wardrobe" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -105,10 +105,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                ads:srcCompat="@drawable/ic_snow_cloud"
+                android:layout_marginTop="16dp"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView20" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView20"
+                ads:srcCompat="@drawable/ic_snow_cloud" />
 
             <ImageView
                 android:id="@+id/imageView20"
@@ -117,10 +117,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                ads:srcCompat="@drawable/new_entity_divide_line"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView18" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView18"
+                ads:srcCompat="@drawable/new_entity_divide_line" />
 
             <ImageView
                 android:id="@+id/imageView21"
@@ -129,20 +129,20 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                ads:srcCompat="@drawable/new_entity_divide_line"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView19" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView19"
+                ads:srcCompat="@drawable/new_entity_divide_line" />
 
             <ImageView
                 android:id="@+id/imageView22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                ads:srcCompat="@drawable/ic_item_size"
+                android:layout_marginTop="16dp"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView21" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView21"
+                ads:srcCompat="@drawable/ic_item_size" />
 
             <TextView
                 android:id="@+id/sizeMainLabel"
@@ -161,12 +161,12 @@
                 android:layout_width="0dp"
                 android:layout_height="3dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                ads:srcCompat="@drawable/new_entity_divide_line"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/sizeClothesTextView" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView22"
+                ads:srcCompat="@drawable/new_entity_divide_line" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -186,10 +186,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                ads:srcCompat="@drawable/ic_sex_item"
+                android:layout_marginTop="16dp"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView23" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView23"
+                ads:srcCompat="@drawable/ic_sex_item" />
 
             <TextView
                 android:id="@+id/textView16"
@@ -212,10 +212,10 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:textAlignment="textEnd"
-                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintBottom_toBottomOf="@+id/textView16"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toEndOf="@+id/textView16"
+                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintTop_toTopOf="@+id/textView16" />
 
             <ImageView
@@ -223,22 +223,22 @@
                 android:layout_width="0dp"
                 android:layout_height="3dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                ads:srcCompat="@drawable/new_entity_divide_line"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView25" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView25"
+                ads:srcCompat="@drawable/new_entity_divide_line" />
 
             <ImageView
                 android:id="@+id/imageView27"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                ads:srcCompat="@drawable/ic_shoes_size"
+                android:layout_marginTop="16dp"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView26" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView26"
+                ads:srcCompat="@drawable/ic_shoes_size" />
 
             <TextView
                 android:id="@+id/sizeTypeAdditionalLabel"
@@ -255,22 +255,24 @@
             <AutoCompleteTextView
                 android:id="@+id/sizeTypeAdditionalTextView"
                 style="@style/TypicalTextView"
-                android:layout_height="15dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:completionThreshold="0"
+                android:gravity="center_vertical"
                 android:hint="Тип зависит от полки"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:textAlignment="viewEnd"
-                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintBottom_toBottomOf="@+id/sizeTypeAdditionalLabel"
-                ads:layout_constraintEnd_toEndOf="parent"
 
+                ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toEndOf="@+id/sizeTypeAdditionalLabel"
+                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintTop_toTopOf="@+id/sizeTypeAdditionalLabel" />
 
             <ImageView
@@ -278,22 +280,22 @@
                 android:layout_width="0dp"
                 android:layout_height="3dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                ads:srcCompat="@drawable/new_entity_divide_line"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView27" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView27"
+                ads:srcCompat="@drawable/new_entity_divide_line" />
 
             <ImageView
                 android:id="@+id/imageView29"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                ads:srcCompat="@drawable/ic_chat"
+                android:layout_marginTop="16dp"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView28" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView28"
+                ads:srcCompat="@drawable/ic_chat" />
 
             <TextView
                 android:id="@+id/textView18"
@@ -310,22 +312,23 @@
             <AutoCompleteTextView
                 android:id="@+id/commentEditText"
                 style="@style/TypicalTextView"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:completionThreshold="0"
+                android:gravity="center_vertical"
                 android:hint="например,шкаф в детской"
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:textAlignment="viewEnd"
-                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintBottom_toBottomOf="@+id/textView18"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toEndOf="@+id/textView18"
+                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintTop_toTopOf="@+id/textView18" />
 
 
@@ -334,12 +337,12 @@
                 android:layout_width="0dp"
                 android:layout_height="3dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                ads:srcCompat="@drawable/new_entity_divide_line"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toStartOf="parent"
-                ads:layout_constraintTop_toBottomOf="@+id/imageView29" />
+                ads:layout_constraintTop_toBottomOf="@+id/imageView29"
+                ads:srcCompat="@drawable/new_entity_divide_line" />
 
             <ImageView
                 android:id="@+id/imageView24"
@@ -347,6 +350,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                ads:layout_constraintBottom_toBottomOf="parent"
                 ads:layout_constraintStart_toStartOf="parent"
                 ads:layout_constraintTop_toBottomOf="@+id/imageView30"
                 ads:srcCompat="@drawable/ic_information" />
@@ -354,10 +359,11 @@
             <AutoCompleteTextView
                 android:id="@+id/comment2EditText"
                 style="@style/TypicalTextView"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:completionThreshold="0"
+                android:gravity="center_vertical"
                 android:hint="производитель и прочая информация"
                 android:imeOptions="actionNext"
                 android:lines="2"
@@ -378,10 +384,10 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:textAlignment="textEnd"
-                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintBottom_toBottomOf="@+id/textView14"
                 ads:layout_constraintEnd_toEndOf="parent"
                 ads:layout_constraintStart_toEndOf="@+id/textView14"
+                ads:layout_constraintStart_toStartOf="@+id/guideline2"
                 ads:layout_constraintTop_toTopOf="@+id/textView14" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -421,19 +427,19 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

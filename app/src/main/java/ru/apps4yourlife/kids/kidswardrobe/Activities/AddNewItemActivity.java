@@ -170,7 +170,7 @@ public class AddNewItemActivity extends AppCompatActivity
 
         Spinner itemSeasonSpinner = (Spinner) findViewById(R.id.spinner_season);
         ArrayAdapter<CharSequence> spinnerAdapter2 = ArrayAdapter.createFromResource(this, R.array.season_array, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinnerAdapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         itemSeasonSpinner.setAdapter(spinnerAdapter2);
         itemSeasonSpinner.setOnItemSelectedListener(this);
 
