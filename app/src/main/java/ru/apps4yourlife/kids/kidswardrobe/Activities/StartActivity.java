@@ -264,7 +264,10 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 // DONE: CLICK TO ITEM IN REPORT
 // DONE: GOOGLE DRIVE REWORK!!
 
-// todo:test test test
 
 
-// **************  RELEASE 2.5. **************** //
+// **************  RELEASE 2.6. **************** //
+// TODO: GOOGLE COMMENTS
+// TODO: Beautiful reporting
+// TODO: clothes sets - how to do that
+//
