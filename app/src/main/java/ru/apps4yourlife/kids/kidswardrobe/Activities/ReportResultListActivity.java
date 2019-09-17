@@ -23,16 +23,17 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ReportListAdapter;
+import ru.apps4yourlife.kids.kidswardrobe.Adapters.ReportListAdapterNew;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class ReportResultListActivity extends AppCompatActivity implements
-        ReportListAdapter.ItemListAdapterClickHandler,
-ReportListAdapter.ImageListAdapterClickHandler{
+        ReportListAdapterNew.ItemListAdapterClickHandler,
+        ReportListAdapterNew.ImageListAdapterClickHandler{
 
     private RecyclerView mListReport;
-    private ReportListAdapter mAdapter;
+    private ReportListAdapterNew mAdapter;
     private Animator mCurrentAnimator;
     private int mShortAnimationDuration;
     private String mLastGoodAsked;
@@ -67,7 +68,7 @@ ReportListAdapter.ImageListAdapterClickHandler{
 
         mListReport.setLayoutManager(layoutManager);
         mListReport.setHasFixedSize(true);
-        mAdapter = new ReportListAdapter(this, this, this);
+        mAdapter = new ReportListAdapterNew(this, this, this);
         String sentFilter = getIntent().getStringExtra("FILTER");
         String sentType = getIntent().getStringExtra("SORT");
         String sentQuery = getIntent().getStringExtra("QUERY");

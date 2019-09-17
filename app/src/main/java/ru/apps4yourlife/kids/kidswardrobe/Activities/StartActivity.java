@@ -268,6 +268,6 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 
 // **************  RELEASE 2.6. **************** //
 // DONE: GOOGLE COMMENTS
-// TODO: Beautiful reporting
+// DONE: Beautiful reporting
 // TODO: clothes sets - how to do that
-// TODO: edit clothes - rotate image
+// DONE: edit clothes - rotate image

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.net.Uri;
@@ -47,6 +48,12 @@ public class GeneralHelper implements Transformation{
     public static final int GENERAL_HELPER_CHILD_TYPE = 106;
     public static final int GENERAL_HELPER_CLOTHES_TYPE = 107;
 
+    public static Bitmap RotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
 
     public static int GetRandomImageId() {
         Random r = new Random();

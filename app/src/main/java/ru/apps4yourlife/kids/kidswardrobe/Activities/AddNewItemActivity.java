@@ -83,6 +83,16 @@ public class AddNewItemActivity extends AppCompatActivity
 
 
 
+    public void onRotateImageClick(View view) {
+        if (mPhotoPreview == null) return;
+        mPhotoPreview = GeneralHelper.RotateBitmap(mPhotoPreview,90);
+        maddNewItemImageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        maddNewItemImageButton.setImageBitmap(mPhotoPreview);
+        maddNewItemImageButton.setBackground(null);
+        return;
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
