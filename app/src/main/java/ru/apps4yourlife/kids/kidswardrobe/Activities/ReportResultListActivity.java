@@ -11,9 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -30,7 +33,8 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class ReportResultListActivity extends AppCompatActivity implements
         ReportListAdapterNew.ItemListAdapterClickHandler,
-        ReportListAdapterNew.ImageListAdapterClickHandler{
+        ReportListAdapterNew.ImageListAdapterClickHandler,
+        ReportListAdapterNew.SetButtonClickHandler {
 
     private RecyclerView mListReport;
     private ReportListAdapterNew mAdapter;
@@ -39,6 +43,9 @@ public class ReportResultListActivity extends AppCompatActivity implements
     private String mLastGoodAsked;
     private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
     private AdView mAdView;
+    private WardrobeDBDataManager mDbManager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +72,10 @@ public class ReportResultListActivity extends AppCompatActivity implements
             mAdView.loadAd(adRequest);
         }
 
-
+        mDbManager = new WardrobeDBDataManager(this);
         mListReport.setLayoutManager(layoutManager);
         mListReport.setHasFixedSize(true);
-        mAdapter = new ReportListAdapterNew(this, this, this);
+        mAdapter = new ReportListAdapterNew(this, this, this, this);
         String sentFilter = getIntent().getStringExtra("FILTER");
         String sentType = getIntent().getStringExtra("SORT");
         String sentQuery = getIntent().getStringExtra("QUERY");
@@ -201,4 +208,23 @@ public class ReportResultListActivity extends AppCompatActivity implements
         set.start();
         mCurrentAnimator = set;
     }
+
+    @Override
+    public void onSetButtonClick(Button sender, int setNumber, int itemId) {
+        // switch background
+        int background = (int) sender.getTag(sender.getId());
+
+        int backgroundRes;
+        if (background == 1) {
+            backgroundRes = R.drawable.oval_white;
+        } else {
+            backgroundRes = R.drawable.oval_light;
+        }
+        sender.setTag(sender.getId(),1 - background);
+        sender.setBackground(getDrawable(backgroundRes));
+        // update DB
+        mDbManager.InsertOrDeleteItemToSet(itemId, setNumber);
+
+    }
+
 }

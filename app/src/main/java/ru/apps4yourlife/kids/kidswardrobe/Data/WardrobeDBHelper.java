@@ -21,7 +21,7 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class WardrobeDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "wardrobe.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     private Context mContext;
 
@@ -103,7 +103,21 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.SizesTypes.COLUMN_SIZE_TYPE_NAME + " VARCHAR(255)" +
                         ")";
 
-
+        final String SQL_CREATE_ITEMS_SETS_TABLE =
+                "CREATE TABLE " +
+                        WardrobeContract.ItemsSets.TABLE_NAME + "(" +
+                        WardrobeContract.ItemsSets._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " INTEGER, " +
+                        WardrobeContract.ItemsSets.COLUMN_SET_ID + " INTEGER" +
+                        ")";
+        /*
+        // set_items
+        public static final class ItemsSets implements BaseColumns {
+            public static final String TABLE_NAME = "items_sets";
+            public static final String COLUMN_ITEM_ID = "item_id";
+            public static final String COLUMN_SET_ID = "set_id"; // 1, 2, 3
+        }
+        */
 
         sqLiteDatabase.execSQL(SQL_CREATE_CHILDREN_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_SETTINGS_TABLE);
@@ -112,6 +126,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_CATEGORY_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_CLOTHES_SIZES_TYPES_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_ITEMS_SETS_TABLE);
         //Log.e("DB", "TABLES WERE CREATED");
     }
 
@@ -179,12 +194,23 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        if (i == 1 && i1 == 2) {
+        if (i == 1) {
             final String SQL_ALTER_CLOTHES_ITEM_TABLE =
                     "ALTER TABLE " + WardrobeContract.ClothesItem.TABLE_NAME +
                     " ADD COLUMN " +  WardrobeContract.ClothesItem.COLUMN_COMMENT2 + " VARCHAR(255) DEFAULT ''";
             sqLiteDatabase.execSQL(SQL_ALTER_CLOTHES_ITEM_TABLE);
             WardrobeDBDataManager.InsertOrUpdatePurchase(sqLiteDatabase, BillingHelper.SKUCodes.noAdsCode,1);
+        }
+
+        if (i1 == 3) {
+            final String SQL_CREATE_ITEMS_SETS_TABLE =
+                    "CREATE TABLE " +
+                            WardrobeContract.ItemsSets.TABLE_NAME + "(" +
+                            WardrobeContract.ItemsSets._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " INTEGER, " +
+                            WardrobeContract.ItemsSets.COLUMN_SET_ID + " INTEGER" +
+                            ")";
+            sqLiteDatabase.execSQL(SQL_CREATE_ITEMS_SETS_TABLE);
         }
     }
 }

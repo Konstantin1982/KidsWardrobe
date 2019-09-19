@@ -3,10 +3,12 @@
     <color name="colorPrimary">#3FB3E7</color>
     <color name="colorPrimaryDark">#1186E3</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorAccentLight">#FF4081</color>
     <color name="buttonsColor">#1186E3</color>
     <color name="buttonsTextColor">#ffffff</color>
     <color name="defaultTextColor">#666666</color>
     <color name="whiteColor">#FFFFFF</color>
+    <color name="almostWhite">#FAFAFA</color>
     <color name="fragmentGreyBackground">#99DEDEDE</color>
     <color name="gridItemStrokeColor">#DADADA</color>
     <color name="gridItemBackgroundColor">#99FFF9C4</color>

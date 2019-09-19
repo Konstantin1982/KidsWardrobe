@@ -8,9 +8,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,12 +54,18 @@ public class ReportListAdapterNew extends RecyclerView.Adapter <ReportListAdapte
         void onImageClick(Bitmap image, View view);
     }
 
+    public interface SetButtonClickHandler {
+        void onSetButtonClick(Button sender, int setNumber, int itemId);
+    }
+
     private final ItemListAdapterClickHandler mItemListAdapterClickHandler;
     private final ImageListAdapterClickHandler mImageClickHandler;
+    private final SetButtonClickHandler mSetButtonClickHandler;
 
-    public ReportListAdapterNew(Context context, ItemListAdapterClickHandler clickHandler, ImageListAdapterClickHandler clickHandler2) {
+    public ReportListAdapterNew(Context context, ItemListAdapterClickHandler clickHandler, ImageListAdapterClickHandler clickHandler2, SetButtonClickHandler setButtonClickHandler) {
         mItemListAdapterClickHandler = clickHandler;
         mImageClickHandler = clickHandler2;
+        mSetButtonClickHandler = setButtonClickHandler;
 
         mContext = context;
         mFilter = "";
@@ -220,7 +228,6 @@ public class ReportListAdapterNew extends RecyclerView.Adapter <ReportListAdapte
             } else {
                 holder.headerTextView.setVisibility(View.GONE);
             }
-            return;
         }
 
         if (mType.equalsIgnoreCase("child")) {
@@ -331,7 +338,23 @@ public class ReportListAdapterNew extends RecyclerView.Adapter <ReportListAdapte
                 holder.headerTextView.setVisibility(View.GONE);
             }
         }
+        int itemId = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem._ID));
+        int backId, inSet;
 
+        inSet = mDataManager.IsItemInSet(itemId, 1);
+        backId = (inSet == 1) ? R.drawable.oval_light : R.drawable.oval_white;
+        holder.set1Button.setTag(holder.set1Button.getId(), inSet);
+        holder.set1Button.setBackground(mContext.getDrawable(backId));
+
+        inSet = mDataManager.IsItemInSet(itemId, 2);
+        backId = (inSet == 1) ? R.drawable.oval_light : R.drawable.oval_white;
+        holder.set2Button.setTag(holder.set2Button.getId(), inSet);
+        holder.set2Button.setBackground(mContext.getDrawable(backId));
+
+        inSet = mDataManager.IsItemInSet(itemId, 3);
+        backId = (inSet == 1) ? R.drawable.oval_light : R.drawable.oval_white;
+        holder.set3Button.setTag(holder.set3Button.getId(), inSet);
+        holder.set3Button.setBackground(mContext.getDrawable(backId));
 
         return;
     }
@@ -372,6 +395,10 @@ public class ReportListAdapterNew extends RecyclerView.Adapter <ReportListAdapte
         private TextView sexTextView;
         private ImageView itemPhoto;
         private ConstraintLayout mLayout;
+        // set's buttons
+        private Button set1Button;
+        private Button set2Button;
+        private Button set3Button;
 
         ItemListAdapterViewHolder(View view) {
             super(view);
@@ -385,16 +412,41 @@ public class ReportListAdapterNew extends RecyclerView.Adapter <ReportListAdapte
             seasonTextView = view.findViewById(R.id.report_season);
             sexTextView = view.findViewById(R.id.report_sex);
             mLayout = (ConstraintLayout) view.findViewById(R.id.report_layout_item);
-            Resources resources = mContext.getResources();
-            //Drawable drawable = VectorDrawableCompat.create(resources, R.drawable.ic_report_back2, mContext.getTheme() );
-            //mLayout.setBackground(drawable);
+
+            set1Button = view.findViewById(R.id.btnsetNumber1);
+            set1Button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListItemsCursor.moveToPosition(getAdapterPosition());
+                    int itemId = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem._ID));
+                    mSetButtonClickHandler.onSetButtonClick(set1Button, 1, itemId);
+                }
+            });
+            set2Button = view.findViewById(R.id.btnsetNumber2);
+            set2Button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListItemsCursor.moveToPosition(getAdapterPosition());
+                    int itemId = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem._ID));
+                    mSetButtonClickHandler.onSetButtonClick(set2Button, 2, itemId);
+                }
+            });
+
+            set3Button = view.findViewById(R.id.btnsetNumber3);
+            set3Button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListItemsCursor.moveToPosition(getAdapterPosition());
+                    int itemId = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem._ID));
+                    mSetButtonClickHandler.onSetButtonClick(set3Button, 3, itemId);
+                }
+            });
+
             view.setOnClickListener(this);
             itemPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Bitmap bitmap = null;
-                    int position = getAdapterPosition();
-                    mListItemsCursor.moveToPosition(position);
                     Uri fullImageUri = Uri.parse(mListItemsCursor.getString(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_LINK_TO_PHOTO)));
                     if (fullImageUri != null) {
                         try {

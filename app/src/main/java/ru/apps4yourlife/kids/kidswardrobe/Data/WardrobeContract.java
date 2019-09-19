@@ -77,5 +77,12 @@ public class WardrobeContract {
         public static final String COLUMN_ID = "type_id";
     }
 
+    // set_items
+    public static final class ItemsSets implements BaseColumns {
+        public static final String TABLE_NAME = "items_sets";
+        public static final String COLUMN_ITEM_ID = "item_id";
+        public static final String COLUMN_SET_ID = "set_id"; // 1, 2, 3
+    }
+
 
 }

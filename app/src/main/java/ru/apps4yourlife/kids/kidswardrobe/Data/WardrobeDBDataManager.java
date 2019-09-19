@@ -1,5 +1,6 @@
 package ru.apps4yourlife.kids.kidswardrobe.Data;
 
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -618,4 +619,60 @@ public class WardrobeDBDataManager {
         }
         return result;
     }
+
+
+    public static long InsertOrDeleteItemToSet(SQLiteDatabase db, int itemId, int setId) {
+        long result = 0;
+
+        Cursor itemSet;
+        itemSet = db.query(
+                WardrobeContract.ItemsSets.TABLE_NAME,
+                null,
+                WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " = ? AND " + WardrobeContract.ItemsSets.COLUMN_SET_ID + " = ? " ,
+                new String[] {String.valueOf(itemId), String.valueOf(setId)},
+                null,
+                null,
+                WardrobeContract.ItemsSets._ID,
+                "1");
+
+        ContentValues newValues = new ContentValues();
+        newValues.put(WardrobeContract.ItemsSets.COLUMN_ITEM_ID, itemId);
+        newValues.put(WardrobeContract.ItemsSets.COLUMN_SET_ID, setId);
+
+        if (itemSet.getCount() > 0) {
+            itemSet.moveToFirst();
+            result = db.delete(WardrobeContract.ItemsSets.TABLE_NAME, WardrobeContract.ItemsSets._ID + " = ? ",
+                    new String[]{itemSet.getString(itemSet.getColumnIndex(WardrobeContract.ItemsSets._ID))});
+        } else {
+            result = db.insert(WardrobeContract.ItemsSets.TABLE_NAME, null, newValues);
+        }
+        return result;
+
+    }
+    // 0 - don't purchased, 1 - taken, -1 - undefined.
+    public long InsertOrDeleteItemToSet( int itemId, int setId) {
+        return InsertOrDeleteItemToSet(mDBHelper.getWritableDatabase(), itemId, setId);
+    }
+
+    public static int IsItemInSet(SQLiteDatabase db, int itemId, int setId) {
+        int result = 0;
+        Cursor itemInSet = db.query(
+                WardrobeContract.ItemsSets.TABLE_NAME,
+                null,
+                WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " = ? AND "  + WardrobeContract.ItemsSets.COLUMN_SET_ID + " = ?",
+                new String[] {String.valueOf(itemId), String.valueOf(setId)},
+                null,
+                null,
+                WardrobeContract.ItemsSets._ID,
+                "1");
+        if (itemInSet.getCount() > 0) {
+            result =  1;
+        }
+        return result;
+    }
+
+    public int IsItemInSet(int itemId, int setId) {
+        return IsItemInSet(mDBHelper.getReadableDatabase(), itemId, setId);
+    }
+
 }
