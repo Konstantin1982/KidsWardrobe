@@ -30,6 +30,7 @@ import com.google.android.gms.ads.AdView;
 import java.util.List;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.PagerAdapter;
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
@@ -82,7 +83,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
         } else {
             MobileAds.initialize(this, this.getString(R.string.app_id));
             mAdView = findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("1FF81EEFAF751AD2DF1BCD1F8546349B").build();
             mAdView.loadAd(adRequest);
         }
         mTabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
@@ -165,6 +166,10 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
     }
     public void btnShowReportAllClothes_Click(View view) {
         Intent intent = new Intent(this,PlaceReportActivity.class);
+        startActivity(intent);
+    }
+    public void btnShowClothesSets_Click(View view) {
+        Intent intent = new Intent(this, SetsListActivity.class);
         startActivity(intent);
     }
 

@@ -12,16 +12,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.33" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.66" />
 
     <Button
         android:id="@+id/button_clothes_for_child"
         style="@style/TypicalButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="4dp"
         android:layout_marginTop="8dp"
-        android:maxHeight="140dp"
+        android:layout_marginBottom="8dp"
         android:onClick="btnShowReportChildClothes_Click"
         android:text="Одеть ребенка"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
@@ -33,14 +39,13 @@
     <Button
         android:id="@+id/button_clothes_for_review"
         style="@style/TypicalButton"
-        android:maxHeight="140dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="4dp"
         android:onClick="btnShowReportAllClothes_Click"
         android:text="@string/title_activity_place_report"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,13 +55,29 @@
         android:id="@+id/button3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:onClick="btnShare_Click"
         android:text="Share something!"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_clothes_for_review" />
+
+
+    <Button
+        android:id="@+id/button_items_sets"
+        style="@style/TypicalButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="btnShowClothesSets_Click"
+        android:text="Комплекты одежды"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,4 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".Activities.ItemSetsActivity">
 
+    <ImageView
+        android:id="@+id/dragabbleImageView1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background_elephant_640" />
+
+    <ImageView
+        android:id="@+id/dragabbleImageView2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dragabbleImageView3"
+        app:layout_constraintStart_toEndOf="@+id/dragabbleImageView1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background_puffin_640" />
+
+    <ImageView
+        android:id="@+id/dragabbleImageView3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background_winter_640" />
 </androidx.constraintlayout.widget.ConstraintLayout>

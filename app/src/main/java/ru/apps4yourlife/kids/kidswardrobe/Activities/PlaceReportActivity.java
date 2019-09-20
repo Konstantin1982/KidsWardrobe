@@ -76,7 +76,7 @@ public class PlaceReportActivity extends AppCompatActivity
         } else {
             MobileAds.initialize(this, this.getString(R.string.app_id));
             mAdView = findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("1FF81EEFAF751AD2DF1BCD1F8546349B").build();
             mAdView.loadAd(adRequest);
         }
 

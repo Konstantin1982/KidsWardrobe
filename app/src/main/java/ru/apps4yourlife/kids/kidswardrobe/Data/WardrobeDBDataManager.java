@@ -644,14 +644,39 @@ public class WardrobeDBDataManager {
             result = db.delete(WardrobeContract.ItemsSets.TABLE_NAME, WardrobeContract.ItemsSets._ID + " = ? ",
                     new String[]{itemSet.getString(itemSet.getColumnIndex(WardrobeContract.ItemsSets._ID))});
         } else {
+
+            String sql = "SELECT MAX(" + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + ")  FROM " + WardrobeContract.ItemsSets.TABLE_NAME  +
+                            " WHERE " + WardrobeContract.ItemsSets.COLUMN_SET_ID + " =  " + setId;
+            Cursor sortOrderCursor = db.rawQuery(sql,null);
+            if (sortOrderCursor.getCount() > 0) {
+                sortOrderCursor.moveToFirst();
+                int sortOrder = sortOrderCursor.getInt(0) + 1;
+                newValues.put(WardrobeContract.ItemsSets.COLUMN_SORT_ORDER, sortOrder);
+            } else {
+                newValues.put(WardrobeContract.ItemsSets.COLUMN_SORT_ORDER, 0);
+            }
             result = db.insert(WardrobeContract.ItemsSets.TABLE_NAME, null, newValues);
         }
         return result;
-
     }
+
     // 0 - don't purchased, 1 - taken, -1 - undefined.
     public long InsertOrDeleteItemToSet( int itemId, int setId) {
         return InsertOrDeleteItemToSet(mDBHelper.getWritableDatabase(), itemId, setId);
+    }
+
+    public static long UpdateSortOrderItemInSet(SQLiteDatabase writableDB, int itemId, int setId, int newSortOrder) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(WardrobeContract.ItemsSets.COLUMN_SORT_ORDER,newSortOrder);
+        long result = writableDB.update(
+                    WardrobeContract.ItemsSets.TABLE_NAME,
+                    newValues,
+        WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " = ? AND " + WardrobeContract.ItemsSets.COLUMN_SET_ID + " = ?", new String[]{String.valueOf(itemId), String.valueOf(setId)});
+        return result;
+    }
+
+    public long UpdateSortOrderItemInSet(int itemId, int setId, int newSortOrder) {
+        return UpdateSortOrderItemInSet(mDBHelper.getWritableDatabase(), itemId, setId, newSortOrder);
     }
 
     public static int IsItemInSet(SQLiteDatabase db, int itemId, int setId) {
