@@ -700,4 +700,34 @@ public class WardrobeDBDataManager {
         return IsItemInSet(mDBHelper.getReadableDatabase(), itemId, setId);
     }
 
+    public static Cursor getAllSetsForList(SQLiteDatabase readableDb) {
+        Cursor setsCursor = readableDb.query(
+                WardrobeContract.ItemsSets.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                WardrobeContract.ItemsSets._ID,
+                null);
+        return setsCursor;
+    }
+
+    public Cursor getAllSetsForList() {
+        return getAllSetsForList(mDBHelper.getReadableDatabase());
+    }
+
+    public static Cursor getAllItemsFromSet(SQLiteDatabase readableDb, int setId) {
+        String SQL = "SELECT item." + WardrobeContract.ClothesItem._ID + ", item." + WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW +
+               "  from " + WardrobeContract.ClothesItem.TABLE_NAME + " as item INNER JOIN " + WardrobeContract.ItemsSets.TABLE_NAME + " as sets " +
+               " ON item." + WardrobeContract.ClothesItem._ID + " = sets." + WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " WHERE sets." + WardrobeContract.ItemsSets._ID +
+                " = " + setId + " ORDER BY " + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + " LIMIT 3";
+        Cursor items = readableDb.rawQuery(SQL, null);
+        return items;
+    }
+
+    public Cursor getAllItemsFromSet(int setId) {
+        return getAllItemsFromSet(mDBHelper.getReadableDatabase(), setId);
+    }
+
 }

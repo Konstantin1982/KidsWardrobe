@@ -82,6 +82,7 @@ public class WardrobeContract {
         public static final String TABLE_NAME = "items_sets";
         public static final String COLUMN_ITEM_ID = "item_id";
         public static final String COLUMN_SET_ID = "set_id"; // 1, 2, 3
+        public static final String COLUMN_SET_NAME = "set_name"; // 1, 2, 3
         public static final String COLUMN_SORT_ORDER = "sort_order";
     }
 

@@ -109,6 +109,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                         WardrobeContract.ItemsSets._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " INTEGER, " +
                         WardrobeContract.ItemsSets.COLUMN_SET_ID + " INTEGER, " +
+                        WardrobeContract.ItemsSets.COLUMN_SET_NAME + " VARCHAR(255), " +
                         WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + " INTEGER" +
                         ")";
         /*
@@ -210,6 +211,7 @@ public class WardrobeDBHelper extends SQLiteOpenHelper {
                             WardrobeContract.ItemsSets._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                             WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " INTEGER, " +
                             WardrobeContract.ItemsSets.COLUMN_SET_ID + " INTEGER, " +
+                            WardrobeContract.ItemsSets.COLUMN_SET_NAME + " VARCHAR(255), " +
                             WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + " INTEGER" +
                             ")";
             sqLiteDatabase.execSQL(SQL_CREATE_ITEMS_SETS_TABLE);

@@ -43,7 +43,7 @@ public class ChildrenListActivity extends AppCompatActivity implements ChildrenL
         */
 
         mListChildren = (RecyclerView) findViewById(R.id.childrenList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         layoutManager.setMeasurementCacheEnabled(false);
 
         mListChildren.setLayoutManager(layoutManager);

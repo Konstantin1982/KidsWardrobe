@@ -7,6 +7,7 @@
     tools:context=".Activities.SetsListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/item_sets_recyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
