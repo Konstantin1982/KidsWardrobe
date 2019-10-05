@@ -32,7 +32,7 @@ public class SetsListAdapter extends RecyclerView.Adapter <SetsListAdapter.SetsL
         setsListAdapterClickHandler = clickHandler;
         mContext = context;
         mDataManager = new WardrobeDBDataManager(mContext);
-        mSetsCursor = mDataManager.GetChildrenListFromDb("");
+        mSetsCursor = mDataManager.getAllSetsForList();
     }
 
     public void updateListValues(Cursor newSetsData, int position) {
@@ -56,10 +56,10 @@ public class SetsListAdapter extends RecyclerView.Adapter <SetsListAdapter.SetsL
 
         mSetsCursor.moveToPosition(position);
         Integer setId = mSetsCursor.getInt(mSetsCursor.getColumnIndex(WardrobeContract.ItemsSets._ID));
-        if (setId > 2) {
-            holder.setNameTextView.setTag(mSetsCursor.getString(mSetsCursor.getColumnIndex(WardrobeContract.ItemsSets._ID)));
+        if (setId > 3) {
+            holder.setNameTextView.setText(mSetsCursor.getString(mSetsCursor.getColumnIndex(WardrobeContract.ItemsSets._ID)));
         } else {
-            holder.setNameTextView.setTag("Временный комплект №" + (setId+1));
+            holder.setNameTextView.setText("Временный комплект №" + (setId));
         }
         holder.setImageView1.setVisibility(View.INVISIBLE);
         holder.setImageView2.setVisibility(View.INVISIBLE);
@@ -69,7 +69,7 @@ public class SetsListAdapter extends RecyclerView.Adapter <SetsListAdapter.SetsL
             for (int i = 0; i < setImages.getCount(); i++) {
                 if (i > 2) break;
                 setImages.moveToPosition(i);
-                byte[] previewInBytes = setImages.getBlob(setImages.getColumnIndex(String.valueOf(1)));
+                byte[] previewInBytes = setImages.getBlob(1);
                 Bitmap smallPhoto = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
                 if (i == 0) {
                     holder.setImageView1.setVisibility(View.VISIBLE);

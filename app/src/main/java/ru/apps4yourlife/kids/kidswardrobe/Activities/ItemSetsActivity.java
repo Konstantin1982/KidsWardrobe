@@ -13,10 +13,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
+import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 
 public class ItemSetsActivity extends AppCompatActivity  {
 
@@ -25,6 +31,10 @@ public class ItemSetsActivity extends AppCompatActivity  {
     private ArrayList<SortKeys> currentSortOrderArray;
     private int mCountOfItems;
 
+    private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
+
+    private AdView mAdView;
+    private String mLastGoodAsked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,27 @@ public class ItemSetsActivity extends AppCompatActivity  {
             itemImageView.setOnDragListener(dragEventListener);
             allImagesInSet.add(itemImageView);
         }
+
+        WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
+        dbDataManager.InsertOrUpdatePurchase(BillingHelper.SKUCodes.noAdsCode,-1);
+        mNoAdsStatus = dbDataManager.getPurchaseStatus(BillingHelper.SKUCodes.noAdsCode);
+
+        mLastGoodAsked = "";
+        if (mNoAdsStatus > 0) {
+            // уже все куплено
+            updateUI();
+        } else {
+            MobileAds.initialize(this, this.getString(R.string.app_id));
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("1FF81EEFAF751AD2DF1BCD1F8546349B").build();
+            mAdView.loadAd(adRequest);
+        }
+
+    }
+    public void updateUI() {
+        AdView adView = (AdView) findViewById(R.id.adView);
+        adView.setVisibility(View.GONE);
+        invalidateOptionsMenu();
     }
 
     protected boolean onLongClickHandler(View view) {

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ChildrenListAdapter;
@@ -38,5 +39,16 @@ public class SetsListActivity extends AppCompatActivity implements SetsListAdapt
     @Override
     public void onSetClick(String setId, String itemPositionInList) {
         // Open set activity
+        Intent intent = new Intent(this, ItemSetsActivity.class);
+        intent.putExtra("ID",setId);
+        intent.putExtra("POSITION",itemPositionInList);
+        //Log.e("ACTIVITY","List received position = " + POSITION);
+        startActivityForResult(intent,199);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 }
