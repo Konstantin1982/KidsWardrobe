@@ -55,9 +55,9 @@ public class SetsListAdapter extends RecyclerView.Adapter <SetsListAdapter.SetsL
         //Log.e("RECYCLER: ", "onBindViewHolder is called with position: " + position);
 
         mSetsCursor.moveToPosition(position);
-        Integer setId = mSetsCursor.getInt(mSetsCursor.getColumnIndex(WardrobeContract.ItemsSets._ID));
+        Integer setId = mSetsCursor.getInt(0);
         if (setId > 3) {
-            holder.setNameTextView.setText(mSetsCursor.getString(mSetsCursor.getColumnIndex(WardrobeContract.ItemsSets._ID)));
+            holder.setNameTextView.setText(mSetsCursor.getString(1));
         } else {
             holder.setNameTextView.setText("Временный комплект №" + (setId));
         }
@@ -119,7 +119,7 @@ public class SetsListAdapter extends RecyclerView.Adapter <SetsListAdapter.SetsL
             mSetsCursor.moveToPosition(position);
             //Log.e("ADAPTER","CALL ACTIVITY with position = " + position);
             setsListAdapterClickHandler.onSetClick(
-                    mSetsCursor.getString(mSetsCursor.getColumnIndex(WardrobeContract.ItemsSets._ID)),
+                    mSetsCursor.getString(mSetsCursor.getColumnIndex(WardrobeContract.ItemsSets.COLUMN_SET_ID)),
                     String.valueOf(position)
             );
         }

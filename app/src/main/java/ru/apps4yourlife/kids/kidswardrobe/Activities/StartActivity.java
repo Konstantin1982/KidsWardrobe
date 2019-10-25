@@ -2,6 +2,8 @@ package ru.apps4yourlife.kids.kidswardrobe.Activities;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -15,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -149,6 +152,10 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
         startActivity(intent);
     }
 
+    public void debugDBbtn_click(View view) {
+    }
+
+
     public void btnDropDB_Click (View view) {
 
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
@@ -276,3 +283,11 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
 // DONE: Beautiful reporting
 // TODO: clothes sets - how to do that
 // DONE: edit clothes - rotate image
+
+
+/*
+Name of FILE
+HIDE EMPTY IMAGES (CAMERA BUTTON)
+SAVE COMPLEKT IN DB.
+GO TO PRODUCTION!
+*/

@@ -17,8 +17,10 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.ads.doubleclick.CustomRenderedAd;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
+import ru.apps4yourlife.kids.kidswardrobe.Activities.ItemSetsActivity;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 /**
@@ -26,7 +28,7 @@ import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
  */
 
 public class WardrobeDBDataManager {
-    private WardrobeDBHelper mDBHelper;
+    public WardrobeDBHelper mDBHelper;
     private Context mContext;
 
 
@@ -644,11 +646,13 @@ public class WardrobeDBDataManager {
             result = db.delete(WardrobeContract.ItemsSets.TABLE_NAME, WardrobeContract.ItemsSets._ID + " = ? ",
                     new String[]{itemSet.getString(itemSet.getColumnIndex(WardrobeContract.ItemsSets._ID))});
         } else {
-
-            String sql = "SELECT MAX(" + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + ")  FROM " + WardrobeContract.ItemsSets.TABLE_NAME  +
-                            " WHERE " + WardrobeContract.ItemsSets.COLUMN_SET_ID + " =  " + setId;
-            Cursor sortOrderCursor = db.rawQuery(sql,null);
-            if (sortOrderCursor.getCount() > 0) {
+            String tmpsql = "SELECT " + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + "  FROM " + WardrobeContract.ItemsSets.TABLE_NAME  +
+                    " WHERE " + WardrobeContract.ItemsSets.COLUMN_SET_ID + " =  " + setId;
+            Cursor tmpCursor = db.rawQuery(tmpsql,null);
+            if (tmpCursor.getCount() > 0) {
+                String sql = "SELECT MAX(" + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + ")  FROM " + WardrobeContract.ItemsSets.TABLE_NAME  +
+                        " WHERE " + WardrobeContract.ItemsSets.COLUMN_SET_ID + " =  " + setId;
+                Cursor sortOrderCursor = db.rawQuery(sql,null);
                 sortOrderCursor.moveToFirst();
                 int sortOrder = sortOrderCursor.getInt(0) + 1;
                 newValues.put(WardrobeContract.ItemsSets.COLUMN_SORT_ORDER, sortOrder);
@@ -660,7 +664,6 @@ public class WardrobeDBDataManager {
         return result;
     }
 
-    // 0 - don't purchased, 1 - taken, -1 - undefined.
     public long InsertOrDeleteItemToSet( int itemId, int setId) {
         return InsertOrDeleteItemToSet(mDBHelper.getWritableDatabase(), itemId, setId);
     }
@@ -701,15 +704,10 @@ public class WardrobeDBDataManager {
     }
 
     public static Cursor getAllSetsForList(SQLiteDatabase readableDb) {
-        Cursor setsCursor = readableDb.query(
-                WardrobeContract.ItemsSets.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                WardrobeContract.ItemsSets._ID,
-                null);
+        String SQL = "SELECT DISTINCT(" + WardrobeContract.ItemsSets.COLUMN_SET_ID + "), " + WardrobeContract.ItemsSets.COLUMN_SET_NAME +
+                " FROM "   + WardrobeContract.ItemsSets.TABLE_NAME + " ORDER BY " + WardrobeContract.ItemsSets.COLUMN_SET_ID + ", "  + WardrobeContract.ItemsSets.COLUMN_SET_NAME  + " DESC";
+
+        Cursor setsCursor = readableDb.rawQuery(SQL, null);
         return setsCursor;
     }
 
@@ -719,15 +717,48 @@ public class WardrobeDBDataManager {
 
     public static Cursor getAllItemsFromSet(SQLiteDatabase readableDb, int setId) {
         String SQL = "SELECT item." + WardrobeContract.ClothesItem._ID + ", item." + WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW +
-               "  from " + WardrobeContract.ClothesItem.TABLE_NAME + " as item INNER JOIN " + WardrobeContract.ItemsSets.TABLE_NAME + " as sets " +
-               " ON item." + WardrobeContract.ClothesItem._ID + " = sets." + WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " WHERE sets." + WardrobeContract.ItemsSets._ID +
-                " = " + setId + " ORDER BY " + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + " LIMIT 3";
+                ", sets." + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER +
+                "  from " + WardrobeContract.ClothesItem.TABLE_NAME + " as item INNER JOIN " + WardrobeContract.ItemsSets.TABLE_NAME + " as sets " +
+               " ON item." + WardrobeContract.ClothesItem._ID + " = sets." + WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " WHERE sets." + WardrobeContract.ItemsSets.COLUMN_SET_ID +
+                " = " + setId + " ORDER BY " + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER;
         Cursor items = readableDb.rawQuery(SQL, null);
         return items;
     }
 
     public Cursor getAllItemsFromSet(int setId) {
         return getAllItemsFromSet(mDBHelper.getReadableDatabase(), setId);
+    }
+
+    public long UpdateItemsInSet(ArrayList<Integer> currentSortOrderArray, String setName, int mSetId) {
+        // From temporary to real
+        int newSetId = mSetId;
+        if (mSetId <= 3) {
+            String SQL = "SELECT MAX(" + WardrobeContract.ItemsSets.COLUMN_SET_ID + ") FROM "   + WardrobeContract.ItemsSets.TABLE_NAME;
+            Cursor setsCursor = mDBHelper.getReadableDatabase().rawQuery(SQL, null);
+            int tmp = 0;
+            if (setsCursor.getCount() > 0) {
+                setsCursor.moveToPosition(0);
+                tmp = setsCursor.getInt(0);
+            }
+            if (tmp <= 3) newSetId = 4; // permanent starts from 4
+        }
+
+        // update setId
+        // from one to one update sortorder
+
+
+        return 0;
+
+    }
+
+    public int DeleteSet(int id) {
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        int result = db.delete(
+                WardrobeContract.ItemsSets.TABLE_NAME,
+                WardrobeContract.ItemsSets.COLUMN_SET_ID + " = ? ",
+                new String[] {String.valueOf(id)}
+        );
+        return result;
     }
 
 }

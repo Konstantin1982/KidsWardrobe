@@ -7,7 +7,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "ru.apps4yourlife.kids.kidswardrobe"
-        minSdkVersion 18
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 240
         versionName "2.4.0"

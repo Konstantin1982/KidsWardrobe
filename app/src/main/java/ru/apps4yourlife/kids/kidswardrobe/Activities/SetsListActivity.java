@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ChildrenListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.SetsListAdapter;
@@ -51,4 +52,17 @@ public class SetsListActivity extends AppCompatActivity implements SetsListAdapt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(0);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

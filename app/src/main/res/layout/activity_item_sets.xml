@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main_layout_item_sets"
     tools:context=".Activities.ItemSetsActivity">
 
     <EditText
@@ -19,16 +21,18 @@
 
     <ImageView
         android:id="@+id/dragabbleImageView1"
+        android:tag="-1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/background_elephant_640" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <ImageView
         android:id="@+id/dragabbleImageView2"
+        android:tag="-1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginEnd="8dp"
@@ -36,17 +40,18 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toStartOf="@+id/dragabbleImageView3"
         app:layout_constraintStart_toEndOf="@+id/dragabbleImageView1"
-        app:srcCompat="@drawable/background_puffin_640" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <ImageView
         android:id="@+id/dragabbleImageView3"
         android:layout_width="100dp"
+        android:tag="-1"
         android:layout_height="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/background_winter_640" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline16"
@@ -58,44 +63,49 @@
     <ImageView
         android:id="@+id/dragabbleImageView4"
         android:layout_width="100dp"
+        android:tag="-1"
         android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
-        app:srcCompat="@drawable/ic_sun_47083" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <ImageView
         android:id="@+id/dragabbleImageView5"
+        android:tag="-1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
-        app:srcCompat="@drawable/ic_sun_47083" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <ImageView
         android:id="@+id/dragabbleImageView6"
+        android:tag="-1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/dragabbleImageView5"
         app:layout_constraintStart_toEndOf="@+id/dragabbleImageView4"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
-        app:srcCompat="@drawable/ic_sun_47083" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <ImageView
         android:id="@+id/dragabbleImageView7"
+        android:tag="-1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dragabbleImageView4"
-        app:srcCompat="@drawable/ic_sun_47083" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <ImageView
+        android:tag="-1"
         android:id="@+id/dragabbleImageView8"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -103,17 +113,31 @@
         app:layout_constraintEnd_toStartOf="@+id/dragabbleImageView9"
         app:layout_constraintStart_toEndOf="@+id/dragabbleImageView7"
         app:layout_constraintTop_toBottomOf="@+id/dragabbleImageView6"
-        app:srcCompat="@drawable/ic_sun_47083" />
+        app:srcCompat="@drawable/ic_overall" />
 
     <ImageView
         android:id="@+id/dragabbleImageView9"
+        android:tag="-1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dragabbleImageView5"
-        app:srcCompat="@drawable/ic_sun_47083" />
+        app:srcCompat="@drawable/ic_overall" />
+
+    <ImageView
+        android:id="@+id/imageView38"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="onScreenCaptureClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
 
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -129,5 +153,6 @@
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:layout_constraintEnd_toEndOf="parent"
         ads:layout_constraintStart_toStartOf="parent"></com.google.android.gms.ads.AdView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
