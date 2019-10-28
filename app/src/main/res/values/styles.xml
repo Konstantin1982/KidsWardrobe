@@ -27,6 +27,10 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="SmallTextStyle" parent="DefaultStyle">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 
     <style name="TypicalButton" parent="DefaultStyle">
         <item name="android:background">@color/buttonsColor</item>

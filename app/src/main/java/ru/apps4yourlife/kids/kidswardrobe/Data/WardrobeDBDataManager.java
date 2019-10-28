@@ -717,7 +717,8 @@ public class WardrobeDBDataManager {
 
     public static Cursor getAllItemsFromSet(SQLiteDatabase readableDb, int setId) {
         String SQL = "SELECT item." + WardrobeContract.ClothesItem._ID + ", item." + WardrobeContract.ClothesItem.COLUMN_PHOTO_PREVIEW +
-                ", sets." + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER +
+                ", sets." + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER + ", item." + WardrobeContract.ClothesItem.COLUMN_COMMENT +
+                ", sets." + WardrobeContract.ItemsSets.COLUMN_SET_NAME +
                 "  from " + WardrobeContract.ClothesItem.TABLE_NAME + " as item INNER JOIN " + WardrobeContract.ItemsSets.TABLE_NAME + " as sets " +
                " ON item." + WardrobeContract.ClothesItem._ID + " = sets." + WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " WHERE sets." + WardrobeContract.ItemsSets.COLUMN_SET_ID +
                 " = " + setId + " ORDER BY " + WardrobeContract.ItemsSets.COLUMN_SORT_ORDER;
@@ -730,11 +731,12 @@ public class WardrobeDBDataManager {
     }
 
     public long UpdateItemsInSet(ArrayList<Integer> currentSortOrderArray, String setName, int mSetId) {
+        SQLiteDatabase writableDB = mDBHelper.getWritableDatabase();
         // From temporary to real
         int newSetId = mSetId;
         if (mSetId <= 3) {
             String SQL = "SELECT MAX(" + WardrobeContract.ItemsSets.COLUMN_SET_ID + ") FROM "   + WardrobeContract.ItemsSets.TABLE_NAME;
-            Cursor setsCursor = mDBHelper.getReadableDatabase().rawQuery(SQL, null);
+            Cursor setsCursor = writableDB.rawQuery(SQL, null);
             int tmp = 0;
             if (setsCursor.getCount() > 0) {
                 setsCursor.moveToPosition(0);
@@ -743,12 +745,29 @@ public class WardrobeDBDataManager {
             if (tmp <= 3) newSetId = 4; // permanent starts from 4
         }
 
-        // update setId
+        // update setId and setName
+        ContentValues newValues = new ContentValues();
+        newValues.put(WardrobeContract.ItemsSets.COLUMN_SET_ID,newSetId);
+        newValues.put(WardrobeContract.ItemsSets.COLUMN_SET_NAME,setName);
+        writableDB.update(
+                WardrobeContract.ItemsSets.TABLE_NAME,
+                newValues,
+                WardrobeContract.ItemsSets.COLUMN_SET_ID + " = ? ", new String[]{String.valueOf(mSetId)});
+
         // from one to one update sortorder
-
-
+        for (int i = 0; i < currentSortOrderArray.size(); i++) {
+            int itemId = currentSortOrderArray.get(i);
+            if (itemId > 0) {
+                ContentValues newValuesitem = new ContentValues();
+                newValuesitem.put(WardrobeContract.ItemsSets.COLUMN_SORT_ORDER,i);
+                writableDB.update(
+                        WardrobeContract.ItemsSets.TABLE_NAME,
+                        newValuesitem,
+                        WardrobeContract.ItemsSets.COLUMN_SET_ID + " = ?  AND " + WardrobeContract.ItemsSets.COLUMN_ITEM_ID + " = ? ",
+                        new String[]{String.valueOf(mSetId), String.valueOf(itemId)});
+            }
+        }
         return 0;
-
     }
 
     public int DeleteSet(int id) {

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
@@ -19,11 +18,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -35,44 +32,37 @@ import android.view.PixelCopy;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.MimeTypeMap;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 
-import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.BillingHelper;
 import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
-public class ItemSetsActivity extends AppCompatActivity  {
+public class ItemSetsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     private ArrayList<ImageView> allImagesInSet;
     private myDragEventListener dragEventListener;
     private ArrayList<Integer> currentSortOrderArrayInt;
     private int mCountOfItems;
     private Bitmap mBitmap;
-
     private int mNoAdsStatus; // 0 - can be taken, 1 - already taken
-
     private AdView mAdView;
     private String mLastGoodAsked;
     private int mSetId;
-
     private WardrobeDBDataManager mDataManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,33 +74,43 @@ public class ItemSetsActivity extends AppCompatActivity  {
 
         Cursor setsItemsCursor = mDataManager.getAllItemsFromSet(mSetId);
 
-
         currentSortOrderArrayInt = new ArrayList<Integer>();
-
         dragEventListener = new myDragEventListener(this);
-
         mCountOfItems = setsItemsCursor.getCount();
         if (mCountOfItems > 9) mCountOfItems = 9;
         allImagesInSet = new ArrayList<ImageView>();
-
         for (int i = 0; i < 9; i ++) {
             currentSortOrderArrayInt.add(-1);
         }
 
+        String setName = "";
         for (int i =0; i < mCountOfItems; i++) {
             setsItemsCursor.moveToPosition(i);
+            if (setName.isEmpty()) {
+                String tmpName = setsItemsCursor.getString(4);
+                if (tmpName != null && !tmpName.isEmpty()) {
+                    setName = tmpName;
+                }
+            }
             int itemId = setsItemsCursor.getInt(0);
             int sortOrder = setsItemsCursor.getInt(2);
             currentSortOrderArrayInt.set(sortOrder, itemId);
-            ImageView itemImageView = findViewById(getResourceByNumber(sortOrder));
+            ImageView itemImageView = findViewById(getResourceByNumber(sortOrder, 0));
             byte[] previewInBytes = setsItemsCursor.getBlob(1);
             Bitmap mPhotoPreview = GeneralHelper.getBitmapFromBytes(previewInBytes,GeneralHelper.GENERAL_HELPER_CHILD_TYPE);
             itemImageView.setImageBitmap(mPhotoPreview);
             itemImageView.setTag(itemId);
+            String itemPlace = setsItemsCursor.getString(3);
+            if (!itemPlace.isEmpty()) {
+                TextView placeTextView = findViewById(getResourceByNumber(sortOrder, 1));
+                placeTextView.setText(itemPlace);
+            }
         }
+        EditText setNameEditField = findViewById(R.id.nameOfSet);
+        setNameEditField.setText(setName);
 
         for (int i =0; i < 9; i++) {
-            ImageView itemImageView = findViewById(getResourceByNumber(i));
+            ImageView itemImageView = findViewById(getResourceByNumber(i, 0));
             itemImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -119,6 +119,9 @@ public class ItemSetsActivity extends AppCompatActivity  {
             });
             itemImageView.setOnDragListener(dragEventListener);
         }
+
+        Switch switchHide = findViewById(R.id.switchHide);
+        switchHide.setOnCheckedChangeListener(this);
 
         WardrobeDBDataManager dbDataManager = new WardrobeDBDataManager(this);
         dbDataManager.InsertOrUpdatePurchase(BillingHelper.SKUCodes.noAdsCode,-1);
@@ -171,17 +174,36 @@ public class ItemSetsActivity extends AppCompatActivity  {
             if (currentSortOrderArrayInt.get(i) == targetId) oldTargetSourceOrder = i;
         }
         if (targetId == -1) oldTargetSourceOrder = getSortOrderById(imageNumber);
-        ImageView sourceImage = findViewById(getResourceByNumber(oldSourceSortOrder));
-        ImageView targetImage = findViewById(getResourceByNumber(oldTargetSourceOrder));
+        // image change
+        ImageView sourceImage = findViewById(getResourceByNumber(oldSourceSortOrder, 0));
+        ImageView targetImage = findViewById(getResourceByNumber(oldTargetSourceOrder, 0));
         Drawable oldtargetDrawable = targetImage.getDrawable();
         targetImage.setImageDrawable(sourceImage.getDrawable());
         sourceImage.setImageDrawable(oldtargetDrawable);
         sourceImage.setTag(targetId);
         targetImage.setTag(sourceId);
+
+        // location change
+        TextView sourceText = findViewById(getResourceByNumber(oldSourceSortOrder, 1));
+        TextView targetText = findViewById(getResourceByNumber(oldTargetSourceOrder, 1));
+        String oldtargetText = targetText.getText().toString();
+        targetText.setText(sourceText.getText());
+        sourceText.setText(oldtargetText);
+
+
         currentSortOrderArrayInt.set(oldSourceSortOrder,targetId);
         currentSortOrderArrayInt.set(oldTargetSourceOrder,sourceId);
 
         return;
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (b) {
+            ChangeUiForScreenshot(View.INVISIBLE);
+        } else {
+            ChangeUiForScreenshot(View.VISIBLE);
+        }
     }
 
     protected  class myDragEventListener implements View.OnDragListener {
@@ -240,38 +262,74 @@ public class ItemSetsActivity extends AppCompatActivity  {
         }
     };
 
-    public int getResourceByNumber(int number) {
-        int result = R.id.dragabbleImageView1;
-        switch (number) {
-            case 0:
-                result = R.id.dragabbleImageView1;
-                break;
-            case 1:
-                result = R.id.dragabbleImageView2;
-                break;
-            case 2:
-                result = R.id.dragabbleImageView3;
-                break;
-            case 3:
-                result = R.id.dragabbleImageView4;
-                break;
-            case 4:
-                result = R.id.dragabbleImageView5;
-                break;
-            case 5:
-                result = R.id.dragabbleImageView6;
-                break;
-            case 6:
-                result = R.id.dragabbleImageView7;
-                break;
-            case 7:
-                result = R.id.dragabbleImageView8;
-                break;
-            case 8:
-                result = R.id.dragabbleImageView9;
-                break;
+    public int getResourceByNumber(int number, int mode) {
+        int result = -1;
+        if (mode == 0) {
+            switch (number) {
+                case 0:
+                    result = R.id.dragabbleImageView1;
+                    break;
+                case 1:
+                    result = R.id.dragabbleImageView2;
+                    break;
+                case 2:
+                    result = R.id.dragabbleImageView3;
+                    break;
+                case 3:
+                    result = R.id.dragabbleImageView4;
+                    break;
+                case 4:
+                    result = R.id.dragabbleImageView5;
+                    break;
+                case 5:
+                    result = R.id.dragabbleImageView6;
+                    break;
+                case 6:
+                    result = R.id.dragabbleImageView7;
+                    break;
+                case 7:
+                    result = R.id.dragabbleImageView8;
+                    break;
+                case 8:
+                    result = R.id.dragabbleImageView9;
+                    break;
+                default:
+                    result = R.id.dragabbleImageView1;
+            }
         }
-
+        if (mode == 1) {
+            switch (number) {
+                case 0:
+                    result = R.id.placeImage1;
+                    break;
+                case 1:
+                    result = R.id.placeImage2;
+                    break;
+                case 2:
+                    result = R.id.placeImage3;
+                    break;
+                case 3:
+                    result = R.id.placeImage4;
+                    break;
+                case 4:
+                    result = R.id.placeImage5;
+                    break;
+                case 5:
+                    result = R.id.placeImage6;
+                    break;
+                case 6:
+                    result = R.id.placeImage7;
+                    break;
+                case 7:
+                    result = R.id.placeImage8;
+                    break;
+                case 8:
+                    result = R.id.placeImage9;
+                    break;
+                default:
+                    result = R.id.placeImage1;
+            }
+        }
         return result;
     }
     public int getSortOrderById(int number) {
@@ -409,24 +467,6 @@ public class ItemSetsActivity extends AppCompatActivity  {
                 }
                 Log.e("MEDIA", tmpUri);
             }
-            /*
-            // create bitmap screen capture
-            File imageFile = null;
-            try {
-                imageFile = GeneralHelper.createImageFile(this);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            if (imageFile != null) {
-                int quality = 100;
-                FileOutputStream outputStream = new FileOutputStream(imageFile);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-                outputStream.flush();
-                outputStream.close();
-                openScreenshot(imageFile);
-            }
-            */
-
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM
             e.printStackTrace();
@@ -448,46 +488,12 @@ public class ItemSetsActivity extends AppCompatActivity  {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_STREAM, imageFileUri);
-        startActivity(intent );
-        /*
-        //String path = imageFile.getAbsolutePath();
-        String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(imageFile.getAbsolutePath()));
-        MediaScannerConnection.scanFile(this,
-                new String[] { imageFile.getAbsolutePath() }, new String[] {type},
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.e("ExternalStorage", "Scanned " + path + ":");
-                        Log.e("ExternalStorage", "-> uri=" + uri);
-                    }
-                });
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(imageFile);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-        MediaScannerConnection.scanFile(
-                getApplicationContext(),
-                new String[]{imageFile.getAbsolutePath()},
-                null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    @Override
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.v("grokkingandroid",
-                                "file " + path + " was scanned seccessfully: " + uri);
-                    }
-                });
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri uri = FileProvider.getUriForFile(this,
-            "ru.apps4yourlife.kids.fileprovider",
-            imageFile);
-        mediaScanIntent.setData(uri);
-        this.sendBroadcast(mediaScanIntent);
-        */
+        startActivity(intent);
     }
 
-
     public void getBitmapFromView(View buttonview, Activity activity) {
-        View view = buttonview.getRootView();
         if (Build.VERSION.SDK_INT >= 26) {
+            View view = buttonview.getRootView();
             Window window = activity.getWindow();
             Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
             int[] locationOfViewInWindow = new int[2];
@@ -501,8 +507,8 @@ public class ItemSetsActivity extends AppCompatActivity  {
                         new PixelCopy.OnPixelCopyFinishedListener() {
                             @Override
                             public void onPixelCopyFinished(int i) {
+                                //ChangeUiForScreenshot(View.VISIBLE);
                                 if (i == PixelCopy.SUCCESS) {
-                                    Log.i("PIXEL", "FINISHED");
                                     mBitmap = bitmap;
                                     saveBitmap();
                                 }
@@ -517,4 +523,15 @@ public class ItemSetsActivity extends AppCompatActivity  {
             Toast.makeText(this,"Кнопка работает только в Android 8 и выше. Сделайте скриншот вручную",Toast.LENGTH_LONG).show();
         }
     }
+
+    public void ChangeUiForScreenshot(int mode) {
+        for (int i = 0; i < 9; i++) {
+            ImageView itemImageView = findViewById(getResourceByNumber(i, 0));
+            if (Integer.valueOf(itemImageView.getTag().toString()) == -1) {
+                itemImageView.setVisibility(mode);
+            }
+        }
+    }
+
+
 }

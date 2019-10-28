@@ -5,13 +5,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.ChildrenListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Adapters.SetsListAdapter;
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeDBDataManager;
 import ru.apps4yourlife.kids.kidswardrobe.R;
+import ru.apps4yourlife.kids.kidswardrobe.Utilities.GeneralHelper;
 
 public class SetsListActivity extends AppCompatActivity implements SetsListAdapter.SetsListAdapterClickHandler {
 
@@ -50,7 +53,12 @@ public class SetsListActivity extends AppCompatActivity implements SetsListAdapt
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        WardrobeDBDataManager dbDataManager= new WardrobeDBDataManager(this);
+        Cursor mSetsCursor = WardrobeDBDataManager.getAllSetsForList(dbDataManager.mDBHelper.getReadableDatabase());
 
+        mSetsListAdapter.updateListValues(mSetsCursor, -1);
+        mSetsListAdapter.notifyDataSetChanged();
+        mListSetsRecyclerView.invalidate();
     }
 
     @Override
@@ -63,6 +71,10 @@ public class SetsListActivity extends AppCompatActivity implements SetsListAdapt
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onHelpShowClick(View view) {
+        GeneralHelper.ShowHelp(this);
     }
 
 }

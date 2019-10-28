@@ -40,7 +40,8 @@ public class SetsListAdapter extends RecyclerView.Adapter <SetsListAdapter.SetsL
         if (position >= 0) {
             notifyItemChanged(position);
         } else {
-            notifyItemInserted(mSetsCursor.getCount());
+            notifyDataSetChanged();
+            //notifyItemInserted(mSetsCursor.getCount());
         }
     }
 

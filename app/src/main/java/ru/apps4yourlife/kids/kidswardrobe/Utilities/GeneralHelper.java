@@ -1,6 +1,7 @@
 package ru.apps4yourlife.kids.kidswardrobe.Utilities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -15,13 +16,19 @@ import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -376,4 +383,26 @@ public class GeneralHelper implements Transformation{
         return newHeader;
     }
 
+    public static void ShowHelp(final Context context) {
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE);
+            View dialogView = inflater.inflate(R.layout.helpview, null);
+            WebView messageWebView = (WebView) dialogView.findViewById(R.id.helpShowWebView);
+            String fileName = "file:///android_asset/setshelp.html";
+            messageWebView.loadUrl(fileName);
+            builder.setView(dialogView);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return;
+
+    }
 }
