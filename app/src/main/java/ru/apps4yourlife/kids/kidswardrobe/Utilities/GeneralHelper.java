@@ -16,6 +16,7 @@ import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
@@ -259,6 +260,12 @@ public class GeneralHelper implements Transformation{
         return value;
     }
 
+    public static String GetStringValueFromEditText(EditText field) {
+        return field.getText().toString();
+    }
+
+
+
     public static ArrayList<Integer> AddSizesForChild(Context context, long childId, ArrayList<Integer> currentList) {
 
         ArrayList<Integer> newList = currentList;
@@ -269,15 +276,17 @@ public class GeneralHelper implements Transformation{
         Cursor childCursor = mDataManager.GetChildByIdFromDb(String.valueOf(childId));
         //1 - Рост
         //2 - Возраст в годах
+        //3 - Размер ноги.
         //4 - Обувь
-        double size1 = 0, size2 = 0, size4 = 0;
+        double size1 = 0, size2 = 0, size3 = 0, size4 = 0;
         if (childSizeCursor.getCount() > 0) {
             childSizeCursor.moveToPosition(0);
             size1 = childSizeCursor.getDouble(childSizeCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_HEIGHT));
+            size3 = childSizeCursor.getDouble(childSizeCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_FOOT_SIZE));
             size4 = childSizeCursor.getDouble(childSizeCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE));
         }
 
-
+        Log.e ("SIZES CHILD SHOES", String.valueOf(size4));
         Calendar currentCalendar = new GregorianCalendar();
         Calendar birthdayCalendar = new GregorianCalendar();
         birthdayCalendar.setTimeInMillis(childCursor.getLong(childCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE)));
@@ -301,14 +310,23 @@ public class GeneralHelper implements Transformation{
             nextSize = mDataManager.GetSizeIdByFilter(2, size2, 2);
             if (nextSize > 0) newList.add(nextSize);
         }
-        if (size4 > 0) {
-            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 0);
+        if (size3 > 0) {
+            nextSize = mDataManager.GetSizeIdByFilter(4, size3, 0);
             if (nextSize > 0) newList.add(nextSize);
-            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 1);
+            nextSize = mDataManager.GetSizeIdByFilter(4, size3, 1);
             if (nextSize > 0) newList.add(nextSize);
-            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 2);
+            nextSize = mDataManager.GetSizeIdByFilter(4, size3, 2);
             if (nextSize > 0) newList.add(nextSize);
         }
+        if (size4 > 0) {
+            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 3);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 4);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(4, size4, 5);
+            if (nextSize > 0) newList.add(nextSize);
+        }
+
         //childCursor.close();
         //childSizeCursor.close();
         return newList;

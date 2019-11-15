@@ -523,6 +523,10 @@ public class WardrobeDBDataManager {
         int result = -1;
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         String sql  = "";
+        if (condition == 5) sql = "select * from sizes where _id < ? and size_type = ? order by _id desc limit 1;";
+        if (condition == 4) sql = "select * from sizes where _id > ? and size_type = ? order by _id limit 1;";
+        if (condition == 3) sql = "select * from sizes where _id <= ? and size_type = ? order by _id desc limit 1;";
+
         if (condition == 2) sql = "select * from sizes where real_value < ? and size_type = ? order by real_value desc limit 1;";
         if (condition == 1) sql = "select * from sizes where real_value > ? and size_type = ? order by real_value limit 1;";
         if (condition == 0) sql = "select * from sizes where real_value <= ? and size_type = ? order by real_value desc limit 1;";
@@ -550,9 +554,17 @@ public class WardrobeDBDataManager {
                 null,
                 sortBy);
         items.moveToFirst();
+
+        Log.e("SQL REPORT", filter);
         //Log.d("SQL SQL","Count of RECORDS = " + items.getCount());
 
-        //Cursor items2 = mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM ITEM WHERE 1 = 1 ORDER BY COMMENT", null);
+        Cursor items2 = mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM ITEM WHERE 1 = 1 ORDER BY COMMENT", null);
+        if (items2.getCount() > 0) {
+            items2.moveToPosition(0);
+            Log.e("SQL REPORT", filter);
+
+        }
+
         //Log.d("SQL SQL","The same query by RAW. Count of RECORDS = " + items2.getCount());
 
         return items;

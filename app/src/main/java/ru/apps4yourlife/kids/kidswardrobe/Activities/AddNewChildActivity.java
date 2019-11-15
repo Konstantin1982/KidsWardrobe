@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -35,9 +36,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ru.apps4yourlife.kids.kidswardrobe.Data.WardrobeContract;
@@ -62,6 +65,8 @@ public class AddNewChildActivity extends AppCompatActivity implements
     private int mChildSex;
     private Context mContext;
     private Intent mPhotoIntent;
+    private static final int SIZES_VALUES = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,15 +120,68 @@ public class AddNewChildActivity extends AppCompatActivity implements
                 EditText childFoot = (EditText) findViewById(R.id.footSizeEditText);
                 childFoot.setText(currentChildSizesCursor.getString(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_FOOT_SIZE)));
 
-                EditText childShoes = (EditText) findViewById(R.id.shoesSizeEditText);
-                childShoes.setText(currentChildSizesCursor.getString(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE)));
+                WardrobeDBDataManager  mDataManager = new WardrobeDBDataManager(this);
+
+                long sizeId = currentChildSizesCursor.getLong(currentChildSizesCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE));
+                Cursor sizeCursor = mDataManager.GetSizesValuesById(sizeId);
+                AutoCompleteTextView sizeClothesTextView = (AutoCompleteTextView) findViewById(R.id.shoesSizeEditText);
+                if (sizeCursor.getCount() > 0) {
+                    sizeClothesTextView.setText(sizeCursor.getString(sizeCursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE)));
+                } else {
+                    sizeClothesTextView.setText("");
+                }
             }
-            //currentChildSizesCursor.close();
+
         }
+        final AutoCompleteTextView shoesSizeEditText;
+        // MAIN
+        shoesSizeEditText = (AutoCompleteTextView) findViewById(R.id.shoesSizeEditText);
+        ArrayAdapter<String> autoCompleteTextViewAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                getList(SIZES_VALUES, 4)
+        );
+        shoesSizeEditText.setAdapter(autoCompleteTextViewAdapter);
+        shoesSizeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if (isFocused) {
+                    shoesSizeEditText.showDropDown();
+                }
+            }
+        });
+
+        //currentChildSizesCursor.close();
+
         androidx.appcompat.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
     }
+
+    private List<String> getList (int typeOfList, int typeOfValues) {
+        List<String> mList = new ArrayList<>();
+        switch (typeOfList) {
+            case SIZES_VALUES:
+                WardrobeDBDataManager mDataManager = new WardrobeDBDataManager(this);
+                Cursor mSizesValuesCursor = mDataManager.GetSizesValuesByType(typeOfValues);
+                if (mSizesValuesCursor.getCount() > 0) {
+                    for (int i = 0; i < mSizesValuesCursor.getCount(); i++) {
+                        mSizesValuesCursor.moveToPosition(i);
+                        mList.add(
+                                mSizesValuesCursor.getString(
+                                        mSizesValuesCursor.getColumnIndex(
+                                                WardrobeContract.Sizes.COLUMN_VALUE
+                                        )
+                                )
+                        );
+                    }
+                }
+                //mSizesValuesCursor.close();
+                break;
+        }
+        return mList;
+    }
+
 
     public void btnAddNewChildPhoto_click(View v) {
         ChoosePhotoApplicationDialogFragment mApplicationDialogFragment = new ChoosePhotoApplicationDialogFragment();
@@ -226,17 +284,15 @@ public class AddNewChildActivity extends AppCompatActivity implements
             if (mCurrentChildID == null || mCurrentChildID.isEmpty()) mCurrentChildID = String.valueOf(res);
             double childFoot = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.footSizeEditText));
             double childHeight = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.heightChildEditText));
-            double childShoes = GeneralHelper.GetDoubleValueFromEditText((EditText) findViewById(R.id.shoesSizeEditText));
-            if (childFoot + childHeight + childShoes > 0) {
+            String childShoes = GeneralHelper.GetStringValueFromEditText((EditText) findViewById(R.id.shoesSizeEditText));
+            long sizeValue1 =     dataManager.FindOrInsertNewSizeValue(4, String.valueOf(childShoes));
+            if (childFoot + childHeight > 0 || !childShoes.isEmpty()) {
                 long resSize =
                         dataManager.InsertOrUpdateChildSize(
                             Long.valueOf(mCurrentChildID),
                             childHeight,
                             childFoot,
-                            childShoes);
-
-                //Toast.makeText(this, "Sizes for Child were updated. Child ID = " + mCurrentChildID, Toast.LENGTH_SHORT).show();
-
+                            sizeValue1);
             }
 
             //Toast.makeText(this, "New chils has been inserted: " + res, Toast.LENGTH_SHORT).show();
