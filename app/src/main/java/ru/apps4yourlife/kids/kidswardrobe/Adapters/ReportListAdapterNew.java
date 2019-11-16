@@ -200,9 +200,9 @@ public class ReportListAdapterNew extends RecyclerView.Adapter <ReportListAdapte
                 }
             }
             if (chidrenNames.isEmpty()) {
-                //chidrenNames = "Непонятно кому подходит";
-                //holder.suiteChildren.setHeight(0);
-                //holder.suiteChildren.setVisibility(View.INVISIBLE);
+                chidrenNames = "";
+                holder.suiteChildren.setVisibility(View.VISIBLE);
+                holder.suiteChildren.setText(chidrenNames);
             } else {
                 chidrenNames = "Подойдет: " + chidrenNames;
                 holder.suiteChildren.setVisibility(View.VISIBLE);
@@ -283,13 +283,8 @@ public class ReportListAdapterNew extends RecyclerView.Adapter <ReportListAdapte
                 String[] mSex = mContext.getResources().getStringArray(R.array.child_sex_array);
                 sexText =  mSex[sex];
             }
-            if (sexText.isEmpty()) {
-                //holder.sexTextView.setHeight(0);
-                //holder.sexTextView.setVisibility(View.INVISIBLE);
-            } else {
-                holder.sexTextView.setText(sexText);
-                holder.sexTextView.setVisibility(View.VISIBLE);
-            }
+            holder.sexTextView.setText(sexText);
+            holder.sexTextView.setVisibility(View.VISIBLE);
             int season = mListItemsCursor.getInt(mListItemsCursor.getColumnIndex(WardrobeContract.ClothesItem.COLUMN_SEASON));
             String[] mSeason = mContext.getResources().getStringArray(R.array.season_array);
             holder.seasonTextView.setText(mSeason[season]);

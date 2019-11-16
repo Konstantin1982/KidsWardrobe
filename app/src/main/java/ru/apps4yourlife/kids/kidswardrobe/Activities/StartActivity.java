@@ -153,6 +153,7 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
     }
 
     public void debugDBbtn_click(View view) {
+        /*
         WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
         Cursor tmp = dataManager.mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM " + WardrobeContract.Sizes.TABLE_NAME, null);
         if (tmp.getCount() > 0) {
@@ -172,6 +173,8 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
                 Log.e("DEBUG TB", res);
             }
         }
+
+         */
     }
 
 

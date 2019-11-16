@@ -35,7 +35,7 @@ public class WardrobeDBDataManager {
     public WardrobeDBDataManager(Context context) {
         mDBHelper = new WardrobeDBHelper(context);
         int some = mDBHelper.getWritableDatabase().getVersion();
-        Log.e("DB VERSION", String.valueOf(some) );
+        //Log.e("DB VERSION", String.valueOf(some) );
         mContext = context;
         //mDBHelper.getWritableDatabase(); // just to fix crash
     }
@@ -571,13 +571,13 @@ public class WardrobeDBDataManager {
                 sortBy);
         items.moveToFirst();
 
-        Log.e("SQL REPORT", filter);
+        //Log.e("SQL REPORT", filter);
         //Log.d("SQL SQL","Count of RECORDS = " + items.getCount());
 
         Cursor items2 = mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM ITEM WHERE 1 = 1 ORDER BY COMMENT", null);
         if (items2.getCount() > 0) {
             items2.moveToPosition(0);
-            Log.e("SQL REPORT", filter);
+            //Log.e("SQL REPORT", filter);
 
         }
 
@@ -770,7 +770,11 @@ public class WardrobeDBDataManager {
                 setsCursor.moveToPosition(0);
                 tmp = setsCursor.getInt(0);
             }
-            if (tmp <= 3) newSetId = 4; // permanent starts from 4
+            if (tmp <= 3) {
+                newSetId = 4; // permanent starts from 4
+            } else {
+                newSetId = tmp + 1;
+            }
         }
 
         // update setId and setName
@@ -782,6 +786,7 @@ public class WardrobeDBDataManager {
                 newValues,
                 WardrobeContract.ItemsSets.COLUMN_SET_ID + " = ? ", new String[]{String.valueOf(mSetId)});
 
+        /*
         // from one to one update sortorder
         for (int i = 0; i < currentSortOrderArray.size(); i++) {
             int itemId = currentSortOrderArray.get(i);
@@ -795,6 +800,8 @@ public class WardrobeDBDataManager {
                         new String[]{String.valueOf(mSetId), String.valueOf(itemId)});
             }
         }
+
+         */
         return 0;
     }
 

@@ -465,7 +465,7 @@ public class ItemSetsActivity extends AppCompatActivity implements CompoundButto
                 if (tmpUri != null) {
                     openScreenshot(Uri.parse(tmpUri));
                 }
-                Log.e("MEDIA", tmpUri);
+                //Log.e("MEDIA", tmpUri);
             }
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM

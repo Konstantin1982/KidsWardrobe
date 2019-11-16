@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         ads:layout_constraintGuide_percent="0.65" />
-
+<!--
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -99,6 +99,6 @@
         android:onClick="debugDBbtn_click"
         ads:layout_constraintBottom_toTopOf="@+id/button6"
         ads:layout_constraintStart_toStartOf="parent" />
-
+-->
 </androidx.constraintlayout.widget.ConstraintLayout>
 
