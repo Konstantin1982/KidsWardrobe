@@ -153,6 +153,25 @@ public class StartActivity extends AppCompatActivity implements PurchasesUpdated
     }
 
     public void debugDBbtn_click(View view) {
+        WardrobeDBDataManager dataManager = new WardrobeDBDataManager(this);
+        Cursor tmp = dataManager.mDBHelper.getReadableDatabase().rawQuery("SELECT * FROM " + WardrobeContract.Sizes.TABLE_NAME, null);
+        if (tmp.getCount() > 0) {
+            tmp.moveToFirst();
+
+            for (int i = 0; i < tmp.getCount(); i++) {
+                tmp.moveToPosition(i);
+                String tmpS, res = "";
+                tmpS = tmp.getString(tmp.getColumnIndex(WardrobeContract.Sizes._ID));
+                res += "ID = " + tmpS;
+                tmpS = tmp.getString(tmp.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+                res += "; SHOWN = " + tmpS;
+                tmpS = tmp.getString(tmp.getColumnIndex(WardrobeContract.Sizes.COLUMN_REAL_VALUE));
+                res += "; VALUE = " + tmpS;
+                tmpS = tmp.getString(tmp.getColumnIndex(WardrobeContract.Sizes.COLUMN_SIZE_TYPE));
+                res += "; TYPE = " + tmpS;
+                Log.e("DEBUG TB", res);
+            }
+        }
     }
 
 

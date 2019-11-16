@@ -286,7 +286,6 @@ public class GeneralHelper implements Transformation{
             size4 = childSizeCursor.getDouble(childSizeCursor.getColumnIndex(WardrobeContract.ChildSizeEntry.COLUMN_SHOES_SIZE));
         }
 
-        Log.e ("SIZES CHILD SHOES", String.valueOf(size4));
         Calendar currentCalendar = new GregorianCalendar();
         Calendar birthdayCalendar = new GregorianCalendar();
         birthdayCalendar.setTimeInMillis(childCursor.getLong(childCursor.getColumnIndex(WardrobeContract.ChildEntry.COLUMN_BIRTHDATE)));
@@ -311,20 +310,40 @@ public class GeneralHelper implements Transformation{
             if (nextSize > 0) newList.add(nextSize);
         }
         if (size3 > 0) {
+            // 1 - search all clothes with sizes values
             nextSize = mDataManager.GetSizeIdByFilter(4, size3, 0);
             if (nextSize > 0) newList.add(nextSize);
             nextSize = mDataManager.GetSizeIdByFilter(4, size3, 1);
             if (nextSize > 0) newList.add(nextSize);
             nextSize = mDataManager.GetSizeIdByFilter(4, size3, 2);
             if (nextSize > 0) newList.add(nextSize);
+            // 2 - search all clothes with type 6 values
+            nextSize = mDataManager.GetSizeIdByFilter(6, size3, 0);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(6, size3, 1);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(6, size3, 2);
+            if (nextSize > 0) newList.add(nextSize);
+
         }
         if (size4 > 0) {
+            // size4 - ID of value.
+            // 1 - search all clothes with sizes ids
             nextSize = mDataManager.GetSizeIdByFilter(4, size4, 3);
             if (nextSize > 0) newList.add(nextSize);
             nextSize = mDataManager.GetSizeIdByFilter(4, size4, 4);
             if (nextSize > 0) newList.add(nextSize);
             nextSize = mDataManager.GetSizeIdByFilter(4, size4, 5);
             if (nextSize > 0) newList.add(nextSize);
+
+            // 2 - search all clothes with type 6 values
+            nextSize = mDataManager.GetSizeIdByFilter(6, size4, 6);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(6, size4, 7);
+            if (nextSize > 0) newList.add(nextSize);
+            nextSize = mDataManager.GetSizeIdByFilter(6, size4, 8);
+            if (nextSize > 0) newList.add(nextSize);
+
         }
 
         //childCursor.close();

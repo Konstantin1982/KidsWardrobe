@@ -516,10 +516,24 @@ public class WardrobeDBDataManager {
 
 
     public int GetSizeIdByFilter(int type, double value, int condition) {
-        // 0 - equal
-        // 1 - next
-        // 2 - prev
+        // 0,3,6 - equal
+        // 1,4,7 - next
+        // 2,5,8 - prev
         // SIZES
+        if (condition > 5) {
+            double sValue = 0;
+            Cursor cursorValue = GetSizesValuesById((long) value);
+            if (cursorValue.getCount() > 0) {
+                cursorValue.moveToFirst();
+                sValue = cursorValue.getDouble(cursorValue.getColumnIndex(WardrobeContract.Sizes.COLUMN_REAL_VALUE));
+                if (sValue > 0) {
+                } else {
+                    sValue = cursorValue.getDouble(cursorValue.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
+                }
+            }
+            value  = sValue;
+            condition -= 6;
+        }
         int result = -1;
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         String sql  = "";
@@ -530,19 +544,21 @@ public class WardrobeDBDataManager {
         if (condition == 2) sql = "select * from sizes where real_value < ? and size_type = ? order by real_value desc limit 1;";
         if (condition == 1) sql = "select * from sizes where real_value > ? and size_type = ? order by real_value limit 1;";
         if (condition == 0) sql = "select * from sizes where real_value <= ? and size_type = ? order by real_value desc limit 1;";
+
+        if (type == 6) {
+            if (condition == 2) sql = "select * from sizes where shown_value < ? and shown_value >= ? - 1  and size_type = ? order by shown_value desc limit 1;";
+            if (condition == 1) sql = "select * from sizes where shown_value > ? and shown_value <= ? + 1 and size_type = ? order by shown_value limit 1;";
+            if (condition == 0) sql = "select * from sizes where shown_value = ? and shown_value =  ? and size_type = ? order by shown_value desc limit 1;";
+        }
         String[] selectionArgs = new String[] {String.valueOf(value), String.valueOf(type)};
+        if (type == 6) selectionArgs = new String[] {String.valueOf(value), String.valueOf(value), String.valueOf(type)};
         Cursor cursor = db.rawQuery(sql,selectionArgs);
-        //Cursor cursor = db.rawQuery(sql,null);
         if (cursor.getCount() > 0) {
             cursor.moveToPosition(0);
             result = cursor.getInt(cursor.getColumnIndex("_id"));
-            //String comment = "Condition" + condition + "; Value = " + value + "; Name from DB = " + cursor.getString(cursor.getColumnIndex(WardrobeContract.Sizes.COLUMN_VALUE));
-           // Toast.makeText(mContext, comment, Toast.LENGTH_LONG);
         }
-        //cursor.close();
         return result;
     }
-
 
     public Cursor GetItemsForReport(String filter, String sortBy) {
         Cursor items = mDBHelper.getReadableDatabase().query(
